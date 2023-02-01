@@ -5,15 +5,15 @@ class ServersController extends Controller {
     super();
   }
 
-  index(): void {
+  async index(): Promise<void> {
     console.log('index');
   }
 
-  channels(): void {
+  async channels(): Promise<void> {
     console.log('We are in channels');
   }
 
-  error(): void {
+  async error(): Promise<void> {
     console.error('error');
   }
 }

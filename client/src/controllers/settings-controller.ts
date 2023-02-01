@@ -5,11 +5,11 @@ class SettingsController extends Controller {
     super();
   }
 
-  index(): void {
+  async index(): Promise<void> {
     console.log('We are in settings');
   }
 
-  error(): void {
+  async error(): Promise<void> {
     console.error('error');
   }
 }

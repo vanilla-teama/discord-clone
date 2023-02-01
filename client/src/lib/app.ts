@@ -42,15 +42,15 @@ class App {
         case Controllers.PersonalMessages: {
           switch (action) {
             case PersonalMessagesActions.Index: {
-              App.personalMessagesController.index();
+              await App.personalMessagesController.index();
               break;
             }
             case PersonalMessagesActions.Chats: {
-              App.personalMessagesController.chats();
+              await App.personalMessagesController.chats();
               break;
             }
             case PersonalMessagesActions.Friends: {
-              App.personalMessagesController.friends();
+              await App.personalMessagesController.friends();
               break;
             }
             default: {
@@ -62,11 +62,11 @@ class App {
         case Controllers.Servers: {
           switch (action) {
             case ServersActions.Index: {
-              App.serversController.index();
+              await App.serversController.index();
               break;
             }
             case ServersActions.Channels: {
-              App.serversController.channels();
+              await App.serversController.channels();
               break;
             }
             default: {
@@ -78,7 +78,7 @@ class App {
         case Controllers.Settings: {
           switch (action) {
             case SettingsActions.Index: {
-              App.settingsController.index();
+              await App.settingsController.index();
               break;
             }
             default: {
