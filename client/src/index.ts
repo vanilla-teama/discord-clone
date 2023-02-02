@@ -1,7 +1,7 @@
 import App from './lib/app';
-import Router, { Controllers, PersonalMessagesActions } from './lib/router';
+import Router, { Controllers } from './lib/router';
 
-const defaultRoute = Router.createLink(Controllers.PersonalMessages, PersonalMessagesActions.Chats);
+const defaultRoute = Router.createLink(Controllers.Chats);
 
 (function initialize() {
   window.history.replaceState(Router.createState(defaultRoute), '', defaultRoute);
