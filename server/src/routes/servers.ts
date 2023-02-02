@@ -6,8 +6,8 @@ import serverController from '../controllers/servers';
 
 const router = express.Router();
 
-// GET /feed/posts
-router.get('/servers', serverController.getServers);
+// GET
+router.get('/', serverController.getServers);
 
 // POST /feed/post
 // router.post(

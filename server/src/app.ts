@@ -1,10 +1,10 @@
 import express from 'express';
-import path from 'path';
 import http from 'http';
 import mongoose from 'mongoose';
+import path from 'path';
 import { Server, Socket } from 'socket.io';
-import serversController from './controllers/servers';
 import serversRoutes from './routes/servers';
+import usersRoutes from './routes/users';
 
 const port: number = 3001;
 
@@ -29,6 +29,7 @@ class App {
     app.use(express.static(path.join(__dirname, '../../client/dist')));
 
     app.use('/servers', serversRoutes);
+    app.use('/users', usersRoutes);
 
     this.server = new http.Server(app);
 

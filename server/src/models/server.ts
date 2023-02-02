@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
+const serverSchema = new Schema({
   name: {
     type: String,
     required: true
   },
 });
 
-export default mongoose.model('Server', userSchema);
+export default mongoose.model('Server', serverSchema);
