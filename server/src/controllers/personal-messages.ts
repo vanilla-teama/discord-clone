@@ -1,12 +1,12 @@
 import path from 'path';
 import { validationResult } from 'express-validator';
-import Server from '../models/server';
+import PersonalMessage from '../models/personal-message';
 import { Handler } from 'express';
 
-const getServers: Handler = (req, res, next) => {
+const getPersonalMessages: Handler = (req, res, next) => {
   let totalItems = 0;
 
-  Server.find()
+  PersonalMessage.find()
     .countDocuments()
     .then((count) => {
       console.log(count);
@@ -14,7 +14,7 @@ const getServers: Handler = (req, res, next) => {
     })
     .then((servers) => {
       res.status(200).json({
-        message: 'Fetched posts successfully.',
+        message: 'Fetched personal messages successfully.',
         servers,
         totalItems,
       });
@@ -36,7 +36,7 @@ const createServer: Handler = (req, res, next) => {
     throw error;
   }
 
-  const server = new Server({
+  const server = new PersonalMessage({
     name: req.body.name,
   });
 
@@ -54,23 +54,6 @@ const createServer: Handler = (req, res, next) => {
       }
       next(err);
     });
-};
-
-const seedServers = (): void => {
-  const servers = ['RS School', 'Vanilla Team', 'Twin Fin'].map((name) => new Server({
-    name: name,
-  }));
-
-  servers.forEach((server) => {
-    server
-    .save()
-    .then((result) => {
-      console.log(`Server ${server.name} was created.`);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-  });
 };
 
 // exports.createPost = (req, res, next) => {
@@ -230,4 +213,4 @@ const seedServers = (): void => {
 //   fs.unlink(filePath, err => console.log(err));
 // };
 
-export default { getServers, createServer, seedServers };
+export default { getPersonalMessages };

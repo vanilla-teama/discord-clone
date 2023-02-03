@@ -5,6 +5,7 @@ import path from 'path';
 import { Server, Socket } from 'socket.io';
 import serversRoutes from './routes/servers';
 import usersRoutes from './routes/users';
+import personalMessagesRoutes from './routes/personal-messages';
 
 const port: number = 3001;
 
@@ -30,6 +31,7 @@ class App {
 
     app.use('/servers', serversRoutes);
     app.use('/users', usersRoutes);
+    app.use('/personal-messages', personalMessagesRoutes);
 
     this.server = new http.Server(app);
 

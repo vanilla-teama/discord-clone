@@ -16,8 +16,11 @@ const userSchema = new Schema({
   },
   phone: {
     type: String,
-    required: true
   },
 });
+
+userSchema.virtual('chats', {
+  ref: 'PersonalMessage'
+})
 
 export default mongoose.model('User', userSchema);

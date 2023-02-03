@@ -1,13 +1,13 @@
 import express from 'express';
 import { body } from 'express-validator/check';
-import serverController from '../controllers/servers';
+import serversController from '../controllers/servers';
 // const feedController = require('../controllers/feed');
 // const isAuth = require('../middleware/is-auth');
 
 const router = express.Router();
 
 // GET
-router.get('/', serverController.getServers);
+router.get('/', serversController.getServers);
 
 // POST /feed/post
 // router.post(
