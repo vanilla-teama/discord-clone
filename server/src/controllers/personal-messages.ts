@@ -27,7 +27,7 @@ const getPersonalMessages: Handler = (req, res, next) => {
     });
 };
 
-const createServer: Handler = (req, res, next) => {
+const createPersonalMessage: Handler = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -36,16 +36,19 @@ const createServer: Handler = (req, res, next) => {
     throw error;
   }
 
-  const server = new PersonalMessage({
-    name: req.body.name,
+  const personalMessage = new PersonalMessage({
+    fromUserId: req.body.fromUserId,
+    toUserId: req.body.toUserId,
+    responsedMessageId: req.body.responsedMessageId,
+    message: req.body.message,
   });
 
-  server
+  personalMessage
     .save()
     .then((result) => {
       res.status(201).json({
         message: 'Server created successfully!',
-        server,
+        personalMessage,
       });
     })
     .catch((err) => {
@@ -213,4 +216,4 @@ const createServer: Handler = (req, res, next) => {
 //   fs.unlink(filePath, err => console.log(err));
 // };
 
-export default { getPersonalMessages };
+export default { getPersonalMessages, createPersonalMessage };

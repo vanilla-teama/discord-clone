@@ -19,8 +19,4 @@ const userSchema = new Schema({
   },
 });
 
-userSchema.virtual('chats', {
-  ref: 'PersonalMessage'
-})
-
 export default mongoose.model('User', userSchema);

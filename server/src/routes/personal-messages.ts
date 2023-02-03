@@ -5,5 +5,6 @@ const router = express.Router();
 
 // GET
 router.get('/', personalMessagesController.getPersonalMessages);
+router.post('/', personalMessagesController.createPersonalMessage);
 
 export default router;
