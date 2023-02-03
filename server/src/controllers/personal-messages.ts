@@ -1,7 +1,6 @@
 import path from 'path';
 import { validationResult } from 'express-validator';
 import PersonalMessage from '../models/personal-message';
-import User from '../models/user';
 import { Handler } from 'express';
 
 const getPersonalMessages: Handler = (req, res, next) => {

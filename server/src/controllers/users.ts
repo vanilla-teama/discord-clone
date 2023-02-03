@@ -1,19 +1,15 @@
 import { Handler } from 'express';
 import User from '../models/user';
+import { validationResult } from 'express-validator';
 
 const getUsers: Handler = (req, res, next) => {
   let totalItems = 0;
 
   User.find()
-    .countDocuments()
-    .then((count) => {
-      totalItems = count;
-    })
     .then((users) => {
       res.status(200).json({
         message: 'Fetched posts successfully.',
         users,
-        totalItems,
       });
     })
     .catch((err) => {
@@ -24,34 +20,38 @@ const getUsers: Handler = (req, res, next) => {
     });
 };
 
-// const createServer: Handler = (req, res, next) => {
-//   const errors = validationResult(req);
+const createUser: Handler = (req, res, next) => {
+  const errors = validationResult(req);
 
-//   if (!errors.isEmpty()) {
-//     const error = new Error('Validation failed, entered data is incorrect.');
-//     // error.statusCode = 422;
-//     throw error;
-//   }
+  if (!errors.isEmpty()) {
+    const error = new Error('Validation failed, entered data is incorrect.');
+    // error.statusCode = 422;
+    throw error;
+  }
 
-//   const server = new Server({
-//     name: req.body.name,
-//   });
+  const user = new User({
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+    phone: req.body.phone,
+  });
 
-//   server
-//     .save()
-//     .then((result) => {
-//       res.status(201).json({
-//         message: 'Post created successfully!',
-//         server,
-//       });
-//     })
-//     .catch((err) => {
-//       if (!err.statusCode) {
-//         err.statusCode = 500;
-//       }
-//       next(err);
-//     });
-// };
+  user
+    .save()
+    .then((result) => {
+      console.log(result);
+      res.status(201).json({
+        message: 'User created successfully!',
+        server: user,
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
 
 // const seedServers = (): void => {
 //   const servers = ['RS School', 'Vanilla Team', 'Twin Fin'].map((name) => new Server({
@@ -227,4 +227,4 @@ const getUsers: Handler = (req, res, next) => {
 //   fs.unlink(filePath, err => console.log(err));
 // };
 
-export default { getUsers };
+export default { getUsers, createUser };

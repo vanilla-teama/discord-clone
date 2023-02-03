@@ -6,6 +6,7 @@ import { Server, Socket } from 'socket.io';
 import serversRoutes from './routes/servers';
 import usersRoutes from './routes/users';
 import personalMessagesRoutes from './routes/personal-messages';
+import chatsRoutes from './routes/chats';
 const port: number = 3001;
 
 mongoose.set('strictQuery', true);
@@ -28,9 +29,12 @@ class App {
     const app = express();
     app.use(express.static(path.join(__dirname, '../../client/dist')));
 
+    app.use(express.json());
+
     app.use('/servers', serversRoutes);
     app.use('/users', usersRoutes);
     app.use('/personal-messages', personalMessagesRoutes);
+    app.use('/chats', chatsRoutes);
 
     this.server = new http.Server(app);
 

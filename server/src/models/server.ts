@@ -6,6 +6,9 @@ const serverSchema = new Schema({
     type: String,
     required: true
   },
+}, {
+  toJSON: { getters: true },
+  toObject: { getters: true },
 });
 
 export default mongoose.model('Server', serverSchema);
