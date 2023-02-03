@@ -6,7 +6,6 @@ import { Server, Socket } from 'socket.io';
 import serversRoutes from './routes/servers';
 import usersRoutes from './routes/users';
 import personalMessagesRoutes from './routes/personal-messages';
-
 const port: number = 3001;
 
 mongoose.set('strictQuery', true);
