@@ -1,30 +1,27 @@
-abstract class View {
-  private $root: HTMLElement | null = document.getElementById('root');
+abstract class View<T extends HTMLElement = HTMLElement> {
+  private $root: T;
 
   protected $container = document.createDocumentFragment();
 
-  protected static page: number;
-
-  private name: string;
-
-  getName(): string {
-    return this.name;
+  constructor($root: T) {
+    this.$root = $root;
   }
 
-  constructor(name: string) {
-    this.name = name;
+  getRootElement(): T {
+    return this.$root;
   }
 
-  render(): void {
-    if (!this.$root) {
-      throw new Error('Root element not found in index.html');
-    }
+  async render(): Promise<void> {
     this.build();
     this.$root.innerHTML = '';
     this.$root.append(this.$container);
   }
 
   abstract build(): void;
+
+  protected static throwNoRootInTheDomError(name: string): never {
+    throw new Error(`${name} element must be rendered before instantiating this view`);
+  }
 }
 
 export default View;

@@ -5,26 +5,26 @@ export type RouterState = {
 };
 
 export enum Controllers {
-  PersonalMessages = 'personal-messages',
+  Chats = 'chats',
   Servers = 'servers',
   Settings = 'settings',
 }
 
 export type Actions = {
-  [Controllers.PersonalMessages]: PersonalMessagesActions;
+  [Controllers.Chats]: ChatsActions;
   [Controllers.Servers]: ServersActions;
   [Controllers.Settings]: SettingsActions;
 };
 
-export type Action<T extends Controllers> = T extends Controllers.PersonalMessages
-  ? PersonalMessagesActions
+export type Action<T extends Controllers> = T extends Controllers.Chats
+  ? ChatsActions
   : T extends Controllers.Servers
   ? ServersActions
   : T extends Controllers.Settings
   ? SettingsActions
   : never;
 
-export enum PersonalMessagesActions {
+export enum ChatsActions {
   Index = 'index',
   Chats = 'chats',
   Friends = 'friends',
@@ -95,8 +95,8 @@ class Router {
 
     // Get defaults
     this.route = '';
-    this.controller = Controllers.PersonalMessages;
-    this.action = PersonalMessagesActions.Chats;
+    this.controller = Controllers.Chats;
+    this.action = '';
     this.params = [];
 
     const uriParts = this.uri.split('?');
@@ -107,6 +107,7 @@ class Router {
     const path = uriParts[0];
 
     const pathParts = path.split('/');
+    pathParts.shift();
 
     if (pathParts.length > 0) {
       // Get controller
@@ -135,7 +136,7 @@ class Router {
 
   static push(
     controller: Controllers,
-    action: Action<typeof controller>,
+    action?: Action<typeof controller>,
     params?: UrlParams,
     search?: RouterSearch
   ): void {
@@ -152,13 +153,24 @@ class Router {
 
   static createLink(
     controller: Controllers,
-    action: Action<typeof controller>,
+    action?: Action<typeof controller>,
     params?: UrlParams,
     search?: RouterSearch
   ): string {
     const paramsStr = params ? params.map(String).join('/') : '';
     const searchStr = search && Object.keys(search).length > 0 ? `?${Router.strinfifySearch(search)}` : '';
-    return `/${controller}/${action}/${paramsStr}${searchStr}`;
+    // let url = `/${controller}/${action}/${paramsStr}${searchStr}`;
+    let url = `/${controller}`;
+    if (action) {
+      url += `/${action}`;
+    }
+    if (paramsStr) {
+      url += `/${paramsStr}`;
+    }
+    if (searchStr) {
+      url += searchStr;
+    }
+    return url;
   }
 
   static parseSearch(input: string): RouterSearch {
