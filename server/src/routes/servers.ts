@@ -9,6 +9,8 @@ const router = express.Router();
 // GET
 router.get('/', serversController.getServers);
 router.post('/', serversController.createServer);
+router.patch('/', serversController.updateServer);
+router.delete('/', serversController.deleteServer);
 
 // POST /feed/post
 // router.post(
