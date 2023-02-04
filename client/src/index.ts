@@ -1,32 +1,17 @@
 import App from './lib/app';
-import Router, { Controllers } from './lib/router';
-import socket from './lib/socket';
+import Router from './lib/router';
+import socket, { bindGlobalSocketEvents, bindSocketEvent } from './lib/socket';
+/*
+  This is for debugging
+  We can use window.router to navigate through our app
+*/
+Object.assign(window, { app: { Router: Router } });
 
-const defaultRoute = Router.createLink(Controllers.Chats);
+const defaultRoute = Router.createLink('');
 
-socket.on('connect', function () {
-  console.log('connect');
-});
+bindGlobalSocketEvents();
 
-socket.on('disconnect', function (message: string) {
-  console.log('disconnect ' + message);
-});
-
-socket.on('click', () => {
-  console.log('socket click');
-});
-
-socket.on('clicked', (data: unknown) => {
-  console.log('socket clicked', data);
-});
-
-socket.on('id', (id: unknown) => {
-  console.log('socket id', id);
-});
-
-socket.on('clients', (clients: unknown) => {
-  console.log('on clients', clients);
-});
+socket.on('zalupa', () => console.log('zalllllll'));
 
 (function initialize() {
   window.history.replaceState(Router.createState(defaultRoute), '', defaultRoute);

@@ -1,4 +1,4 @@
-import Router, { Controllers } from '../lib/router';
+import Router, { RouteControllers } from '../lib/router';
 import View from '../lib/view';
 import { $ } from '../utils/functions';
 import StartBarView from './start-bar-view';
@@ -22,7 +22,7 @@ class ChatsBarView extends View {
     $item.innerHTML = `<img src="https://source.boringavatars.com/sunset" width="20" height="20" /><span>Personal Messages</span>`;
 
     $item.onclick = () => {
-      Router.push(Controllers.Chats);
+      Router.push(RouteControllers.Chats);
     };
     $list.append($item);
     this.$container.append($list);

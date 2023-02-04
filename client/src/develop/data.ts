@@ -1,23 +1,23 @@
-import { PersonalMessage, Server, User } from '../types/entities';
+import { Chat, PersonalMessage, Server, User } from '../types/entities';
 import moment from '../lib/moment';
 
 export const users: User[] = [
   {
-    id: '1',
+    id: '63dd3d9da1340145e9b74055',
     name: 'Hlib Hodovaniuk',
     email: 'email1@gmail.com',
     password: '1111',
     phone: '+380991234567',
   },
   {
-    id: '2',
+    id: '63dd3dd9938e35dad6409e12',
     name: 'Alexander Chornyi',
     email: 'email2@gmail.com',
     password: '1111',
     phone: '+380991234567',
   },
   {
-    id: '3',
+    id: '63dd3de6938e35dad6409e14',
     name: 'Alexander Kiroi',
     email: 'email3@gmail.com',
     password: '1111',
@@ -91,5 +91,20 @@ export const servers: Server[] = [
     id: '3',
     name: 'Vanilla Team',
     avatar: 'https://source.boringavatars.com/beam',
+  },
+];
+
+export const chats: Chat[] = [
+  {
+    userId: '63dd3d9da1340145e9b74055',
+    userName: 'Hlib Hodovaniuk',
+  },
+  {
+    userId: '63dd3dd9938e35dad6409e12',
+    userName: 'Alexander Chornyi',
+  },
+  {
+    userId: '63dd3de6938e35dad6409e14',
+    userName: 'Alexander Kiroi',
   },
 ];

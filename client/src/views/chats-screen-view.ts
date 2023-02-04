@@ -1,4 +1,5 @@
 import View from '../lib/view';
+import { User } from '../types/entities';
 import { $ } from '../utils/functions';
 
 class ChatsScreenView extends View {
@@ -28,6 +29,17 @@ class ChatsScreenView extends View {
   private createStartBar(): HTMLDivElement {
     const $container = $('div', ChatsScreenView.classNames.startBar);
     return $container;
+  }
+
+  displayUser(user: User): void {
+    document.querySelector('.user')?.remove();
+
+    const $userElement = $('div', 'user');
+    $userElement.style.position = 'fixed';
+    $userElement.style.top = '0';
+    $userElement.style.right = '0';
+    $userElement.innerHTML = `${user.name}`;
+    this.$container.append($userElement);
   }
 }
 

@@ -1,4 +1,4 @@
-import Router, { Controllers } from '../lib/router';
+import Router, { RouteControllers } from '../lib/router';
 import View from '../lib/view';
 import { Server } from '../types/entities';
 import { $ } from '../utils/functions';
@@ -39,7 +39,7 @@ class ServersBarView extends View {
           $item.innerHTML = `<img src="${avatar}" width="20" height="20" /><span>${name}</span>`;
 
           $item.onclick = () => {
-            Router.push(Controllers.Servers, undefined, [id]);
+            Router.push(RouteControllers.Servers, undefined, [id]);
           };
           return $item;
         })

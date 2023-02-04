@@ -30,3 +30,8 @@ export interface Server extends MongoEntity {
   name: string;
   avatar: string;
 }
+
+export interface Chat {
+  userId: MongoEntityId;
+  userName: string;
+}

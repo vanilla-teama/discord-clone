@@ -1,23 +1,29 @@
-import { personalMessages, servers, users } from '../develop/data';
-import { PersonalMessage, Server, User } from '../types/entities';
+import { chats, personalMessages, servers, users } from '../develop/data';
+import { Chat, PersonalMessage, Server, User } from '../types/entities';
 
 class AppStore {
   private static instance: AppStore;
 
+  user: User | null = null;
+
   private _users: User[] = [];
 
-  private _chats: User[] = [];
+  private _chats: Chat[] = [];
 
   // Personal messages with the opponent selected in the Chats bar and shown in the Main
   private _personalMessages: PersonalMessage[] = [];
 
   private _servers: Server[] = [];
 
+  get isAuth(): boolean {
+    return Boolean(this.user);
+  }
+
   get users(): User[] {
     return this._users;
   }
 
-  get chats(): User[] {
+  get chats(): Chat[] {
     return this._chats;
   }
 
@@ -34,10 +40,7 @@ class AppStore {
   }
 
   async fetchChats(userId: User['id']): Promise<void> {
-    console.log(this.personalMessages);
-    this._chats = this.personalMessages
-      .filter(({ fromUserId, toUserId }) => userId === fromUserId || userId === toUserId)
-      .map(({ id }) => this.users.find(({ id: currentUserId }) => id === currentUserId)!);
+    this._chats = chats;
   }
 
   async fetchPersonalMessages(userId: User['id']): Promise<void> {
@@ -64,9 +67,14 @@ class AppStore {
   }
 
   onServerListChanged = (servers: Server[]) => {};
+  onSigningIn = (data: FormData) => {};
 
   async bindServerListChanged(callback: (servers: Server[]) => void) {
     this.onServerListChanged = callback;
+  }
+
+  bindSigningIn(callback: (data: FormData) => void) {
+    this.onSigningIn = callback;
   }
 
   private constructor() {

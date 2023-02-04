@@ -1,5 +1,5 @@
 import View from '../lib/view';
-import { User } from '../types/entities';
+import { Chat, User } from '../types/entities';
 import { $ } from '../utils/functions';
 import ChatsScreenView from './chats-screen-view';
 
@@ -21,11 +21,12 @@ class ChatsSideBarView extends View {
     this.$container.append($chatsContainer);
   }
 
-  displayChats(chats: User[]) {
+  displayChats(chats: Chat[]) {
+    console.log({ chats });
     if (this.$chatList) {
       this.$chatList.append(
-        ...chats.map(({ name }) => {
-          return name;
+        ...chats.map(({ userName }) => {
+          return userName;
         })
       );
     }

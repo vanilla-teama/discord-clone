@@ -4,23 +4,24 @@ export type RouterState = {
   url: string;
 };
 
-export enum Controllers {
+export enum RouteControllers {
+  Start = 'start',
   Chats = 'chats',
   Servers = 'servers',
   Settings = 'settings',
 }
 
-export type Actions = {
-  [Controllers.Chats]: ChatsActions;
-  [Controllers.Servers]: ServersActions;
-  [Controllers.Settings]: SettingsActions;
+export type RouteActions = {
+  [RouteControllers.Chats]: ChatsActions;
+  [RouteControllers.Servers]: ServersActions;
+  [RouteControllers.Settings]: SettingsActions;
 };
 
-export type Action<T extends Controllers> = T extends Controllers.Chats
+export type Action<T extends RouteControllers> = T extends RouteControllers.Chats
   ? ChatsActions
-  : T extends Controllers.Servers
+  : T extends RouteControllers.Servers
   ? ServersActions
-  : T extends Controllers.Settings
+  : T extends RouteControllers.Settings
   ? SettingsActions
   : never;
 
@@ -95,7 +96,7 @@ class Router {
 
     // Get defaults
     this.route = '';
-    this.controller = Controllers.Chats;
+    this.controller = RouteControllers.Start;
     this.action = '';
     this.params = [];
 
@@ -135,8 +136,8 @@ class Router {
   }
 
   static push(
-    controller: Controllers,
-    action?: Action<typeof controller>,
+    controller: RouteControllers | '',
+    action?: typeof controller extends RouteControllers ? Action<RouteControllers> : '',
     params?: UrlParams,
     search?: RouterSearch
   ): void {
@@ -152,8 +153,8 @@ class Router {
   }
 
   static createLink(
-    controller: Controllers,
-    action?: Action<typeof controller>,
+    controller: RouteControllers | '',
+    action?: typeof controller extends RouteControllers ? Action<RouteControllers> : '',
     params?: UrlParams,
     search?: RouterSearch
   ): string {
