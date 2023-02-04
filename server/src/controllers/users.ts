@@ -123,24 +123,24 @@ const createUser: Handler = (req, res, next) => {
 //     });
 // };
 
-// exports.getPost = (req, res, next) => {
-//   const postId = req.params.postId;
-//   Post.findById(postId)
-//     .then(post => {
-//       if (!post) {
-//         const error = new Error('Could not find post.');
-//         error.statusCode = 404;
-//         throw error;
-//       }
-//       res.status(200).json({ message: 'Post fetched.', post: post });
-//     })
-//     .catch(err => {
-//       if (!err.statusCode) {
-//         err.statusCode = 500;
-//       }
-//       next(err);
-//     });
-// };
+const getUser: Handler = (req, res, next) => {
+  const userId = req.params.id;
+  User.findById(userId)
+    .then((user) => {
+      if (!user) {
+        const error = new Error('Could not find post.');
+        //error.statusCode = 404;
+        throw error;
+      }
+      res.status(200).json({ messageInfo: 'User fetched.', user: user });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
 
 // exports.updatePost = (req, res, next) => {
 //   const postId = req.params.postId;
@@ -233,4 +233,4 @@ const createUser: Handler = (req, res, next) => {
 //   fs.unlink(filePath, err => console.log(err));
 // };
 
-export default { getUsers, createUser };
+export default { getUsers, createUser, getUser };
