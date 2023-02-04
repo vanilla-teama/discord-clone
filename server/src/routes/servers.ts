@@ -6,11 +6,11 @@ import serversController from '../controllers/servers';
 
 const router = express.Router();
 
-// GET
 router.get('/', serversController.getServers);
+router.get('/:id', serversController.getServer);
 router.post('/', serversController.createServer);
-router.patch('/', serversController.updateServer);
-router.delete('/', serversController.deleteServer);
+router.patch('/:id', serversController.updateServer);
+router.delete('/:id', serversController.deleteServer);
 
 // POST /feed/post
 // router.post(

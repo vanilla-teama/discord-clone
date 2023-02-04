@@ -13,7 +13,7 @@ const getUsers: Handler = (req, res, next) => {
     })
     .then((users) => {
       res.status(200).json({
-        message: 'Fetched posts successfully.',
+        message: 'Fetched users successfully.',
         count: docsCount,
         users,
       });
@@ -58,23 +58,6 @@ const createUser: Handler = (req, res, next) => {
       next(err);
     });
 };
-
-// const seedServers = (): void => {
-//   const servers = ['RS School', 'Vanilla Team', 'Twin Fin'].map((name) => new Server({
-//     name: name,
-//   }));
-
-//   servers.forEach((server) => {
-//     server
-//     .save()
-//     .then((result) => {
-//       console.log(`Server ${server.name} was created.`);
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//     });
-//   });
-// };
 
 const getUser: Handler = (req, res, next) => {
   const userId = req.params.id;
@@ -122,7 +105,7 @@ const updateUser: Handler = (req, res, next) => {
       return user.save();
     })
     .then((user) => {
-      res.status(200).json({ messageInfo: 'user updated!', user });
+      res.status(200).json({ messageInfo: 'User updated!', user });
     })
     .catch((err) => {
       if (!err.statusCode) {

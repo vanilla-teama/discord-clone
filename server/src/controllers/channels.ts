@@ -10,12 +10,30 @@ const getChannels: Handler = (req, res, next) => {
       return Channel.find();
     })
     .then((channels) => {
-      console.log(channels);
       res.status(200).json({
-        message: 'Fetched channel successfully.',
+        message: 'Fetched channels successfully.',
         count: docsCount,
         channels,
       });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+const getChannel: Handler = (req, res, next) => {
+  const channelId = req.params.id;
+  Channel.findById(channelId)
+    .then((channel) => {
+      if (!channel) {
+        const error = new Error('Could not find channel.');
+        //error.statusCode = 404;
+        throw error;
+      }
+      res.status(200).json({ messageInfo: 'Channel fetched.', channel });
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -42,7 +60,7 @@ const createChannel: Handler = (req, res, next) => {
     .save()
     .then(() => {
       res.status(201).json({
-        message: 'channel created successfully!',
+        message: 'Channel created successfully!',
         channel,
       });
     })
@@ -66,7 +84,7 @@ const deleteChannel: Handler = (req, res, next) => {
       return Channel.findByIdAndRemove(channelId);
     })
     .then((result) => {
-      res.status(200).json({ messageInfo: 'channel message.' });
+      res.status(200).json({ messageInfo: 'Deleted channel' });
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -96,7 +114,7 @@ const updateChannel: Handler = (req, res, next) => {
       return channel.save();
     })
     .then((channel) => {
-      res.status(200).json({ messageInfo: 'channel updated!', channel });
+      res.status(200).json({ messageInfo: 'Channel updated!', channel });
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -105,4 +123,4 @@ const updateChannel: Handler = (req, res, next) => {
       next(err);
     });
 };
-export default { getChannels, createChannel, updateChannel, deleteChannel };
+export default { getChannels, getChannel, createChannel, updateChannel, deleteChannel };

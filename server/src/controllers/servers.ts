@@ -27,6 +27,25 @@ const getServers: Handler = (req, res, next) => {
     });
 };
 
+const getServer: Handler = (req, res, next) => {
+  const serverId = req.params.id;
+  Server.findById(serverId)
+    .then((server) => {
+      if (!server) {
+        const error = new Error('Could not find server.');
+        //error.statusCode = 404;
+        throw error;
+      }
+      res.status(200).json({ messageInfo: 'Server fetched.', server });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
 const createServer: Handler = (req, res, next) => {
   const errors = validationResult(req);
 
@@ -96,7 +115,7 @@ const updateServer: Handler = (req, res, next) => {
       return server.save();
     })
     .then((server) => {
-      res.status(200).json({ messageInfo: 'server updated!', server });
+      res.status(200).json({ messageInfo: 'Server updated!', server });
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -127,4 +146,4 @@ const deleteServer: Handler = (req, res, next) => {
     });
 };
 
-export default { getServers, createServer, seedServers, updateServer, deleteServer };
+export default { getServers, createServer, getServer, seedServers, updateServer, deleteServer };
