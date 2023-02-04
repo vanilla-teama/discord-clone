@@ -1,9 +1,16 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import mongooseDelete from 'mongoose-delete';
+
+// export interface PersonalMessage {
+//   fromUserId: Types.ObjectId,
+//   toUserId: Types.ObjectId,
+//   responsedMessageId: Types.ObjectId,
+//   date: typeof Date
+// }
 
 const Schema = mongoose.Schema;
 
-const personalMessageSchema = new Schema({
+export const personalMessageSchema = new Schema({
   fromUserId: {
     type: Schema.Types.ObjectId,
     required: true
@@ -23,6 +30,12 @@ const personalMessageSchema = new Schema({
     type: String,
     required: true
   },
+}, {
+  query: {
+    byDeleted(deleted: boolean) {
+      return this.find({ deleted });
+    }
+  }
 });
 
 personalMessageSchema.plugin(mongooseDelete);

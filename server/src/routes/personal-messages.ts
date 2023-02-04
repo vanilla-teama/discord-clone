@@ -1,6 +1,11 @@
 import express from 'express';
 import personalMessagesController from '../controllers/personal-messages';
 
+export enum DeletedRequestQuery {
+  With = 'with',
+  Only = 'only',
+}
+
 const router = express.Router();
 
 // GET

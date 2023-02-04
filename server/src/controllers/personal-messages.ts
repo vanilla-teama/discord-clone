@@ -2,15 +2,23 @@ import path from 'path';
 import { validationResult } from 'express-validator';
 import PersonalMessage from '../models/personal-message';
 import { Handler } from 'express';
+import { DeletedRequestQuery } from '../routes/personal-messages';
 
 const getPersonalMessages: Handler = (req, res, next) => {
   let docsCount = 0;
-  console.log(req.query);
-  PersonalMessage.find()
+
+  const { deleted } = req.query;
+  let query = () => deleted === DeletedRequestQuery.With
+  ? PersonalMessage.find()
+  : deleted === DeletedRequestQuery.Only
+  ? PersonalMessage.find().byDeleted(true)
+  : PersonalMessage.find().byDeleted(false);
+
+    query()
     .countDocuments()
     .then((count) => {
       docsCount = count;
-      return PersonalMessage.find();
+      return query();
     })
     .then((personalMessages) => {
       res.status(200).json({
