@@ -87,7 +87,7 @@ const updateChannel: Handler = (req, res, next) => {
   Channel.findById(channelId)
     .then((channel) => {
       if (!channel) {
-        const error = new Error('Could not find message.');
+        const error = new Error('Could not find channel.');
         // error.statusCode = 404;
         throw error;
       }
@@ -96,7 +96,7 @@ const updateChannel: Handler = (req, res, next) => {
       return channel.save();
     })
     .then((channel) => {
-      res.status(200).json({ messageInfo: 'Message updated!', channel });
+      res.status(200).json({ messageInfo: 'channel updated!', channel });
     })
     .catch((err) => {
       if (!err.statusCode) {
