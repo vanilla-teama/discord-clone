@@ -3,12 +3,18 @@ import User from '../models/user';
 import { validationResult } from 'express-validator';
 
 const getUsers: Handler = (req, res, next) => {
-  let totalItems = 0;
+  let docsCount = 0;
 
   User.find()
+    .countDocuments()
+    .then((count) => {
+      docsCount = count;
+      return User.find();
+    })
     .then((users) => {
       res.status(200).json({
         message: 'Fetched posts successfully.',
+        count: docsCount,
         users,
       });
     })

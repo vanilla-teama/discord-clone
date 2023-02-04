@@ -4,19 +4,19 @@ import PersonalMessage from '../models/personal-message';
 import { Handler } from 'express';
 
 const getPersonalMessages: Handler = (req, res, next) => {
-  let totalItems = 0;
-
+  let docsCount = 0;
+  console.log(req.query);
   PersonalMessage.find()
     .countDocuments()
     .then((count) => {
-      console.log(count);
-      totalItems = count;
+      docsCount = count;
+      return PersonalMessage.find();
     })
-    .then((servers) => {
+    .then((personalMessages) => {
       res.status(200).json({
         message: 'Fetched personal messages successfully.',
-        servers,
-        totalItems,
+        count: docsCount,
+        servers: personalMessages,
       });
     })
     .catch((err) => {
@@ -45,7 +45,7 @@ const createPersonalMessage: Handler = (req, res, next) => {
 
   personalMessage
     .save()
-    .then((result) => {
+    .then(() => {
       res.status(201).json({
         message: 'Message created successfully!',
         personalMessage,
@@ -61,6 +61,7 @@ const createPersonalMessage: Handler = (req, res, next) => {
 
 const getPersonalMessage: Handler = (req, res, next) => {
   const personalMessageId = req.params.id;
+
   PersonalMessage.findById(personalMessageId)
     .then((message) => {
       if (!message) {
@@ -98,8 +99,8 @@ const updatePersonalMessage: Handler = (req, res, next) => {
       message.message = contentMessage;
       return message.save();
     })
-    .then((result) => {
-      res.status(200).json({ messageInfo: 'Message updated!', message: result });
+    .then((message) => {
+      res.status(200).json({ messageInfo: 'Message updated!', message });
     })
     .catch((err) => {
       if (!err.statusCode) {

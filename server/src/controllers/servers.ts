@@ -4,12 +4,19 @@ import Server from '../models/server';
 import { Handler } from 'express';
 
 const getServers: Handler = (req, res, next) => {
+  let docsCount = 0;
   Server
     .find()
+    .countDocuments()
+    .then((count) => {
+      docsCount = count;
+      return Server.find();
+    })
     .then((servers) => {
       console.log(servers);
       res.status(200).json({
         message: 'Fetched servers successfully.',
+        count: docsCount,
         servers,
       });
     })

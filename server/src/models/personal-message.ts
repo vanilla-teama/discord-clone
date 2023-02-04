@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import mongooseDelete from 'mongoose-delete';
+
 const Schema = mongoose.Schema;
 
 const personalMessageSchema = new Schema({
@@ -22,5 +24,7 @@ const personalMessageSchema = new Schema({
     required: true
   },
 });
+
+personalMessageSchema.plugin(mongooseDelete);
 
 export default mongoose.model('PersonalMessage', personalMessageSchema);
