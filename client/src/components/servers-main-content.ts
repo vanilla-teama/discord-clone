@@ -1,9 +1,9 @@
 import Controller from '../lib/controller';
-import ChatsMainContentView from '../views/chats-main-content-view';
+import ServersMainContentView from '../views/servers-main-content';
 
-class ServersMainContentComponent extends Controller<ChatsMainContentView> {
+class ServersMainContentComponent extends Controller<ServersMainContentView> {
   constructor() {
-    super(new ChatsMainContentView());
+    super(new ServersMainContentView());
   }
 
   async init(): Promise<void> {
