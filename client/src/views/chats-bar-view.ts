@@ -19,11 +19,15 @@ class ChatsBarView extends View {
   async build(): Promise<void> {
     const $list = $('ul', ChatsBarView.classes.list);
     const $item = $('li', ChatsBarView.classes.listItem);
-    $item.innerHTML = `<img src="https://source.boringavatars.com/sunset" width="20" height="20" /><span>Personal Messages</span>`;
+    const $itemImg = $('img', 'chats-bar__img');
+    const $itemName = $('div', 'chats-bar__name');
+    $itemName.textContent = 'Personal Messages';
+    $itemImg.src = 'https://source.boringavatars.com/sunset';
 
     $item.onclick = () => {
       Router.push(RouteControllers.Chats);
     };
+    $item.append($itemImg, $itemName);
     $list.append($item);
     this.$container.append($list);
   }

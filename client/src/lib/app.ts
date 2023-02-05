@@ -1,6 +1,8 @@
 import ChatsScreen from '../components/chats-screen';
+import Screen from '../components/screen';
 import ServersScreen from '../components/servers-screen';
 import StartScreen from '../components/start-screen';
+import { isKeyOf } from '../utils/functions';
 import Router from './router';
 
 const routes = {
@@ -8,8 +10,6 @@ const routes = {
   chats: ChatsScreen,
   servers: ServersScreen,
 } as const;
-
-const isKeyOf = <T extends object>(value: unknown, obj: T): value is keyof typeof obj => (value as string) in obj;
 
 export type AppControllerType = ChatsScreen | ServersScreen | StartScreen;
 
@@ -26,15 +26,15 @@ class App {
     App.router = new Router();
 
     const controller = App.router.getController();
-    console.log('app', controller);
 
     try {
+      // Render content
       if (isKeyOf(controller, routes)) {
         const prevController = App.controller;
 
         if (!prevController || !(prevController instanceof routes[controller])) {
           App.controller = new routes[controller]();
-          App.controller.init();
+          await App.controller.init();
         }
       }
     } catch (error) {

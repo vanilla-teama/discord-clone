@@ -1,13 +1,13 @@
 import View from '../lib/view';
-import { Chat, User } from '../types/entities';
+import { Chat } from '../types/entities';
 import { $ } from '../utils/functions';
-import ChatsScreenView from './chats-screen-view';
+import ScreenView from './screen-view';
 
 class ChatsSideBarView extends View {
   constructor() {
-    const $root = ChatsScreenView.$chatsSideBar;
+    const $root = ScreenView.$sideBar;
     if (!$root) {
-      ChatsSideBarView.throwNoRootInTheDomError(`ServersBar`);
+      ChatsSideBarView.throwNoRootInTheDomError(`Chats-sidebar`);
     }
     super($root);
   }
@@ -22,7 +22,6 @@ class ChatsSideBarView extends View {
   }
 
   displayChats(chats: Chat[]) {
-    console.log({ chats });
     if (this.$chatList) {
       this.$chatList.append(
         ...chats.map(({ userName }) => {

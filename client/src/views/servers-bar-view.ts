@@ -8,7 +8,7 @@ class ServersBarView extends View {
   static readonly classes = {
     list: 'servers-bar__list',
     listItem: 'servers-bar__list-item',
-    addingServerItem: 'server-bar__list-item_add',
+    addingServerItem: 'servers-bar__list-item_add',
   };
 
   $serverList: HTMLUListElement | null = null;
@@ -36,7 +36,11 @@ class ServersBarView extends View {
       this.$serverList.append(
         ...servers.map(({ id, name, avatar }) => {
           const $item = $('li', ServersBarView.classes.listItem);
-          $item.innerHTML = `<img src="${avatar}" width="20" height="20" /><span>${name}</span>`;
+          const $itemImg = $('img', 'servers-bar__img');
+          const $itemName = $('div', 'servers-bar__name');
+          $itemName.textContent = `${name}`;
+          $itemImg.src = `${avatar}`;
+          $item.append($itemImg, $itemName);
 
           $item.onclick = () => {
             Router.push(RouteControllers.Servers, undefined, [id]);
@@ -46,7 +50,11 @@ class ServersBarView extends View {
       );
 
       const $addingServerItem = $('li', ServersBarView.classes.addingServerItem);
-      $addingServerItem.innerHTML = `<img src="https://source.boringavatars.com/ring" width="20" height="20" /><span>Add Server</span>`;
+      const $addingServerItemImg = $('span', 'servers-bar__img-add');
+      const $addingServerItemName = $('span', 'servers-bar__name');
+      $addingServerItemName.textContent = `Add Server`;
+
+      $addingServerItem.append($addingServerItemImg, $addingServerItemName);
       this.$serverList.append($addingServerItem);
     }
   }

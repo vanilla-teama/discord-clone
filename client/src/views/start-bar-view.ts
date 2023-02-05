@@ -1,6 +1,7 @@
 import View from '../lib/view';
 import { $ } from '../utils/functions';
 import ChatsScreenView from './chats-screen-view';
+import ScreenView from './screen-view';
 import ServersScreenView from './servers-screen-view';
 
 class StartBarView extends View {
@@ -13,11 +14,7 @@ class StartBarView extends View {
   static $serversBar: HTMLDivElement | null;
 
   constructor() {
-    // This check will be fixed later when develop a General Layout or something like this
-    const $root =
-      ((ChatsScreenView.$startBar?.isConnected && ChatsScreenView.$startBar) || null) ??
-      ((ServersScreenView.$startBar?.isConnected && ServersScreenView.$startBar) || null) ??
-      null;
+    const $root = ScreenView.$startBar;
 
     if (!$root) {
       StartBarView.throwNoRootInTheDomError(`StartBar`);

@@ -12,7 +12,7 @@ class SignInView extends View {
   constructor() {
     const $root = document.getElementById('root');
     if (!$root) {
-      throw new Error('Root element not found in index.html. Please, provide an element with id `root`');
+      SignInView.throwNoRootInTheDomError('Root');
     }
     super($root);
   }

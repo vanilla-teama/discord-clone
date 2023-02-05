@@ -4,6 +4,8 @@ import { bindSocketEvent } from '../lib/socket';
 import AppStore, { appStore } from '../store/app-store';
 import ChatsScreenView from '../views/chats-screen-view';
 import ChatsSideBarComponent from './chats-sidebar';
+import MainComponent from './main';
+import Screen from './screen';
 import StartBarComponent from './start-bar';
 
 class ChatsScreen extends Controller<ChatsScreenView> {
@@ -20,14 +22,16 @@ class ChatsScreen extends Controller<ChatsScreenView> {
     await appStore.fetchServers();
     await appStore.fetchPersonalMessages('1');
     await appStore.fetchChats('1');
+    // Render Layout
+    await new Screen().init();
 
-    this.view.render();
     if (appStore.user) {
       this.view.displayUser(appStore.user);
     }
 
     new StartBarComponent().init();
     new ChatsSideBarComponent().init();
+    new MainComponent().init();
 
     this.bindSocketEvents();
   }

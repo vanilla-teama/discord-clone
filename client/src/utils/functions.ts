@@ -2,11 +2,11 @@ export const capitalize = (value: string) => value.slice(0, 1).toUpperCase() + v
 
 export const createElement = <K extends keyof HTMLElementTagNameMap>(
   tagName: K,
-  className?: string
+  className?: string | string[]
 ): HTMLElementTagNameMap[K] => {
   const $element = document.createElement(tagName);
   if (className) {
-    $element.className = className;
+    $element.className = [className].flat(Infinity).join(' ');
   }
   return $element;
 };
@@ -20,3 +20,6 @@ export const replaceWith = <T extends HTMLElement = HTMLElement>($element: T, $n
   }
   return $newElement;
 };
+
+export const isKeyOf = <T extends object>(value: unknown, obj: T): value is keyof typeof obj =>
+  (value as string) in obj;
