@@ -1,6 +1,5 @@
 import { Handler } from 'express';
 import Channel from '../models/channel';
-import { validationResult } from 'express-validator';
 const getChannels: Handler = (req, res, next) => {
   let docsCount = 0;
   Channel.find()
@@ -44,13 +43,7 @@ const getChannel: Handler = (req, res, next) => {
 };
 
 const createChannel: Handler = (req, res, next) => {
-  const errors = validationResult(req);
 
-  if (!errors.isEmpty()) {
-    const error = new Error('Validation failed, entered data is incorrect.');
-    // error.statusCode = 422;
-    throw error;
-  }
   const channel = new Channel({
     serverId: req.body.serverId,
     name: req.body.name,
@@ -96,12 +89,7 @@ const deleteChannel: Handler = (req, res, next) => {
 
 const updateChannel: Handler = (req, res, next) => {
   const channelId = req.params.id;
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const error = new Error('Validation failed, entered data is incorrect.');
-    // error.statusCode = 422;
-    throw error;
-  }
+
   Channel.findById(channelId)
     .then((channel) => {
       if (!channel) {

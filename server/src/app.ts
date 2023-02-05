@@ -36,6 +36,7 @@ export class App {
 
     app.use(express.json());
 
+    // TODO: add validation
     app.use('/servers', serversRoutes);
     app.use('/users', usersRoutes);
     app.use('/personal-messages', personalMessagesRoutes);

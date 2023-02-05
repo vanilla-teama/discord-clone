@@ -1,6 +1,5 @@
 import { Handler } from 'express';
-import User from '../models/user';
-import { validationResult } from 'express-validator';
+import User, { validateUserField } from '../models/user';
 
 const getUsers: Handler = (req, res, next) => {
   let docsCount = 0;
@@ -27,14 +26,7 @@ const getUsers: Handler = (req, res, next) => {
 };
 
 const createUser: Handler = (req, res, next) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    const error = new Error('Validation failed, entered data is incorrect.');
-    // error.statusCode = 422;
-    throw error;
-  }
-
+  
   const user = new User({
     name: req.body.name,
     email: req.body.email,
@@ -61,14 +53,15 @@ const createUser: Handler = (req, res, next) => {
 
 const getUser: Handler = (req, res, next) => {
   const userId = req.params.id;
-  User.findById(userId)
+  User
+    .findById(userId)
     .then((user) => {
       if (!user) {
         const error = new Error('Could not find post.');
         //error.statusCode = 404;
         throw error;
       }
-      res.status(200).json({ messageInfo: 'User fetched.', user: user });
+      res.status(200).json({ messageInfo: 'User fetched.', user });
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -80,13 +73,7 @@ const getUser: Handler = (req, res, next) => {
 
 const updateUser: Handler = (req, res, next) => {
   const userId = req.params.id;
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const error = new Error('Validation failed, entered data is incorrect.');
-    // error.statusCode = 422;
-    throw error;
-  }
-
+  
   User.findById(userId)
     .then((user) => {
       if (!user) {
@@ -94,14 +81,14 @@ const updateUser: Handler = (req, res, next) => {
         // error.statusCode = 404;
         throw error;
       }
-      const nameUser = req.body.name;
-      const passwordUser = req.body.password;
-      const emailUser = req.body.email;
-      const phoneUser = req.body.phone;
-      user.name = nameUser;
-      user.password = passwordUser;
-      user.email = emailUser;
-      user.phone = phoneUser;
+      Object.entries(User.schema.paths).map(([path, data]) => {
+        if (req.body[path]) {
+          if (path === 'name' || path === 'email' || path === 'password' || path === 'phone') {
+            user[path] = req.body[path];
+          }
+        }
+      });
+      
       return user.save();
     })
     .then((user) => {
@@ -137,4 +124,92 @@ const deleteUser: Handler = (req, res, next) => {
     });
 };
 
-export default { getUsers, createUser, getUser, updateUser, deleteUser };
+const getFriends: Handler = (req, res, next) => {
+  const userId = req.params.id;
+
+  User
+    .findById(userId)
+    .populate('friends')
+    .then((user) => {
+      if (!user) {
+        const error = new Error('Could not find user.');
+        // error.statusCode = 404;
+        throw error;
+      }
+      res.status(200).json({ messageInfo: 'Friends fetched.', friends: user.friends });
+    })
+}
+
+const updateFriends: Handler = async (req, res, next) => {
+  const userId = req.params.id;
+  let friendIds = req.body.friends;
+  const { action } = req.query;
+
+  if (!validateUserField(friendIds, 'friends')) {
+    const error = new Error('Validation failed, entered data is incorrect.');
+    // error.statusCode = 422;
+    next(error);
+    return;
+  }
+  
+  if (typeof action !== 'string' || !['add', 'delete'].includes(action)) {
+    const error = new Error('Validation failed, `action` query parameter is required.');
+    // error.statusCode = 422;
+    next(error);
+    return;
+  }
+
+  friendIds = friendIds.filter((id) => id !== userId);
+
+  User
+    .findById(userId)
+    .populate('friends')
+    .then((user) => {
+
+      if (!user) {
+        const error = new Error('Could not find user.');
+        // error.statusCode = 404;
+        throw error;
+      }
+      
+      if (action === 'delete') {
+
+        user.friends = user.friends.filter((friend) => !friendIds.includes(friend.id));
+
+        return user
+          .save()
+          .then((user) => {
+            user
+              .populate('friends')
+              .then((user) => {
+                res.status(200).json({ messageInfo: 'Friends deleted!', friends: user.friends });
+              })
+          });
+      }
+
+      User
+        .find({ _id: { $in: friendIds }})
+        .select('id')
+        .then((foundUsers) => {
+          const newFriends = foundUsers.map((user) => user.id);
+          user.friends = [...new Set([...user.friends.map((user) => user.id), ...newFriends])];
+
+          return user.save();
+        })
+        .then((user) => {
+          user
+            .populate('friends')
+            .then((user) => {
+              res.status(200).json({ messageInfo: 'Friends added!', friends: user.friends });
+            })
+        });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+}
+
+export default { getUsers, createUser, getUser, updateUser, deleteUser, getFriends, updateFriends };

@@ -1,7 +1,5 @@
-import path from 'path';
-import { validationResult } from 'express-validator';
-import PersonalMessage from '../models/personal-message';
 import { Handler } from 'express';
+import PersonalMessage from '../models/personal-message';
 import { DeletedRequestQuery } from '../routes/personal-messages';
 
 const getPersonalMessages: Handler = (req, res, next) => {
@@ -36,13 +34,6 @@ const getPersonalMessages: Handler = (req, res, next) => {
 };
 
 const createPersonalMessage: Handler = (req, res, next) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    const error = new Error('Validation failed, entered data is incorrect.');
-    // error.statusCode = 422;
-    throw error;
-  }
 
   const personalMessage = new PersonalMessage({
     fromUserId: req.body.fromUserId,
@@ -89,12 +80,6 @@ const getPersonalMessage: Handler = (req, res, next) => {
 
 const updatePersonalMessage: Handler = (req, res, next) => {
   const personalMessageId = req.params.id;
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const error = new Error('Validation failed, entered data is incorrect.');
-    // error.statusCode = 422;
-    throw error;
-  }
 
   PersonalMessage.findById(personalMessageId)
     .then((message) => {

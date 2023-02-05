@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const serverSchema = new Schema({
   name: {
-    type: String,
+    type: Schema.Types.ObjectId,
     required: true
   },
 }, {

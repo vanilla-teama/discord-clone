@@ -1,7 +1,5 @@
-import path from 'path';
-import { validationResult } from 'express-validator';
-import Server from '../models/server';
 import { Handler } from 'express';
+import Server from '../models/server';
 
 const getServers: Handler = (req, res, next) => {
   let docsCount = 0;
@@ -47,14 +45,7 @@ const getServer: Handler = (req, res, next) => {
 };
 
 const createServer: Handler = (req, res, next) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    const error = new Error('Validation failed, entered data is incorrect.');
-    // error.statusCode = 422;
-    throw error;
-  }
-
+  
   const server = new Server({
     name: req.body.name,
   });
@@ -97,12 +88,7 @@ const seedServers = (): void => {
 
 const updateServer: Handler = (req, res, next) => {
   const serverId = req.params.id;
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const error = new Error('Validation failed, entered data is incorrect.');
-    // error.statusCode = 422;
-    throw error;
-  }
+  
   Server.findById(serverId)
     .then((server) => {
       if (!server) {

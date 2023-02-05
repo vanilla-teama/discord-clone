@@ -8,4 +8,8 @@ router.post('/', userController.createUser);
 router.get('/:id', userController.getUser);
 router.patch('/:id', userController.updateUser);
 router.delete('/:id', userController.deleteUser);
+
+router.get('/:id/friends', userController.getFriends);
+router.patch('/:id/friends/', userController.updateFriends);
+
 export default router;
