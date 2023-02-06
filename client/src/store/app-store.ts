@@ -3,6 +3,7 @@ import { Chat, PersonalMessage, Server, User } from '../types/entities';
 import { AppOmit } from '../types/utils';
 import { RenderedPersonalMessage } from '../views/chats-main-content-view';
 import moment from '../lib/moment';
+import { http } from '../lib/http';
 
 export type IncomingPersonalMessage = AppOmit<PersonalMessage, 'id'>;
 
@@ -41,6 +42,8 @@ class AppStore {
   }
 
   async fetchUsers(): Promise<void> {
+    const users1 = await http.get('/users');
+    console.log(users1);
     this._users = users;
   }
 

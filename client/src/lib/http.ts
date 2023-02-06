@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import { API_URL } from '../constants';
 
 enum ErrorStatusCode {
   Unauthorized = 401,
@@ -39,7 +40,7 @@ class Http {
 
   initHttp() {
     const http = axios.create({
-      baseURL: 'https://api.example.com',
+      baseURL: API_URL,
       headers,
       withCredentials: true,
     });
