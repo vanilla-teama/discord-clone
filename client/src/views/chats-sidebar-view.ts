@@ -19,11 +19,11 @@ class ChatsSideBarView extends View {
 
     const $directMessagesContainer = $('div', 'chats-sidebar__dm-container');
     const $directMessagesTitle = $('div', 'chats-sidebar__dm-title');
-    $directMessagesTitle.textContent = 'Direct messages'
+    $directMessagesTitle.textContent = 'Direct messages';
     const $directMessagesAddBtn = $('span', 'chats-sidebar__dm-add');
-    $directMessagesAddBtn.dataset.name = "Create DM"
+    $directMessagesAddBtn.dataset.name = 'Create DM';
 
-    $directMessagesContainer.append($directMessagesTitle, $directMessagesAddBtn)
+    $directMessagesContainer.append($directMessagesTitle, $directMessagesAddBtn);
 
     this.$chatList = $('ul', 'chats-sidebar__list');
 
@@ -36,7 +36,7 @@ class ChatsSideBarView extends View {
     $userContainer.append($userIcon, $userName);
     $chatsUser.append($userContainer, $userSettings);
 
-    $chatsContainer.append($directMessagesContainer, this.$chatList, $chatsUser );
+    $chatsContainer.append($directMessagesContainer, this.$chatList, $chatsUser);
     this.$container.append($chatsContainer);
   }
 
@@ -46,7 +46,7 @@ class ChatsSideBarView extends View {
         ...chats.map(({ userId, userName }) => {
           const $item = $('li', 'chats-sidebar__item');
           const $itemBox = $('div', 'chats-sidebar__item-box');
-          const $itemIcon = $('div','chats-sidebar__icon');
+          const $itemIcon = $('div', 'chats-sidebar__icon');
           const $itemName = $('div', 'chats-sidebar__name');
           const $itemClose = $('span', 'chats-sidebar__close');
           $itemName.textContent = `${userName}`;
