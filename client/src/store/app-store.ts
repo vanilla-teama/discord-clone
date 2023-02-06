@@ -1,5 +1,10 @@
 import { chats, personalMessages, servers, users } from '../develop/data';
 import { Chat, PersonalMessage, Server, User } from '../types/entities';
+import { AppOmit } from '../types/utils';
+import { RenderedPersonalMessage } from '../views/chats-main-content-view';
+import moment from '../lib/moment';
+
+export type IncomingPersonalMessage = AppOmit<PersonalMessage, 'id'>;
 
 class AppStore {
   private static instance: AppStore;
@@ -44,17 +49,21 @@ class AppStore {
   }
 
   async fetchPersonalMessages(userId: User['id']): Promise<void> {
-    this._personalMessages = personalMessages.filter(
-      ({ fromUserId, toUserId }) => fromUserId === userId || toUserId === userId
-    );
+    // this._personalMessages = personalMessages.filter(
+    //   ({ fromUserId, toUserId }) => fromUserId === userId || toUserId === userId
+    // );
+    this._personalMessages = [];
   }
 
   async fetchServers(): Promise<void> {
     this._servers = servers;
   }
 
-  async addPersonalMessage(message: PersonalMessage): Promise<void> {
-    this._personalMessages = [...this._personalMessages, message];
+  async addPersonalMessage(message: IncomingPersonalMessage): Promise<void> {
+    const id =
+      this.personalMessages.length > 0 ? Number(this.personalMessages[this.personalMessages.length - 1].id) + 1 : 1;
+    this._personalMessages = [...this._personalMessages, { ...message, id: id.toString() }];
+    this.onPersonalMessageListChanged(this.getFormattedRenderedPersonalMessages());
   }
 
   deletePersonalMessage(id: PersonalMessage['id']): void {
@@ -68,6 +77,7 @@ class AppStore {
 
   onServerListChanged = (servers: Server[]) => {};
   onSigningIn = (data: FormData) => {};
+  onPersonalMessageListChanged = (messages: RenderedPersonalMessage[]) => {};
 
   async bindServerListChanged(callback: (servers: Server[]) => void) {
     this.onServerListChanged = callback;
@@ -75,6 +85,26 @@ class AppStore {
 
   bindSigningIn(callback: (data: FormData) => void) {
     this.onSigningIn = callback;
+  }
+
+  bindPersonalMessageListChanged = (callback: (messages: RenderedPersonalMessage[]) => void) => {
+    this.onPersonalMessageListChanged = callback;
+  };
+
+  private getFormattedRenderedPersonalMessages(): RenderedPersonalMessage[] {
+    return this.personalMessages.map(({ id, fromUserId, date, message }) => {
+      console.log(fromUserId, this.users);
+      const user = this.users.find((user) => user.id === fromUserId);
+      if (!user) {
+        throw Error('User not found');
+      }
+      return {
+        id,
+        username: user.name,
+        date: moment(date).calendar(),
+        message,
+      };
+    });
   }
 
   private constructor() {

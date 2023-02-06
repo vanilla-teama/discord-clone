@@ -7,6 +7,7 @@ import Router from './router';
 
 const routes = {
   start: StartScreen,
+  // start: StartScreen,
   chats: ChatsScreen,
   servers: ServersScreen,
 } as const;

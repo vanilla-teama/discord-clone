@@ -1,5 +1,6 @@
 import App from '../lib/app';
 import Controller from '../lib/controller';
+import Router, { RouteControllers } from '../lib/router';
 import { Dispatch } from '../types/types';
 import StartScreenView from '../views/start-screen-view';
 import SignInComponent from './sign-in';

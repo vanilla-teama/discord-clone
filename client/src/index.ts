@@ -1,6 +1,6 @@
 import App from './lib/app';
-import Router from './lib/router';
-import socket, { bindGlobalSocketEvents, bindSocketEvent } from './lib/socket';
+import Router, { RouteControllers } from './lib/router';
+import socket, { bindGlobalSocketEvents } from './lib/socket';
 import { CustomEvents } from './types/types';
 /*
   This is for debugging

@@ -1,8 +1,8 @@
-export type MongoEntityId = string;
+export type MongoObjectId = string;
 export type Timestamp = number;
 
 export interface MongoEntity {
-  id: MongoEntityId;
+  id: MongoObjectId;
 }
 
 export interface User extends MongoEntity {
@@ -13,15 +13,15 @@ export interface User extends MongoEntity {
 }
 
 export interface PersonalMessage extends MongoEntity {
-  fromUserId: MongoEntityId;
-  toUserId: MongoEntityId;
-  responseMessageId: MongoEntityId | null;
+  fromUserId: MongoObjectId;
+  toUserId: MongoObjectId;
+  responseMessageId: MongoObjectId | null;
   date: Timestamp;
   message: string;
 }
 
 export interface ChannelMessage extends MongoEntity {
-  responseMessageId: MongoEntityId;
+  responseMessageId: MongoObjectId;
   date: Timestamp;
   message: string;
 }
@@ -32,6 +32,6 @@ export interface Server extends MongoEntity {
 }
 
 export interface Chat {
-  userId: MongoEntityId;
+  userId: MongoObjectId;
   userName: string;
 }

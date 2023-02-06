@@ -24,8 +24,10 @@ class ChatsSideBarView extends View {
   displayChats(chats: Chat[]) {
     if (this.$chatList) {
       this.$chatList.append(
-        ...chats.map(({ userName }) => {
-          return userName;
+        ...chats.map(({ userId, userName }) => {
+          const $item = $('li', 'chats-list-item');
+          $item.textContent = userName;
+          return $item;
         })
       );
     }
