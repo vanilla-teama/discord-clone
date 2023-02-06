@@ -9,8 +9,10 @@ import personalMessagesRoutes from './routes/personal-messages';
 import chatsRoutes from './routes/chats';
 import channelsRoutes from './routes/channels';
 import { initSocket } from './socket';
+import cors from 'cors';
 
 const port: number = 3001;
+const whitelist = ['http://localhost:3000',]
 
 mongoose.set('strictQuery', true);
 
@@ -34,6 +36,16 @@ export class App {
     const app = express();
     app.use(express.static(path.join(__dirname, '../../client/dist')));
 
+    app.use(cors({
+      origin: function(origin, callback) {
+        if (origin && whitelist.indexOf(origin) !== -1) {
+          callback(null, true)
+        } else {
+          callback(new Error('Not allowed by CORS'))
+        }
+      },
+      credentials: true,
+    }));
     app.use(express.json());
 
     // TODO: add validation
