@@ -21,6 +21,10 @@ export const initSocket = (app: App) => {
     socket.on('userLoggedInClient', (data) => {
       socket.broadcast.emit('userLoggedInServer', data);
     });
+
+    socket.on('personalMessageClient', (data) => {
+      socket.broadcast.emit('personalMessageServer', data);
+    });
   });
 
   return io;

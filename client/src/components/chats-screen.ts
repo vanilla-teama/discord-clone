@@ -1,6 +1,6 @@
 import Controller from '../lib/controller';
 import Router, { RouteControllers } from '../lib/router';
-import { bindSocketEvent } from '../lib/socket';
+import { bindEvent } from '../lib/socket';
 import AppStore, { appStore } from '../store/app-store';
 import ChatsScreenView from '../views/chats-screen-view';
 import ChatsSideBarComponent from './chats-sidebar';
@@ -37,7 +37,7 @@ class ChatsScreen extends Controller<ChatsScreenView> {
   }
 
   bindSocketEvents() {
-    bindSocketEvent('userLoggedInServer', (data: unknown) => {
+    bindEvent('userLoggedInServer', (data: unknown) => {
       console.log('Chat Screen', 'user logged In', data);
     });
   }

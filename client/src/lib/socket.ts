@@ -1,12 +1,19 @@
 import { io } from 'socket.io-client';
+import { MongoObjectId } from '../types/entities';
+import { IncomingPersonalMessage } from '../store/app-store';
 
 type UserLoggedInOutDataClient = {
   id: string;
 };
 
-type UserLoggedInOutDataServer = {
-  id: string;
+type UserLoggedInOutDataServer = UserLoggedInOutDataClient;
+
+type PersonalMessageDataClient = {
+  fromUserId: MongoObjectId;
+  toUserId: MongoObjectId;
 };
+
+type PersonalMessageDataServer = PersonalMessageDataClient;
 
 export type SocketClientEvents = {
   userLoggedInClient: {
@@ -14,6 +21,9 @@ export type SocketClientEvents = {
   };
   userLoggedOutClient: {
     data: UserLoggedInOutDataClient;
+  };
+  personalMessageClient: {
+    data: PersonalMessageDataClient;
   };
 };
 
@@ -33,12 +43,17 @@ export type SocketServerEvents = {
   client: {
     data: unknown;
   };
+  personalMessageServer: {
+    data: PersonalMessageDataServer;
+  };
 };
 
 export type ValueOfSocketEvent<T extends SocketClientEventName> = T extends 'userLoggedInClient'
   ? SocketClientEvents['userLoggedInClient']
   : T extends 'userLoggedOutClient'
   ? SocketClientEvents['userLoggedOutClient']
+  : T extends 'personalMessageClient'
+  ? SocketClientEvents['personalMessageClient']
   : never;
 
 export type SocketClientEventName = keyof SocketClientEvents;
@@ -51,7 +66,7 @@ export const createSocketEvent = (name: SocketClientEventName, data: ValueOfSock
 
 const socket = io();
 
-export const bindSocketEvent = (
+export const bindEvent = (
   event: SocketClientEventName | SocketServerEventName,
   handler: (...args: unknown[]) => void
 ): void => {
@@ -59,21 +74,28 @@ export const bindSocketEvent = (
 };
 
 export const bindGlobalSocketEvents = () => {
-  bindSocketEvent('connect', () => {
+  bindEvent('connect', () => {
     console.log('connect');
   });
 
-  bindSocketEvent('disconnect', (message: unknown) => {
+  bindEvent('disconnect', (message: unknown) => {
     console.log('disconnect ' + message);
   });
 
-  bindSocketEvent('id', (id: unknown) => {
+  bindEvent('id', (id: unknown) => {
     console.log('socket id', id);
   });
 
-  bindSocketEvent('client', (clients: unknown) => {
+  bindEvent('client', (clients: unknown) => {
     console.log('on clients', clients);
   });
+};
+
+export const emitPersonalMessage = (message: IncomingPersonalMessage) => {
+  const event = createSocketEvent('personalMessageClient', {
+    data: { fromUserId: message.fromUserId, toUserId: message.toUserId },
+  });
+  socket.emit(event.name, event.data);
 };
 
 export default socket;

@@ -91,7 +91,7 @@ class AppStore {
     this.onPersonalMessageListChanged = callback;
   };
 
-  private getFormattedRenderedPersonalMessages(): RenderedPersonalMessage[] {
+  getFormattedRenderedPersonalMessages(): RenderedPersonalMessage[] {
     return this.personalMessages.map(({ id, fromUserId, date, message }) => {
       console.log(fromUserId, this.users);
       const user = this.users.find((user) => user.id === fromUserId);
