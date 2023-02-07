@@ -51,11 +51,6 @@ export type RouterLinkFunc<R = void> = (
   search?: RouterSearch
 ) => R;
 
-// controller: RouteControllers | '',
-//     action?: typeof controller extends RouteControllers ? Action<RouteControllers> : '',
-//     params?: UrlParams,
-//     search?: RouterSearch
-
 export type RouterSearch = Record<string, string>;
 
 export type UrlParams = (string | number)[];

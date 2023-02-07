@@ -1,7 +1,6 @@
 import App from './lib/app';
-import Router, { RouteControllers } from './lib/router';
+import Router from './lib/router';
 import socket, { bindGlobalSocketEvents } from './lib/socket';
-import { CustomEvents } from './types/types';
 /*
   This is for debugging
   We can use window.router to navigate through our app

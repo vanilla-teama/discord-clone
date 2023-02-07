@@ -48,7 +48,8 @@
       position: absolute;
       transition: all 0.3s ease 0s;
     }
-    &:hover::before {
+    &:hover::before,
+    &_active::before {
       height: 60%;
       top: 12px;
     }

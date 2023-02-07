@@ -17,11 +17,12 @@ class ChatsSideBarView extends View {
     super($root);
     this.$chatList = $('ul', 'chats-sidebar__list');
     this.$userBar = this.createUserBar();
+    this.chatListMap = new Map();
   }
 
   $chatList: HTMLUListElement;
   $userBar: HTMLDivElement;
-  chatListMap: Map<HTMLLIElement, { chat: Chat }> = new Map();
+  chatListMap: Map<HTMLLIElement, { chat: Chat }>;
 
   build(): void {
     const $chatsContainer = $('div', 'chats-sidebar__container');
