@@ -1,5 +1,5 @@
 import { chats, personalMessages, servers, users } from '../develop/data';
-import { Chat, PersonalMessage, Server, User } from '../types/entities';
+import { Chat, FetchedUser, PersonalMessage, Server, User } from '../types/entities';
 import { AppOmit } from '../types/utils';
 import { RenderedPersonalMessage } from '../views/chats-main-content-view';
 import moment from '../lib/moment';
@@ -42,19 +42,25 @@ class AppStore {
   }
 
   async fetchUsers(): Promise<void> {
-    const users1 = await http.get('/users');
-    console.log(users1);
-    this._users = users;
+    const response = await http.get<{ users: User[] | null }>('/users');
+    if (response) {
+      this._users = response.data.users || [];
+    } else {
+      this._users = users;
+    }
+    console.log(this._users);
   }
 
   async fetchChats(userId: User['id']): Promise<void> {
-    this._chats = chats;
+    const response = await http.get<{ chats: Chat[] }>(`/chats/users/${userId}`);
+    if (response) {
+      this._chats = response.data.chats || [];
+    } else {
+      this._chats = chats;
+    }
   }
 
   async fetchPersonalMessages(userId: User['id']): Promise<void> {
-    // this._personalMessages = personalMessages.filter(
-    //   ({ fromUserId, toUserId }) => fromUserId === userId || toUserId === userId
-    // );
     this._personalMessages = [];
   }
 

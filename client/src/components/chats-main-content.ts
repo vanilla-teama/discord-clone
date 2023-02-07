@@ -3,15 +3,15 @@ import Controller from '../lib/controller';
 import Router, { RouteControllers } from '../lib/router';
 import socket, { bindEvent as bindSocketEvent, createSocketEvent, emitPersonalMessage } from '../lib/socket';
 import { IncomingPersonalMessage, appStore } from '../store/app-store';
-import { PersonalMessage } from '../types/entities';
+import { Chat, PersonalMessage } from '../types/entities';
 import ChatsMainContentView, { RenderedPersonalMessage } from '../views/chats-main-content-view';
 
 class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
   constructor() {
     super(new ChatsMainContentView());
-    if (!this.getOpponentId()) {
-      Router.push(RouteControllers.Chats, '', ['63dd3d9da1340145e9b74055']);
-    }
+    // if (!this.getOpponentId()) {
+    //   Router.push(RouteControllers.Chats, '', ['63dd3d9da1340145e9b74055']);
+    // }
   }
 
   async init(): Promise<void> {
@@ -55,7 +55,7 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
 
   private getOpponentId(): string | null {
     const params = App.getRouter().getParams();
-    return (params[0] as PersonalMessage['toUserId']) || null;
+    return (params[0] as Chat['userId']) || null;
   }
 }
 

@@ -5,23 +5,30 @@ export const users: User[] = [
   {
     id: '63dd3d9da1340145e9b74055',
     name: 'Hlib Hodovaniuk',
+    password: '1111333',
     email: 'email1@gmail.com',
-    password: '1111',
     phone: '+380991234567',
   },
   {
     id: '63dd3dd9938e35dad6409e12',
     name: 'Alexander Chornyi',
-    email: 'email2@gmail.com',
     password: '1111',
-    phone: '+380991234567',
+    email: 'email2@gmail.com',
+    phone: '+380992234567',
   },
   {
     id: '63dd3de6938e35dad6409e14',
     name: 'Alexander Kiroi',
-    email: 'email3@gmail.com',
     password: '1111',
-    phone: '+380991234567',
+    email: 'email3@gmail.com',
+    phone: '+380993234567',
+  },
+  {
+    id: '63dede6beac45c545ad1e616',
+    name: 'Serhii Serdiuk',
+    password: '1111',
+    email: 'email4@gmail.com',
+    phone: '+380994234567',
   },
 ];
 

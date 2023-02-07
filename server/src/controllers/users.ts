@@ -1,5 +1,6 @@
 import { Handler } from 'express';
 import User, { validateUserField } from '../models/user';
+import { FetchedUser, userDTO } from '../utils/dto';
 
 const getUsers: Handler = (req, res, next) => {
   let docsCount = 0;
@@ -11,10 +12,11 @@ const getUsers: Handler = (req, res, next) => {
       return User.find();
     })
     .then((users) => {
+      const exportedUsers = users.map((u) => userDTO(u));
       res.status(200).json({
         message: 'Fetched users successfully.',
         count: docsCount,
-        users,
+        users: exportedUsers,
       });
     })
     .catch((err) => {
@@ -37,10 +39,9 @@ const createUser: Handler = (req, res, next) => {
   user
     .save()
     .then((result) => {
-      console.log(result);
       res.status(201).json({
         message: 'User created successfully!',
-        server: user,
+        user: userDTO(user),
       });
     })
     .catch((err) => {
@@ -61,7 +62,7 @@ const getUser: Handler = (req, res, next) => {
         //error.statusCode = 404;
         throw error;
       }
-      res.status(200).json({ messageInfo: 'User fetched.', user });
+      res.status(200).json({ messageInfo: 'User fetched.', user: userDTO(user) });
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -92,7 +93,7 @@ const updateUser: Handler = (req, res, next) => {
       return user.save();
     })
     .then((user) => {
-      res.status(200).json({ messageInfo: 'User updated!', user });
+      res.status(200).json({ messageInfo: 'User updated!', user: userDTO(user) });
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -136,7 +137,8 @@ const getFriends: Handler = (req, res, next) => {
         // error.statusCode = 404;
         throw error;
       }
-      res.status(200).json({ messageInfo: 'Friends fetched.', friends: user.friends });
+      const exportedFriends = user.friends.map((f) => userDTO(f as unknown as FetchedUser));
+      res.status(200).json({ messageInfo: 'Friends fetched.', friends: exportedFriends });
     })
 }
 

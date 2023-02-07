@@ -1,7 +1,8 @@
 import Controller from '../lib/controller';
 import Router, { RouteControllers } from '../lib/router';
 import { bindEvent } from '../lib/socket';
-import AppStore, { appStore } from '../store/app-store';
+import { appStore } from '../store/app-store';
+import { Chat } from '../types/entities';
 import ChatsScreenView from '../views/chats-screen-view';
 import ChatsSideBarComponent from './chats-sidebar';
 import MainComponent from './main';
@@ -17,11 +18,13 @@ class ChatsScreen extends Controller<ChatsScreenView> {
   }
 
   async init(): Promise<void> {
-    const appStore = AppStore.Instance;
+    if (!appStore.user) {
+      throw Error('User is not defined');
+    }
     await appStore.fetchUsers();
     await appStore.fetchServers();
-    await appStore.fetchPersonalMessages('1');
-    await appStore.fetchChats('1');
+    await appStore.fetchPersonalMessages(appStore.user.id);
+    await appStore.fetchChats(appStore.user.id);
     // Render Layout
     await new Screen().init();
 
@@ -34,12 +37,21 @@ class ChatsScreen extends Controller<ChatsScreenView> {
     new MainComponent().init();
 
     this.bindSocketEvents();
+    this.maybeRedirectToFirstChat(appStore.chats);
   }
 
   bindSocketEvents() {
     bindEvent('userLoggedInServer', (data: unknown) => {
       console.log('Chat Screen', 'user logged In', data);
     });
+  }
+
+  private maybeRedirectToFirstChat(chats: Chat[] | null | undefined): void {
+    console.log(chats);
+    if (!chats || chats.length === 0) {
+      return;
+    }
+    Router.push(RouteControllers.Chats, '', [chats[0].userId]);
   }
 }
 

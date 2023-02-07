@@ -1,7 +1,7 @@
 import mongoose, { ValidateFn, Types } from 'mongoose';
 const Schema = mongoose.Schema;
 
-export interface UserSchema {
+export interface IUser {
   name: string;
   password: string;
   email: string;
@@ -9,7 +9,12 @@ export interface UserSchema {
   friends: Types.ObjectId[];
 }
 
-const userSchema = new Schema<UserSchema>({
+export interface IChat {
+  userId: Types.ObjectId;
+  username: string;
+}
+
+const userSchema = new Schema<IUser>({
   name: {
     type: String,
   },
@@ -26,15 +31,15 @@ const userSchema = new Schema<UserSchema>({
 });
 
 export const validateUserField = <
-  F extends keyof UserSchema,
+  F extends keyof IUser,
   R = F extends 'name'
-    ? UserSchema['name']
+    ? IUser['name']
     : F extends 'password'
-    ? UserSchema['password']
+    ? IUser['password']
     : F extends 'email'
-    ? UserSchema['email']
+    ? IUser['email']
     : F extends 'phone'
-    ? UserSchema['phone']
+    ? IUser['phone']
     : F extends 'friends'
     ? string[]
     : never

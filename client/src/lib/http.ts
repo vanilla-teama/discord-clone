@@ -82,6 +82,9 @@ class Http {
   // Handle global app errors
   // We can handle generic app errors depending on the status code
   private handleError(error: AxiosError) {
+    if (!error) {
+      return;
+    }
     const { status } = error;
 
     switch (status) {

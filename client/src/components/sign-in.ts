@@ -15,7 +15,7 @@ class SignInComponent extends Controller<SignInView> {
     this.props = props;
 
     // Initiatializing user to skip the auth screen
-    appStore.user = users[0];
+    appStore.user = users[1];
     if (appStore.isAuth) {
       this.onSignedIn();
     }

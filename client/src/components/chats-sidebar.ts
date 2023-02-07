@@ -11,11 +11,15 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
   async init(): Promise<void> {
     await appStore.fetchPersonalMessages('1');
     this.view.render();
+    this.onInit(appStore.user);
     this.onChatListChanged(appStore.chats);
   }
 
-  onChatListChanged = (chats: Chat[]) => {
-    console.log(chats);
+  onInit = (user: User | null): void => {
+    this.view.displayUser(user);
+  };
+
+  onChatListChanged = (chats: Chat[]): void => {
     this.view.displayChats(chats);
   };
 }

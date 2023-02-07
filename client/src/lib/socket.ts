@@ -48,18 +48,10 @@ export type SocketServerEvents = {
   };
 };
 
-export type ValueOfSocketEvent<T extends SocketClientEventName> = T extends 'userLoggedInClient'
-  ? SocketClientEvents['userLoggedInClient']
-  : T extends 'userLoggedOutClient'
-  ? SocketClientEvents['userLoggedOutClient']
-  : T extends 'personalMessageClient'
-  ? SocketClientEvents['personalMessageClient']
-  : never;
-
 export type SocketClientEventName = keyof SocketClientEvents;
 export type SocketServerEventName = keyof SocketServerEvents;
 
-export const createSocketEvent = (name: SocketClientEventName, data: ValueOfSocketEvent<typeof name>) => ({
+export const createSocketEvent = <K extends SocketClientEventName>(name: K, data: SocketClientEvents[K]) => ({
   name,
   data,
 });
@@ -75,19 +67,19 @@ export const bindEvent = (
 
 export const bindGlobalSocketEvents = () => {
   bindEvent('connect', () => {
-    console.log('connect');
+    // console.log('connect');
   });
 
   bindEvent('disconnect', (message: unknown) => {
-    console.log('disconnect ' + message);
+    // console.log('disconnect ' + message);
   });
 
   bindEvent('id', (id: unknown) => {
-    console.log('socket id', id);
+    // console.log('socket id', id);
   });
 
   bindEvent('client', (clients: unknown) => {
-    console.log('on clients', clients);
+    // console.log('on clients', clients);
   });
 };
 

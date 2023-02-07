@@ -12,6 +12,15 @@ export interface User extends MongoEntity {
   phone: string;
 }
 
+export interface FetchedUser {
+  _id: string;
+  name: string;
+  password: string;
+  email: string;
+  phone: string;
+  friends: string[];
+}
+
 export interface PersonalMessage extends MongoEntity {
   fromUserId: MongoObjectId;
   toUserId: MongoObjectId;

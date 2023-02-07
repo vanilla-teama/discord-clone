@@ -1,6 +1,7 @@
 import { Handler } from 'express';
 import PersonalMessage from '../models/personal-message';
 import User from '../models/user';
+import { chatDTO } from '../utils/dto';
 
 const getChats: Handler = (req, res, next) => {
   const userId = req.params.userId;
@@ -14,15 +15,19 @@ const getChats: Handler = (req, res, next) => {
     .select('fromUserId toUserId')
     .then((chats) => {
       const userIds = [
-        ...new Set(chats.map(({ fromUserId, toUserId }) => [fromUserId.toString(), toUserId.toString()]).flat()),
-      ].filter((id) => id !== userId);
+        ...new Set(chats.map(({ fromUserId, toUserId }) => [fromUserId, toUserId]).flat()),
+      ].filter((id) => id.toString() !== userId);
 
-      User.findById(userIds)
+      User.find({
+        _id: {
+          $in: userIds,
+        }
+      })
         .select('name')
         .then((users) => {
           res.status(200).json({
             message: 'Fetched chats successfully.',
-            chats: users,
+            chats: users.map((u) => chatDTO(u)),
           });
         });
     })

@@ -12,16 +12,6 @@ const defaultRoute = Router.createLink('');
 
 bindGlobalSocketEvents();
 
-document.addEventListener(CustomEvents.BEFOREROUTERPUSH, (event) => {
-  console.log('before push');
-  console.log(event);
-});
-
-document.addEventListener(CustomEvents.AFTERROUTERPUSH, (event) => {
-  console.log('after push');
-  console.log(event);
-});
-
 (function initialize() {
   window.history.replaceState(Router.createState(defaultRoute), '', defaultRoute);
 })();

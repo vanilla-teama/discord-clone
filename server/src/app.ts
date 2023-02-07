@@ -12,7 +12,7 @@ import { initSocket } from './socket';
 import cors from 'cors';
 
 const port: number = 3001;
-const whitelist = ['http://localhost:3000',]
+const whitelist = ['http://localhost:3000', 'http://localhost:8005']
 
 mongoose.set('strictQuery', true);
 
@@ -41,7 +41,8 @@ export class App {
         if (origin && whitelist.indexOf(origin) !== -1) {
           callback(null, true)
         } else {
-          callback(new Error('Not allowed by CORS'))
+          callback(null, true);
+          // callback(new Error('Not allowed by CORS'))
         }
       },
       credentials: true,
