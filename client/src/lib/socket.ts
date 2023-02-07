@@ -1,7 +1,8 @@
-import { io } from 'socket.io-client';
+import { ManagerOptions, io } from 'socket.io-client';
 import { MongoObjectId } from '../types/entities';
 import { IncomingPersonalMessage } from '../store/app-store';
 import { FallbackToUntypedListener } from '@socket.io/component-emitter';
+import { SocketOptions } from 'engine.io-client';
 
 type UserLoggedInOutDataClient = {
   id: string;
@@ -60,7 +61,12 @@ export const createSocketEvent = <K extends SocketClientEventName>(name: K, data
   data,
 });
 
-const socket = io({ reconnection: false });
+const socketOptions: Partial<ManagerOptions & SocketOptions> | undefined = {
+  reconnection: false,
+  reconnectionAttempts: 1,
+  reconnectionDelay: 100,
+};
+const socket = io(socketOptions);
 
 export const bindEvent = <K extends SocketClientEventName | SocketServerEventName>(
   event: K,
