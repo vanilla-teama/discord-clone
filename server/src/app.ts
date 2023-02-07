@@ -8,6 +8,7 @@ import usersRoutes from './routes/users';
 import personalMessagesRoutes from './routes/personal-messages';
 import chatsRoutes from './routes/chats';
 import channelsRoutes from './routes/channels';
+import testRoutes from './routes/test';
 import { initSocket } from './socket';
 import cors from 'cors';
 
@@ -50,6 +51,7 @@ export class App {
     app.use(express.json());
 
     // TODO: add validation
+    app.use('/test', testRoutes);
     app.use('/servers', serversRoutes);
     app.use('/users', usersRoutes);
     app.use('/personal-messages', personalMessagesRoutes);

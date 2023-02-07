@@ -22,14 +22,23 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
     this.view.render();
 
     if (this.chat) {
+      await this.fetchMessages();
       this.onMessageListChange(appStore.getFormattedRenderedPersonalMessages());
       this.view.bindMessageEvent(this.handleSendMessage);
-      appStore.bindPersonalMessageListChanged(this.onMessageListChange);
+      // appStore.bindPersonalMessageListChanged(this.onMessageListChange);
       this.onSocketPersonalMessage();
     }
   }
 
+  private async fetchMessages(): Promise<void> {
+    if (!appStore.user || !this.chat) {
+      return;
+    }
+    await appStore.fetchPersonalMessages(appStore.user.id, this.chat.userId);
+  }
+
   onMessageListChange = (messages: RenderedPersonalMessage[]) => {
+    console.log(messages);
     this.view.displayMessages(messages);
   };
 
@@ -54,7 +63,7 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       if (!this.chat) {
         return;
       }
-      // await appStore.fetchPersonalMessages();
+      await this.fetchMessages();
       this.onMessageListChange(appStore.getFormattedRenderedPersonalMessages());
     });
   }

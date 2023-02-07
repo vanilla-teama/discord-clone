@@ -33,9 +33,10 @@ const injectToken = (config: AxiosRequestConfig = {}): AxiosRequestConfig => {
 
 class Http {
   private instance: AxiosInstance | null = null;
+  connected = false;
 
   private get http(): AxiosInstance {
-    return this.instance != null ? this.instance : this.initHttp();
+    return this.instance ? this.instance : this.initHttp();
   }
 
   initHttp() {
@@ -47,15 +48,24 @@ class Http {
 
     // http.interceptors.request.use(injectToken, (error: AxiosError) => Promise.reject(error));
 
+    http.interceptors.request.use((config) => {
+      console.log(config);
+      if (config.url !== '/test' && !this.connected) {
+        throw Error('NO CONNECTION!');
+      }
+      return config;
+    });
+
     http.interceptors.response.use(
       (response) => response,
-      (error) => {
+      (error: AxiosError) => {
         const { response } = error;
         return this.handleError(response);
       }
     );
 
     this.instance = http;
+
     return http;
   }
 
@@ -79,9 +89,20 @@ class Http {
     return this.http.delete<T, R>(url, config);
   }
 
+  async test() {
+    await this.http
+      .head('/test')
+      .then((res) => {
+        if (res) {
+          this.connected = true;
+        }
+      })
+      .catch((error) => console.log(error));
+  }
+
   // Handle global app errors
   // We can handle generic app errors depending on the status code
-  private handleError(error: AxiosError) {
+  private handleError(error: AxiosResponse | undefined) {
     if (!error) {
       return;
     }

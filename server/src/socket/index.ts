@@ -23,7 +23,8 @@ export const initSocket = (app: App) => {
     });
 
     socket.on('personalMessageClient', (data) => {
-      socket.broadcast.emit('personalMessageServer', data);
+      // socket.broadcast.emit('personalMessageServer', data);
+      io.emit('personalMessageServer', data);
     });
   });
 

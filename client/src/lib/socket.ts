@@ -38,6 +38,9 @@ export type SocketServerEvents = {
   disconnect: {
     data: unknown;
   };
+  connect_error: {
+    data: unknown;
+  };
   id: {
     data: unknown;
   };
@@ -57,14 +60,7 @@ export const createSocketEvent = <K extends SocketClientEventName>(name: K, data
   data,
 });
 
-const socket = io();
-
-// export const bindEvent = (
-//   event: SocketClientEventName | SocketServerEventName,
-//   handler: (...args: unknown[]) => void
-// ): void => {
-//   socket.on(event, handler);
-// };
+const socket = io({ reconnection: false });
 
 export const bindEvent = <K extends SocketClientEventName | SocketServerEventName>(
   event: K,
@@ -93,6 +89,11 @@ export const bindGlobalSocketEvents = () => {
   bindEvent('connect', () => {});
 
   bindEvent('disconnect', () => {});
+
+  bindEvent('connect_error', () => {
+    // TODO: Handle this error
+    console.log('connect error');
+  });
 
   bindEvent('id', (id: unknown) => {});
 

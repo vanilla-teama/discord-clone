@@ -60,8 +60,12 @@ class AppStore {
   }
 
   async fetchPersonalMessages(userOneId: string, userTwoId: string): Promise<void> {
-    const response = await http.get(`/chats/messages/${userOneId}/${userTwoId}`);
-    this._personalMessages = [];
+    const response = await http.get<{ messages: PersonalMessage[] }>(`/chats/messages/${userOneId}/${userTwoId}`);
+    if (response) {
+      this._personalMessages = response.data.messages || [];
+    } else {
+      this._personalMessages = [];
+    }
   }
 
   async fetchServers(): Promise<void> {
@@ -69,9 +73,7 @@ class AppStore {
   }
 
   async addPersonalMessage(message: IncomingPersonalMessage): Promise<void> {
-    const id =
-      this.personalMessages.length > 0 ? Number(this.personalMessages[this.personalMessages.length - 1].id) + 1 : 1;
-    this._personalMessages = [...this._personalMessages, { ...message, id: id.toString() }];
+    await http.post('/personal-messages', message).catch((error) => console.error(error));
     this.onPersonalMessageListChanged(this.getFormattedRenderedPersonalMessages());
   }
 

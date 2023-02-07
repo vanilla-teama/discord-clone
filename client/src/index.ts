@@ -1,4 +1,5 @@
 import App from './lib/app';
+import { http } from './lib/http';
 import Router from './lib/router';
 import socket, { bindGlobalSocketEvents } from './lib/socket';
 /*
@@ -16,6 +17,7 @@ bindGlobalSocketEvents();
 })();
 
 async function main() {
+  await http.test();
   await App.run();
   socket.emit('run');
 }
