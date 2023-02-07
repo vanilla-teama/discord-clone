@@ -73,7 +73,7 @@ class ChatsSideBarView extends View {
     $userContainer.append($userIcon, $userName);
     $userBar.append($userContainer, $userSettings);
 
-    $userSettings.onclick = () => Router.push(RouteControllers.Settings, '', [SettingsParams.Account]);
+    $userSettings.onclick = () => Router.push(RouteControllers.Settings, '', [SettingsParams.Language]);
     return $userBar;
   }
 
