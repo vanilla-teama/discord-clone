@@ -36,7 +36,6 @@ class App {
 
         if (!prevController || !(prevController instanceof routes[controller])) {
           App.controller = new routes[controller]();
-          console.log('App.run', App.controller);
           await App.controller.init();
         }
       }

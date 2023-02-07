@@ -8,6 +8,7 @@ class MainView extends View {
   static readonly classNames = {};
 
   static $appbar: HTMLDivElement | null = null;
+  static $mainContainer: HTMLDivElement | null = null;
   static $mainContent: HTMLDivElement | null = null;
   static $infobar: HTMLDivElement | null = null;
 
@@ -20,10 +21,12 @@ class MainView extends View {
   }
   build(): void {
     MainView.$appbar = $('div', 'app-bar');
+    MainView.$mainContainer = $('div', 'main-container');
     MainView.$mainContent = $('div', 'main-content');
     MainView.$infobar = $('div', 'info-bar');
+    MainView.$mainContainer.append(MainView.$mainContent, MainView.$infobar);
 
-    this.$container.append(MainView.$appbar, MainView.$mainContent, MainView.$infobar);
+    this.$container.append(MainView.$appbar, MainView.$mainContainer);
   }
 }
 
