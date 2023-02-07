@@ -48,7 +48,6 @@ class AppStore {
     } else {
       this._users = users;
     }
-    console.log(this._users);
   }
 
   async fetchChats(userId: User['id']): Promise<void> {
@@ -60,7 +59,8 @@ class AppStore {
     }
   }
 
-  async fetchPersonalMessages(userId: User['id']): Promise<void> {
+  async fetchPersonalMessages(userOneId: string, userTwoId: string): Promise<void> {
+    const response = await http.get(`/chats/messages/${userOneId}/${userTwoId}`);
     this._personalMessages = [];
   }
 
@@ -102,7 +102,6 @@ class AppStore {
 
   getFormattedRenderedPersonalMessages(): RenderedPersonalMessage[] {
     return this.personalMessages.map(({ id, fromUserId, date, message }) => {
-      console.log(fromUserId, this.users);
       const user = this.users.find((user) => user.id === fromUserId);
       if (!user) {
         throw Error('User not found');

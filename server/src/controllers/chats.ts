@@ -57,4 +57,27 @@ const deleteChat: Handler = (req, res, next) => {
   });
 };
 
-export default { getChats, deleteChat };
+const getChatMessages: Handler = (req, res, next) => {
+  const { userOneId, userTwoId } = req.params;
+
+  PersonalMessage.find({
+    $or: [
+      { $and: [{ fromUserId: userOneId }, { toUserId: userTwoId }] },
+      { $and: [{ fromUserId: userTwoId }, { toUserId: userOneId }] }
+    ],
+  })
+    .then((messages) => {
+      res.status(200).json({
+        message: 'Fetched chat messages successfully.',
+        messages: messages.map((m) => m),
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+export default { getChats, deleteChat, getChatMessages };

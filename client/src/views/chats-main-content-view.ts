@@ -1,5 +1,5 @@
 import View from '../lib/view';
-import { MongoObjectId, PersonalMessage } from '../types/entities';
+import { Chat, MongoObjectId } from '../types/entities';
 import { $ } from '../utils/functions';
 import MainView from './main-view';
 
@@ -16,17 +16,18 @@ class ChatsMainContentView extends View {
   get messageText() {
     return this.$chatInput.value;
   }
-
+  chat: Chat | null;
   $chatInput: HTMLInputElement;
   $messageList: HTMLUListElement;
   messagesRecord: Record<string, HTMLLIElement> = {};
 
-  constructor() {
+  constructor(chat: Chat | null) {
     const $root = MainView.$mainContent;
     if (!$root) {
       ChatsMainContentView.throwNoRootInTheDomError('Main-content');
     }
     super($root);
+    this.chat = chat;
     this.$chatInput = $('input', 'chat__input');
     this.$messageList = $('ul', 'chat__messages-list');
   }
@@ -34,7 +35,11 @@ class ChatsMainContentView extends View {
   build(): void {
     const $container = $('div', 'chat');
 
-    $container.append(this.$messageList, this.$chatInput);
+    if (this.chat) {
+      $container.append(this.$messageList, this.$chatInput);
+    } else {
+      $container.append('CHATS NOT FOUND!!!!!!!!!!!!!');
+    }
 
     this.$container.append($container);
   }

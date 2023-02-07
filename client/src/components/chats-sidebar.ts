@@ -13,7 +13,9 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
   }
 
   async init(): Promise<void> {
-    await appStore.fetchPersonalMessages('1');
+    if (!appStore.user) {
+      throw Error('User is not defined');
+    }
     this.view.render();
     this.onInit(appStore.user);
     this.onChatListChanged(appStore.chats);

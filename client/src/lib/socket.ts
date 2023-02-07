@@ -1,6 +1,7 @@
 import { io } from 'socket.io-client';
 import { MongoObjectId } from '../types/entities';
 import { IncomingPersonalMessage } from '../store/app-store';
+import { FallbackToUntypedListener } from '@socket.io/component-emitter';
 
 type UserLoggedInOutDataClient = {
   id: string;
@@ -58,29 +59,44 @@ export const createSocketEvent = <K extends SocketClientEventName>(name: K, data
 
 const socket = io();
 
-export const bindEvent = (
-  event: SocketClientEventName | SocketServerEventName,
-  handler: (...args: unknown[]) => void
+// export const bindEvent = (
+//   event: SocketClientEventName | SocketServerEventName,
+//   handler: (...args: unknown[]) => void
+// ): void => {
+//   socket.on(event, handler);
+// };
+
+export const bindEvent = <K extends SocketClientEventName | SocketServerEventName>(
+  event: K,
+  handler: FallbackToUntypedListener<
+    K extends 'connect' | 'disconnect' | 'connect_error'
+      ? () => void
+      : K extends string
+      ? (
+          data: K extends SocketClientEventName
+            ? SocketClientEvents[K]['data']
+            : K extends SocketServerEventName
+            ? SocketServerEvents[K]['data']
+            : unknown
+        ) => void
+      : never
+  >
 ): void => {
   socket.on(event, handler);
 };
 
+export const removeSocketEvent = <K extends SocketClientEventName | SocketServerEventName>(event: K): void => {
+  socket.removeListener(event);
+};
+
 export const bindGlobalSocketEvents = () => {
-  bindEvent('connect', () => {
-    // console.log('connect');
-  });
+  bindEvent('connect', () => {});
 
-  bindEvent('disconnect', (message: unknown) => {
-    // console.log('disconnect ' + message);
-  });
+  bindEvent('disconnect', () => {});
 
-  bindEvent('id', (id: unknown) => {
-    // console.log('socket id', id);
-  });
+  bindEvent('id', (id: unknown) => {});
 
-  bindEvent('client', (clients: unknown) => {
-    // console.log('on clients', clients);
-  });
+  bindEvent('client', (clients: unknown) => {});
 };
 
 export const emitPersonalMessage = (message: IncomingPersonalMessage) => {

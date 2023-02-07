@@ -24,6 +24,7 @@ class App {
   }
 
   static async run(): Promise<void> {
+    App.beforeRun();
     App.router = new Router();
 
     const controller = App.router.getController();
@@ -41,6 +42,10 @@ class App {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  static beforeRun() {
+    ChatsScreen.bindRouteChanged();
   }
 }
 

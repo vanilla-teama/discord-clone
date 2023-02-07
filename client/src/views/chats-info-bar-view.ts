@@ -1,22 +1,29 @@
 import View from '../lib/view';
+import { Chat } from '../types/entities';
 import { $ } from '../utils/functions';
 import MainView from './main-view';
 
 class ChatsInfoBarView extends View {
   static readonly classNames = {};
 
-  constructor() {
+  chat: Chat | null;
+
+  constructor(chat: Chat | null) {
     const $root = MainView.$infobar;
     if (!$root) {
       ChatsInfoBarView.throwNoRootInTheDomError('Info-bar');
     }
     super($root);
+    this.chat = chat;
   }
   build(): void {
     const $container = $('div', 'main');
-    $container.textContent = 'I AM APP-BAR!';
 
-    this.$container.append('I AM CHATS INFO-BAR!');
+    if (this.chat) {
+      this.$container.append('I AM CHATS INFO-BAR!');
+    } else {
+      this.$container.append('NO CHAT FOR INFOBAR!');
+    }
   }
 }
 

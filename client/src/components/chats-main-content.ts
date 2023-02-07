@@ -1,24 +1,27 @@
 import App from '../lib/app';
 import Controller from '../lib/controller';
-import Router, { RouteControllers } from '../lib/router';
-import socket, { bindEvent as bindSocketEvent, createSocketEvent, emitPersonalMessage } from '../lib/socket';
+import socket, { bindEvent as bindSocketEvent, emitPersonalMessage, removeSocketEvent } from '../lib/socket';
 import { IncomingPersonalMessage, appStore } from '../store/app-store';
-import { Chat, PersonalMessage } from '../types/entities';
+import { Chat } from '../types/entities';
 import ChatsMainContentView, { RenderedPersonalMessage } from '../views/chats-main-content-view';
+import ChatsScreen from './chats-screen';
 
 class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
   constructor() {
-    super(new ChatsMainContentView());
-    // if (!this.getOpponentId()) {
-    //   Router.push(RouteControllers.Chats, '', ['63dd3d9da1340145e9b74055']);
-    // }
+    super(new ChatsMainContentView(ChatsScreen.chat));
+    this.chat = ChatsScreen.chat;
   }
 
+  chat: Chat | null;
+
   async init(): Promise<void> {
+    if (!appStore.user) {
+      throw Error('User is not defined');
+    }
+
     this.view.render();
 
-    const opponentId = this.getOpponentId();
-    if (appStore.user && opponentId) {
+    if (this.chat) {
       this.onMessageListChange(appStore.getFormattedRenderedPersonalMessages());
       this.view.bindMessageEvent(this.handleSendMessage);
       appStore.bindPersonalMessageListChanged(this.onMessageListChange);
@@ -31,13 +34,12 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
   };
 
   handleSendMessage = async (messageText: string): Promise<void> => {
-    const opponentId = this.getOpponentId();
-    if (!appStore.user || !opponentId) {
+    if (!appStore.user || !this.chat) {
       return;
     }
     const message: IncomingPersonalMessage = {
       fromUserId: appStore.user.id,
-      toUserId: opponentId,
+      toUserId: this.chat.userId,
       date: Date.now(),
       responseMessageId: null,
       message: messageText,
@@ -47,15 +49,14 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
   };
 
   onSocketPersonalMessage() {
-    bindSocketEvent('personalMessageServer', (data) => {
-      console.log(data);
+    removeSocketEvent('personalMessageServer');
+    bindSocketEvent('personalMessageServer', async ({ fromUserId, toUserId }) => {
+      if (!this.chat) {
+        return;
+      }
+      // await appStore.fetchPersonalMessages();
       this.onMessageListChange(appStore.getFormattedRenderedPersonalMessages());
     });
-  }
-
-  private getOpponentId(): string | null {
-    const params = App.getRouter().getParams();
-    return (params[0] as Chat['userId']) || null;
   }
 }
 
