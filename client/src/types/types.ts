@@ -13,3 +13,7 @@ export type CustomEventData = {
   [CustomEvents.BEFOREROUTERPUSH]: RouterPushEventDetails;
   [CustomEvents.AFTERROUTERPUSH]: RouterPushEventDetails;
 };
+
+export interface TypeWithArgs<T, A extends unknown[]> extends Function {
+  new (...args: A): T;
+}

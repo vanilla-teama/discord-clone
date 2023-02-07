@@ -1,18 +1,19 @@
 import ChatsScreen from '../components/chats-screen';
-import Screen from '../components/screen';
 import ServersScreen from '../components/servers-screen';
+import SettingsScreen from '../components/settings-screen';
 import StartScreen from '../components/start-screen';
+import { Construct } from '../types/utils';
 import { isKeyOf } from '../utils/functions';
 import Router from './router';
 
 const routes = {
   start: StartScreen,
-  // start: StartScreen,
   chats: ChatsScreen,
   servers: ServersScreen,
+  settings: SettingsScreen,
 } as const;
 
-export type AppControllerType = ChatsScreen | ServersScreen | StartScreen;
+export type AppControllerType = ChatsScreen | ServersScreen | StartScreen | SettingsScreen;
 
 class App {
   private static router: Router;
