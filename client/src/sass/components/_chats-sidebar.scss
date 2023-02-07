@@ -61,7 +61,8 @@
     border-radius: 7px;
     transition: all 0.3s ease 0s;
 
-    &:hover {
+    &:hover,
+    &_active {
       background-color: var(--background-color-gray-hover);
       cursor: pointer;
 

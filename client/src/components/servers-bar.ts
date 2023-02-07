@@ -3,7 +3,8 @@ import Controller from '../lib/controller';
 import { RouteControllers } from '../lib/router';
 import { appStore } from '../store/app-store';
 import { Server } from '../types/entities';
-import { CustomEvent, CustomEvents } from '../types/types';
+import { CustomEventData, CustomEvents } from '../types/types';
+import { getTypedCustomEvent } from '../utils/functions';
 import ServersBarView from '../views/servers-bar-view';
 
 class ServersBarComponent extends Controller<ServersBarView> {
@@ -39,7 +40,8 @@ class ServersBarComponent extends Controller<ServersBarView> {
     document.addEventListener(CustomEvents.AFTERROUTERPUSH, (event) => {
       const {
         detail: { controller, params },
-      } = event as unknown as CustomEvent[CustomEvents.AFTERROUTERPUSH];
+      } = getTypedCustomEvent(CustomEvents.AFTERROUTERPUSH, event);
+
       if (controller === RouteControllers.Servers && params.length > 0) {
         this.view.toggleActiveStatus(params[0]);
       }

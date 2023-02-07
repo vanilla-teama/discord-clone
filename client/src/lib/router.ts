@@ -1,4 +1,4 @@
-import { CustomEvents } from '../types/types';
+import { CustomEvents, CustomEventData } from '../types/types';
 import App from './app';
 
 export type RouterState = {
@@ -174,7 +174,7 @@ class Router {
       router.getParams(),
       router.getSearch(),
     ];
-    const event = new CustomEvent(CustomEvents.AFTERROUTERPUSH, {
+    const event = new CustomEvent<CustomEventData[CustomEvents.AFTERROUTERPUSH]>(CustomEvents.AFTERROUTERPUSH, {
       detail: { controller, action, params, search },
       bubbles: true,
     });

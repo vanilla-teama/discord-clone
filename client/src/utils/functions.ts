@@ -1,3 +1,4 @@
+import { CustomEventData, CustomEvents } from '../types/types';
 import { Construct } from '../types/utils';
 
 export const capitalize = (value: string) => value.slice(0, 1).toUpperCase() + value.slice(1);
@@ -38,3 +39,7 @@ export const isClosestElementOfClass = <T extends HTMLElement = HTMLElement>(
   $item: EventTarget | null,
   className: string
 ): $item is T => $item instanceof Element && Boolean($item.closest(`.${className}`));
+
+export const getTypedCustomEvent = <K extends CustomEvents>(name: K, event: Event) => {
+  return event as unknown as CustomEvent<CustomEventData[K]>;
+};

@@ -7,6 +7,7 @@ import ScreenView from './screen-view';
 class ChatsSideBarView extends View {
   static readonly classes = {
     chatItem: 'chats-sidebar__item',
+    chatItemActive: 'chats-sidebar__item_active',
   };
 
   constructor() {
@@ -90,6 +91,15 @@ class ChatsSideBarView extends View {
 
   private onAppendChatItem($item: HTMLLIElement, chat: Chat): void {
     this.chatListMap.set($item, { chat });
+  }
+
+  toggleActiveStatus(userId: string | undefined) {
+    this.chatListMap.forEach((data, $item) => {
+      $item.classList.remove(ChatsSideBarView.classes.chatItemActive);
+      if (data.chat.userId === userId) {
+        $item.classList.add(ChatsSideBarView.classes.chatItemActive);
+      }
+    });
   }
 }
 
