@@ -1,7 +1,7 @@
 import Router, { RouteControllers, SettingsParams } from '../lib/router';
 import View from '../lib/view';
 import { Chat, User } from '../types/entities';
-import { $, isClosestElementOfClass, isElementOfClass, replaceWith } from '../utils/functions';
+import { $, isClosestElementOfCssClass, isElementOfCssClass, replaceWith } from '../utils/functions';
 import ScreenView from './screen-view';
 
 class ChatsSideBarView extends View {

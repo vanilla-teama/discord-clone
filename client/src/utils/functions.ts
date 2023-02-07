@@ -30,12 +30,12 @@ export const isKeyOf = <T extends object>(value: unknown, obj: T): value is keyo
 // export const isElementOfClass = ($item: EventTarget | null, className: string): $item is Element =>
 //   $item instanceof Element && $item.classList.contains(className);
 
-export const isElementOfClass = <T extends HTMLElement = HTMLElement>(
+export const isElementOfCssClass = <T extends HTMLElement = HTMLElement>(
   $item: EventTarget | null,
   className: string
 ): $item is T => $item instanceof Element && $item.classList.contains(className);
 
-export const isClosestElementOfClass = <T extends HTMLElement = HTMLElement>(
+export const isClosestElementOfCssClass = <T extends HTMLElement = HTMLElement>(
   $item: EventTarget | null,
   className: string
 ): $item is T => $item instanceof Element && Boolean($item.closest(`.${className}`));

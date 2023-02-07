@@ -1,5 +1,5 @@
 abstract class View<T extends HTMLElement = HTMLElement> {
-  private $root: T;
+  protected $root: T;
 
   protected $container = document.createDocumentFragment();
 

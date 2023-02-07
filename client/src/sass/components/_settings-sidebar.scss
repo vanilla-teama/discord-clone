@@ -8,4 +8,8 @@
   line-height: 20px;
   cursor: pointer;
   font-weight: 500;
+
+  &_active {
+    background-color: #313131;
+  }
 }
