@@ -1,4 +1,4 @@
-import Router, { RouteControllers } from '../lib/router';
+import Router, { RouteControllers, SettingsParams } from '../lib/router';
 import View from '../lib/view';
 import { Chat, User } from '../types/entities';
 import { $, isClosestElementOfClass, isElementOfClass, replaceWith } from '../utils/functions';
@@ -72,6 +72,8 @@ class ChatsSideBarView extends View {
     const $userSettings = $('span', 'chats-sidebar__user-settings');
     $userContainer.append($userIcon, $userName);
     $userBar.append($userContainer, $userSettings);
+
+    $userSettings.onclick = () => Router.push(RouteControllers.Settings, '', [SettingsParams.Account]);
     return $userBar;
   }
 

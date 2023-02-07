@@ -38,7 +38,6 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
   }
 
   onMessageListChange = (messages: RenderedPersonalMessage[]) => {
-    console.log(messages);
     this.view.displayMessages(messages);
   };
 

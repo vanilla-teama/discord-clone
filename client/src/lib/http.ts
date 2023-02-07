@@ -49,7 +49,6 @@ class Http {
     // http.interceptors.request.use(injectToken, (error: AxiosError) => Promise.reject(error));
 
     http.interceptors.request.use((config) => {
-      console.log(config);
       if (config.url !== '/test' && !this.connected) {
         throw Error('NO CONNECTION!');
       }

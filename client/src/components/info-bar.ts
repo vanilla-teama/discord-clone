@@ -1,13 +1,14 @@
 import App from '../lib/app';
 import Controller from '../lib/controller';
+import { RouteControllers } from '../lib/router';
 import { isKeyOf } from '../utils/functions';
 import InfoBarView from '../views/info-bar-view';
 import ChatsInfoBarComponent from './chats-info-bar';
 import ServersInfoBarComponent from './servers-info-bar';
 
 const routes = {
-  chats: ChatsInfoBarComponent,
-  servers: ServersInfoBarComponent,
+  [RouteControllers.Chats]: ChatsInfoBarComponent,
+  [RouteControllers.Servers]: ServersInfoBarComponent,
 } as const;
 
 class InfoBarComponent extends Controller<InfoBarView> {

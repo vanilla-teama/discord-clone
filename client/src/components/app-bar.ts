@@ -1,13 +1,14 @@
 import App from '../lib/app';
 import Controller from '../lib/controller';
+import { RouteControllers } from '../lib/router';
 import { isKeyOf } from '../utils/functions';
 import AppBarView from '../views/app-bar-view';
 import ChatsAppBarComponent from './chats-app-bar';
 import ServersAppBarComponent from './servers-app-bar';
 
 const routes = {
-  chats: ChatsAppBarComponent,
-  servers: ServersAppBarComponent,
+  [RouteControllers.Chats]: ChatsAppBarComponent,
+  [RouteControllers.Servers]: ServersAppBarComponent,
 } as const;
 
 class AppBarComponent extends Controller<AppBarView> {

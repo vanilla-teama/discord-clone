@@ -1,9 +1,6 @@
-import { StartScreenComponentState } from '../components/start-screen';
 import View from '../lib/view';
-import { Dispatch } from '../types/types';
 import { $ } from '../utils/functions';
 import MainView from './main-view';
-import ScreenView from './screen-view';
 
 class AppBarView extends View {
   static readonly classNames = {};

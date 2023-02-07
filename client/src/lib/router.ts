@@ -15,7 +15,7 @@ export enum RouteControllers {
 export type RouteActions = {
   [RouteControllers.Chats]: ChatsActions;
   [RouteControllers.Servers]: ServersActions;
-  [RouteControllers.Settings]: SettingsActions;
+  [RouteControllers.Settings]: SettingsParams;
 };
 
 export type Action<T extends RouteControllers> = T extends RouteControllers.Chats
@@ -23,7 +23,7 @@ export type Action<T extends RouteControllers> = T extends RouteControllers.Chat
   : T extends RouteControllers.Servers
   ? ServersActions
   : T extends RouteControllers.Settings
-  ? SettingsActions
+  ? SettingsParams
   : never;
 
 export enum ChatsActions {
@@ -37,16 +37,17 @@ export enum ServersActions {
   Channels = 'channels',
 }
 
-export enum SettingsActions {
-  Index = 'index',
+export enum SettingsParams {
   Account = 'account',
   Profiles = 'profiles',
+  Appearance = 'appearance',
+  Keybinds = 'keybinds',
   Language = 'language',
 }
 
-export type RouterLinkFunc<R = void> = (
-  controller: RouteControllers | '',
-  action?: typeof controller extends RouteControllers ? Action<RouteControllers> : '',
+export type RouterLinkFunc<R = void, C extends RouteControllers | '' = RouteControllers> = (
+  controller: C | '',
+  action?: C extends RouteControllers ? Action<RouteControllers> | '' : '',
   params?: UrlParams,
   search?: RouterSearch
 ) => R;

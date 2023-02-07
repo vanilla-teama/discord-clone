@@ -2,15 +2,14 @@ import ChatsScreen from '../components/chats-screen';
 import ServersScreen from '../components/servers-screen';
 import SettingsScreen from '../components/settings-screen';
 import StartScreen from '../components/start-screen';
-import { Construct } from '../types/utils';
 import { isKeyOf } from '../utils/functions';
-import Router from './router';
+import Router, { RouteControllers } from './router';
 
 const routes = {
-  start: StartScreen,
-  chats: ChatsScreen,
-  servers: ServersScreen,
-  settings: SettingsScreen,
+  [RouteControllers.Start]: StartScreen,
+  [RouteControllers.Chats]: ChatsScreen,
+  [RouteControllers.Servers]: ServersScreen,
+  [RouteControllers.Settings]: SettingsScreen,
 } as const;
 
 export type AppControllerType = ChatsScreen | ServersScreen | StartScreen | SettingsScreen;
@@ -37,6 +36,7 @@ class App {
 
         if (!prevController || !(prevController instanceof routes[controller])) {
           App.controller = new routes[controller]();
+          console.log('App.run', App.controller);
           await App.controller.init();
         }
       }
