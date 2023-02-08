@@ -2,7 +2,9 @@ import View from '../lib/view';
 import { $ } from '../utils/functions';
 import MainView from './main-view';
 import SettingsScreenView from './settings-screen-view';
-
+import * as urlEng from '../assets/flags/flag-eng.png';
+import * as urlUkr from '../assets/flags/flag-ukr.png';
+import * as urlRus from '../assets/flags/flag-rus.png';
 class SettingsLanguageView extends View {
   static readonly classNames = {
     form: 'form-language',
@@ -29,23 +31,17 @@ class SettingsLanguageView extends View {
     const $contEng = $('div', SettingsLanguageView.classNames.container);
     const $inputEng = Object.assign($('input'), { id: 'english', type: 'radio', name: 'radio-group' });
     const $labelEng = Object.assign($('label'), { htmlFor: 'english', textContent: 'English' });
-    const $flagEng = Object.assign($('img', SettingsLanguageView.classNames.img), {
-      src: 'https://flomaster.club/uploads/posts/2021-11/1635908464_1-flomaster-club-p-velikobritanskii-flag-narisovannii-krasivi-1.jpg',
-    });
+    const $flagEng = Object.assign($('img', SettingsLanguageView.classNames.img), { src: urlEng.default });
     const $contInputUkr = $('div');
     const $contUkr = $('div', SettingsLanguageView.classNames.container);
     const $inputUkr = Object.assign($('input'), { id: 'ukraine', type: 'radio', name: 'radio-group' });
     const $labelUkr = Object.assign($('label'), { htmlFor: 'ukraine', textContent: 'Українська' });
-    const $flagUkr = Object.assign($('img', SettingsLanguageView.classNames.img), {
-      src: 'https://flomaster.club/uploads/posts/2021-11/1635908464_1-flomaster-club-p-velikobritanskii-flag-narisovannii-krasivi-1.jpg',
-    });
+    const $flagUkr = Object.assign($('img', SettingsLanguageView.classNames.img), { src: urlUkr.default });
     const $contInpuRus = $('div');
     const $contRus = $('div', SettingsLanguageView.classNames.container);
     const $inputRus = Object.assign($('input'), { id: 'rus', type: 'radio', name: 'radio-group' });
     const $labelRus = Object.assign($('label'), { htmlFor: 'rus', textContent: 'Русский' });
-    const $flagRus = Object.assign($('img', SettingsLanguageView.classNames.img), {
-      src: 'https://flomaster.club/uploads/posts/2021-11/1635908464_1-flomaster-club-p-velikobritanskii-flag-narisovannii-krasivi-1.jpg',
-    });
+    const $flagRus = Object.assign($('img', SettingsLanguageView.classNames.img), { src: urlRus.default });
     $contInputEng.append($inputEng, $labelEng);
     $contEng.append($contInputEng, $flagEng);
     $contInputUkr.append($inputUkr, $labelUkr);
