@@ -1,9 +1,9 @@
-import { chats, personalMessages, users } from '../develop/data';
-import { Chat, FetchedUser, PersonalMessage, Server, User } from '../types/entities';
+import { chats, users } from '../develop/data';
+import { http } from '../lib/http';
+import moment from '../lib/moment';
+import { Chat, Availability, ChatAvailabilitiesMap, PersonalMessage, Server, User } from '../types/entities';
 import { AppOmit } from '../types/utils';
 import { RenderedPersonalMessage } from '../views/chats-main-content-view';
-import moment from '../lib/moment';
-import { http } from '../lib/http';
 
 export type IncomingPersonalMessage = AppOmit<PersonalMessage, 'id'>;
 
@@ -15,6 +15,8 @@ class AppStore {
   private _users: User[] = [];
 
   private _chats: Chat[] = [];
+
+  private _chatStatuses: ChatAvailabilitiesMap = new Map();
 
   // Personal messages with the opponent selected in the Chats bar and shown in the Main
   private _personalMessages: PersonalMessage[] = [];
@@ -39,6 +41,14 @@ class AppStore {
 
   private set chats(chats: Chat[]) {
     this._chats = chats;
+  }
+
+  get chatStatuses(): ChatAvailabilitiesMap {
+    return this._chatStatuses;
+  }
+
+  private set chatStatuses(statuses: ChatAvailabilitiesMap) {
+    this._chatStatuses = statuses;
   }
 
   get personalMessages(): PersonalMessage[] {
@@ -115,20 +125,33 @@ class AppStore {
     this.onServerListChanged(this.servers);
   }
 
-  onServerListChanged = (servers: Server[]) => {};
-  onSigningIn = (data: FormData) => {};
-  onPersonalMessageListChanged = (messages: RenderedPersonalMessage[]) => {};
+  updateChatLocally(chatId: Chat['userId'], data: Partial<Pick<Chat, 'userName' | 'availability'>>) {
+    let chat = this.chats.find(({ userId }) => userId === chatId);
+    if (chat) {
+      chat = { ...chat, ...data };
+      this.onChatLocallyUpdate(chat);
+    }
+  }
 
-  async bindServerListChanged(callback: (servers: Server[]) => void) {
+  onServerListChanged = (servers: Server[]): void => {};
+  onSigningIn = (data: FormData): void => {};
+  onPersonalMessageListChanged = (messages: RenderedPersonalMessage[]): void => {};
+  onChatLocallyUpdate = (chat: Chat): void => {};
+
+  async bindServerListChanged(callback: (servers: Server[]) => void): Promise<void> {
     this.onServerListChanged = callback;
   }
 
-  bindSigningIn(callback: (data: FormData) => void) {
+  bindSigningIn(callback: (data: FormData) => void): void {
     this.onSigningIn = callback;
   }
 
-  bindPersonalMessageListChanged = (callback: (messages: RenderedPersonalMessage[]) => void) => {
+  bindPersonalMessageListChanged = (callback: (messages: RenderedPersonalMessage[]) => void): void => {
     this.onPersonalMessageListChanged = callback;
+  };
+
+  bindChatLocallyUpdate = (callback: (chat: Chat) => void): void => {
+    this.onChatLocallyUpdate = callback;
   };
 
   getFormattedRenderedPersonalMessages(): RenderedPersonalMessage[] {

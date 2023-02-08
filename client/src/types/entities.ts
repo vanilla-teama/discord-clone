@@ -10,6 +10,7 @@ export interface User extends MongoEntity {
   password: string;
   email: string;
   phone: string;
+  availability: Availability;
 }
 
 export interface FetchedUser {
@@ -43,4 +44,14 @@ export interface Server<S extends 'data' | 'formData' = 'data'> extends MongoEnt
 export interface Chat {
   userId: MongoObjectId;
   userName: string;
+  availability?: Availability;
 }
+
+export enum Availability {
+  Online = 'online',
+  Offline = 'offline',
+  Away = 'away',
+  DoNotDisturb = 'donotdisturb',
+}
+
+export type ChatAvailabilitiesMap = Map<Chat, Availability>;

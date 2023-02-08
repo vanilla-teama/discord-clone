@@ -1,3 +1,5 @@
+import { Availability } from "../models/user";
+
 interface DTOEntity {
   id: string;
 }
@@ -7,6 +9,7 @@ export interface DTOUser extends DTOEntity {
   password: string;
   email: string;
   phone: string;
+  availability: Availability;
 }
 
 export interface DTOPersonalMessage extends DTOEntity {

@@ -1,4 +1,4 @@
-import { Chat, PersonalMessage, Server, User } from '../types/entities';
+import { Availability, Chat, PersonalMessage, Server, User } from '../types/entities';
 import moment from '../lib/moment';
 
 export const users: User[] = [
@@ -8,6 +8,7 @@ export const users: User[] = [
     password: '1111333',
     email: 'email1@gmail.com',
     phone: '+380991234567',
+    availability: Availability.Offline,
   },
   {
     id: '63dd3dd9938e35dad6409e12',
@@ -15,6 +16,7 @@ export const users: User[] = [
     password: '1111',
     email: 'email2@gmail.com',
     phone: '+380992234567',
+    availability: Availability.DoNotDisturb,
   },
   {
     id: '63dd3de6938e35dad6409e14',
@@ -22,6 +24,7 @@ export const users: User[] = [
     password: '1111',
     email: 'email3@gmail.com',
     phone: '+380993234567',
+    availability: Availability.Online,
   },
   {
     id: '63dede6beac45c545ad1e616',
@@ -29,6 +32,7 @@ export const users: User[] = [
     password: '1111',
     email: 'email4@gmail.com',
     phone: '+380994234567',
+    availability: Availability.Away,
   },
 ];
 

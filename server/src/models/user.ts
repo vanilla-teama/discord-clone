@@ -1,4 +1,4 @@
-import mongoose, { ValidateFn, Types } from 'mongoose';
+import mongoose, { ValidateFn, Types, HydratedDocument } from 'mongoose';
 const Schema = mongoose.Schema;
 
 export interface IUser {
@@ -7,12 +7,28 @@ export interface IUser {
   email: string;
   phone: string;
   friends: Types.ObjectId[];
+  availability: Availability;
 }
 
 export interface IChat {
   userId: Types.ObjectId;
   username: string;
+  availability: Availability;
 }
+
+export enum Availability {
+  Online = 'online',
+  Offline = 'offline',
+  Away = 'away',
+  DoNotDisturb = 'donotdisturb',
+}
+
+const availabilityEnum: Availability[] = [
+  Availability.Online,
+  Availability.Offline,
+  Availability.Away,
+  Availability.DoNotDisturb,
+];
 
 const userSchema = new Schema<IUser>({
   name: {
@@ -28,6 +44,10 @@ const userSchema = new Schema<IUser>({
     type: String,
   },
   friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  availability: {
+    type: String,
+    enum: availabilityEnum,
+  }
 });
 
 export const validateUserField = <

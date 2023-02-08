@@ -1,5 +1,7 @@
 import { Server, Socket } from 'socket.io';
 import { App } from '../app';
+import User, { Availability } from '../models/user';
+import { userDTO } from '../utils/dto';
 
 export const initSocket = (app: App) => {
   const io = new Server(app.getServer());
@@ -19,7 +21,24 @@ export const initSocket = (app: App) => {
     });
 
     socket.on('userLoggedInClient', (data) => {
-      socket.broadcast.emit('userLoggedInServer', data);
+      User
+        .findById(data.data.id)
+        .then((user) => {
+          if (user) {
+            // We keep statuses like `Away` and `Do not disturb`
+            if (user.availability !== Availability.Away && user.availability !== Availability.DoNotDisturb) {
+              user.availability = Availability.Online;
+            }
+
+            user.save()
+              .then((result) => {
+                socket.broadcast.emit('userLoggedInServer', { user: userDTO(user) });
+              })
+          }
+        })
+          .catch((err) => {
+            console.log(err);
+          });
     });
 
     socket.on('personalMessageClient', (data) => {

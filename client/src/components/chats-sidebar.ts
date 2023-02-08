@@ -5,6 +5,7 @@ import { appStore } from '../store/app-store';
 import { Chat, User } from '../types/entities';
 import { CustomEventData as CustomEventType, CustomEvents } from '../types/types';
 import { getTypedCustomEvent } from '../utils/functions';
+import { bindEvent as bindSocketEvent } from '../lib/socket';
 import ChatsSideBarView from '../views/chats-sidebar-view';
 
 class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
@@ -20,6 +21,8 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
     this.onInit(appStore.user);
     this.onChatListChanged(appStore.chats);
     this.bindRouteChanged();
+    this.bindSocketUserLoggedInServer();
+    appStore.bindChatLocallyUpdate(this.onChatUpdate);
   }
 
   onInit = (user: User | null): void => {
@@ -29,6 +32,10 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
   onChatListChanged = (chats: Chat[]): void => {
     this.view.displayChats(chats);
     this.toggleActiveStatus();
+  };
+
+  onChatUpdate = (chat: Chat): void => {
+    this.view.updateChat(chat);
   };
 
   toggleActiveStatus() {
@@ -45,6 +52,12 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
       if (controller === RouteControllers.Chats && params.length > 0) {
         this.view.toggleActiveStatus(params[0]);
       }
+    });
+  }
+
+  bindSocketUserLoggedInServer() {
+    bindSocketEvent('userLoggedInServer', ({ user }) => {
+      appStore.updateChatLocally(user.id, { availability: user.availability });
     });
   }
 }

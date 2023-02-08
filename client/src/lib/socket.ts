@@ -1,5 +1,5 @@
 import { ManagerOptions, io } from 'socket.io-client';
-import { MongoObjectId } from '../types/entities';
+import { MongoObjectId, User } from '../types/entities';
 import { IncomingPersonalMessage } from '../store/app-store';
 import { FallbackToUntypedListener } from '@socket.io/component-emitter';
 import { SocketOptions } from 'engine.io-client';
@@ -8,7 +8,9 @@ type UserLoggedInOutDataClient = {
   id: string;
 };
 
-type UserLoggedInOutDataServer = UserLoggedInOutDataClient;
+type UserLoggedInOutDataServer = {
+  user: User;
+};
 
 type PersonalMessageDataClient = {
   fromUserId: MongoObjectId;

@@ -58,7 +58,7 @@ const getUser: Handler = (req, res, next) => {
     .findById(userId)
     .then((user) => {
       if (!user) {
-        const error = new Error('Could not find post.');
+        const error = new Error('Could not find user.');
         //error.statusCode = 404;
         throw error;
       }

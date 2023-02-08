@@ -11,9 +11,6 @@ import channelsRoutes from './routes/channels';
 import testRoutes from './routes/test';
 import { initSocket } from './socket';
 import cors from 'cors';
-import multer from 'multer';
-import formidable from 'formidable';
-import fs from 'fs';
 
 const port: number = 3001;
 const whitelist = ['http://localhost:3000', 'http://localhost:8005'];
@@ -27,8 +24,6 @@ const mongooseUrl = isLocalConnection
   : 'mongodb+srv://superconscience:QrtczmnqiciavAoI@node.wiauk.mongodb.net/?retryWrites=true&w=majority';
 
 type AppClients = Record<string, unknown>;
-
-const upload = multer({ limits: { fileSize: 1064960 }, dest: '/uploads/' }).single('image');
 
 export class App {
   private server: http.Server;
@@ -55,40 +50,6 @@ export class App {
         credentials: true,
       })
     );
-
-    // app.post('/servers', function (req, res) {
-    //   upload(req, res, function (err) {
-    //     if (err) {
-    //       res.status(500).json({ error: 'message' });
-    //     }
-
-    //     console.log(req.file, req.files);
-
-    //     if (req.file == null) {
-    //       // If Submit was accidentally clicked with no file selected...
-    //       res.send('boo');
-    //     } else {
-    //       // read the img file from tmp in-memory location
-    //       const newImg = fs.readFileSync(req.file.path);
-    //       // encode the file as a base64 string.
-    //       const encImg = newImg.toString('base64');
-    //       // define your new document
-    //       const newItem = {
-    //         description: req.body.description,
-    //         contentType: req.file.mimetype,
-    //         size: req.file.size,
-    //         img: Buffer.from(encImg, 'base64'),
-    //       };
-
-    //       // db.collection('images').insert(newItem)
-    //       //     .then(function() {
-    //       //         console.log('image inserted!');
-    //       //     });
-
-    //       res.send('yo');
-    //     }
-    //   });
-    // });
 
     app.use(express.json());
 

@@ -6,12 +6,13 @@ export type FetchedUser = HydratedDocument<IUser>;
 
 export type FetchedChat = HydratedDocument<Pick<IUser, 'name'>>;
 
-export const userDTO = ({ _id, email, name, password, phone }: FetchedUser): DTOUser => ({
+export const userDTO = ({ _id, email, name, password, phone, availability }: FetchedUser): DTOUser => ({
   id: _id.toString(),
   name,
   email,
   password,
   phone,
+  availability,
 });
 
 export const chatDTO = ({ _id, name }: FetchedChat): DTOChat => ({
