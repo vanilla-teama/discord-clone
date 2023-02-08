@@ -10,10 +10,11 @@
 
 .main-container {
   display: flex;
+  height: 100%;
 }
 
 .main-content {
-
+  flex: 1 1 auto;
 }
 
   
