@@ -1,4 +1,4 @@
-import { chats, personalMessages, servers, users } from '../develop/data';
+import { chats, personalMessages, users } from '../develop/data';
 import { Chat, FetchedUser, PersonalMessage, Server, User } from '../types/entities';
 import { AppOmit } from '../types/utils';
 import { RenderedPersonalMessage } from '../views/chats-main-content-view';
@@ -29,47 +29,68 @@ class AppStore {
     return this._users;
   }
 
+  private set users(users: User[]) {
+    this._users = users;
+  }
+
   get chats(): Chat[] {
     return this._chats;
+  }
+
+  private set chats(chats: Chat[]) {
+    this._chats = chats;
   }
 
   get personalMessages(): PersonalMessage[] {
     return this._personalMessages;
   }
 
+  private set personalMessages(messages: PersonalMessage[]) {
+    this._personalMessages = messages;
+  }
+
   get servers(): Server[] {
     return this._servers;
+  }
+
+  private set servers(servers: Server[]) {
+    this._servers = servers;
   }
 
   async fetchUsers(): Promise<void> {
     const response = await http.get<{ users: User[] | null }>('/users');
     if (response) {
-      this._users = response.data.users || [];
+      this.users = response.data.users || [];
     } else {
-      this._users = users;
+      this.users = users;
     }
   }
 
   async fetchChats(userId: User['id']): Promise<void> {
     const response = await http.get<{ chats: Chat[] }>(`/chats/users/${userId}`);
     if (response) {
-      this._chats = response.data.chats || [];
+      this.chats = response.data.chats || [];
     } else {
-      this._chats = chats;
+      this.chats = chats;
     }
   }
 
   async fetchPersonalMessages(userOneId: string, userTwoId: string): Promise<void> {
     const response = await http.get<{ messages: PersonalMessage[] }>(`/chats/messages/${userOneId}/${userTwoId}`);
     if (response) {
-      this._personalMessages = response.data.messages || [];
+      this.personalMessages = response.data.messages || [];
     } else {
-      this._personalMessages = [];
+      this.personalMessages = [];
     }
   }
 
   async fetchServers(): Promise<void> {
-    this._servers = servers;
+    const response = await http.get<{ servers: Server[] }>(`/servers`);
+    if (response) {
+      this.servers = response.data.servers || [];
+    } else {
+      this.servers = [];
+    }
   }
 
   async addPersonalMessage(message: IncomingPersonalMessage): Promise<void> {
@@ -78,11 +99,19 @@ class AppStore {
   }
 
   deletePersonalMessage(id: PersonalMessage['id']): void {
-    this._personalMessages = this._personalMessages.filter(({ id: currId }) => currId !== id);
+    this.personalMessages = this.personalMessages.filter(({ id: currId }) => currId !== id);
   }
 
-  async addServer(server: Server): Promise<void> {
-    this._servers = [...this._servers, server];
+  async addServer(server: Partial<Server<'formData'>>): Promise<void> {
+    await http
+      .post('/servers', server, {
+        headers: {
+          Accept: 'multipart/form-data',
+          'Content-Type': 'multipart/form-data; charset=utf-8',
+        },
+      })
+      .catch((error) => console.error(error));
+    await this.fetchServers();
     this.onServerListChanged(this.servers);
   }
 

@@ -1,5 +1,6 @@
 import { Handler } from 'express';
 import Server from '../models/server';
+import fs from 'fs';
 
 const getServers: Handler = (req, res, next) => {
   let docsCount = 0;
@@ -10,11 +11,16 @@ const getServers: Handler = (req, res, next) => {
       return Server.find();
     })
     .then((servers) => {
-      console.log(servers);
       res.status(200).json({
         message: 'Fetched servers successfully.',
         count: docsCount,
-        servers,
+        servers: servers.map((server) => {
+          // console.log(server);
+          // if (server.image) {
+          //   return { ...server, image: server.image.toString('base64')};
+          // }
+          return server;
+        }),
       });
     })
     .catch((err) => {
@@ -45,9 +51,17 @@ const getServer: Handler = (req, res, next) => {
 };
 
 const createServer: Handler = (req, res, next) => {
-  
+  console.log('incoming file', req.file);
+  console.log('body', req.body);
+  let imageBuffer: Buffer | null = null;
+  if (req.file) {
+    const image = fs.readFileSync(req.file.path);
+    const encImage = image.toString('base64');
+    imageBuffer = Buffer.from(encImage, 'base64');
+  }
   const server = new Server({
     name: req.body.name,
+    image: imageBuffer,
   });
 
   server
@@ -88,7 +102,7 @@ const seedServers = (): void => {
 
 const updateServer: Handler = (req, res, next) => {
   const serverId = req.params.id;
-  
+
   Server.findById(serverId)
     .then((server) => {
       if (!server) {

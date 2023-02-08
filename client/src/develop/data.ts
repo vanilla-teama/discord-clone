@@ -83,23 +83,23 @@ export const personalMessages: PersonalMessage[] = [
   },
 ];
 
-export const servers: Server[] = [
-  {
-    id: '1',
-    name: 'RS School',
-    avatar: 'https://source.boringavatars.com/pixel',
-  },
-  {
-    id: '2',
-    name: 'Twin Fin',
-    avatar: 'https://source.boringavatars.com/sunset',
-  },
-  {
-    id: '3',
-    name: 'Vanilla Team',
-    avatar: 'https://source.boringavatars.com/beam',
-  },
-];
+// export const servers: Server[] = [
+//   {
+//     id: '1',
+//     name: 'RS School',
+//     image: Buffer.from(''),
+//   },
+//   {
+//     id: '2',
+//     name: 'Twin Fin',
+//     image: Buffer.from(''),
+//   },
+//   {
+//     id: '3',
+//     name: 'Vanilla Team',
+//     image: Buffer.from(''),
+//   },
+// ];
 
 export const chats: Chat[] = [
   {

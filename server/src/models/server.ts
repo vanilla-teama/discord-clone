@@ -1,10 +1,16 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 const Schema = mongoose.Schema;
 
 const serverSchema = new Schema({
   name: {
-    type: Schema.Types.ObjectId,
+    type: String,
     required: true
+  },
+  image: {
+    type: Buffer,
+    get(image: Buffer | null) {
+      return image ? image.toString('base64') : null;
+    }
   },
 }, {
   toJSON: { getters: true },

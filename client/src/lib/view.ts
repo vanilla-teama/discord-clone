@@ -15,6 +15,13 @@ abstract class View<T extends HTMLElement = HTMLElement> {
     this.build();
     this.$root.innerHTML = '';
     this.$root.append(this.$container);
+    this.onAfterRender();
+  }
+
+  private onAfterRender = (): void => {};
+
+  bindAfterRender(handler: () => void) {
+    this.onAfterRender = handler;
   }
 
   abstract build(): void;

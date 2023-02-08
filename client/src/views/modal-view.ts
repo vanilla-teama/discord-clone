@@ -1,13 +1,18 @@
 import View from '../lib/view';
-import { $ } from '../utils/functions';
+import { $, isClosestElementOfCssClass, isElementOfCssClass } from '../utils/functions';
 import ModalPortalView from './modal-portal-view';
 
 class ModalView extends View {
   static readonly classNames = {
+    modal: 'modal',
+    container: 'modal__container',
     show: 'show',
+    hiding: 'hiding',
   };
 
-  static $root: HTMLDivElement;
+  static $portal: HTMLDivElement;
+  private static $modal: HTMLDivElement;
+  private static $container: HTMLDivElement;
 
   constructor() {
     const $root = ModalPortalView.$portal;
@@ -15,21 +20,43 @@ class ModalView extends View {
       ModalView.throwNoRootInTheDomError('Modal');
     }
     super($root);
-    ModalView.$root = $root;
+    ModalView.$modal = $('div', ModalView.classNames.modal);
+    ModalView.$container = $('div', ModalView.classNames.container);
+    ModalView.$portal = $root;
   }
   build(): void {
-    this.$container.append($('div', 'modal'));
+    ModalView.$modal.append(ModalView.$container);
+    this.$container.append(ModalView.$modal);
+    this.bindOverlayClick();
   }
 
-  static show($content: HTMLElement): void {
-    ModalView.$root.innerHTML = '';
-    ModalView.$root.append($content);
-    ModalView.$root.classList.add(ModalView.classNames.show);
+  static getContainer() {
+    return ModalView.$container;
+  }
+
+  static show(): void {
+    ModalView.$modal.onanimationend = null;
+    ModalView.$modal.classList.add(ModalView.classNames.show);
   }
 
   static hide(): void {
-    ModalView.$root.classList.remove(ModalView.classNames.show);
+    ModalView.$modal.onanimationend = () => {
+      ModalView.$modal.classList.remove(ModalView.classNames.show, ModalView.classNames.hiding);
+      ModalView.$modal.onanimationend = null;
+    };
+    ModalView.$modal.classList.add(ModalView.classNames.hiding);
   }
+
+  bindOverlayClick(): void {
+    ModalView.$modal.onclick = ModalView.onOverlayClick;
+  }
+
+  static onOverlayClick: EventListener = (event) => {
+    if (isClosestElementOfCssClass(event.target, ModalView.classNames.container)) {
+      return;
+    }
+    ModalView.hide();
+  };
 }
 
 export default ModalView;

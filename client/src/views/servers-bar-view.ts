@@ -13,6 +13,7 @@ class ServersBarView extends View {
   };
 
   $serverList: HTMLUListElement;
+  $addServerButton: HTMLLIElement;
   serverListMap: Map<HTMLLIElement, { server: Server }>;
 
   constructor() {
@@ -23,13 +24,15 @@ class ServersBarView extends View {
     super($root);
     this.$serverList = $('ul', ServersBarView.classes.list);
     this.serverListMap = new Map();
+    this.$addServerButton = this.createAddServerButton();
   }
 
   build(): void {
     this.$container.append(this.$serverList);
   }
 
-  displayServers(servers: Server[]) {
+  displayServers(servers: Server[]): void {
+    console.log({ servers });
     this.$serverList.innerHTML = '';
     servers.forEach((server) => {
       const $item = this.createServerItem(server);
@@ -37,10 +40,11 @@ class ServersBarView extends View {
       this.onAppendServerItem($item, server);
     });
 
-    this.$serverList.append(this.createAddServerItem());
+    this.$serverList.append(this.$addServerButton);
+    this.bindShowModal();
   }
 
-  bindAddServer(handler: (server: Partial<Server>) => void) {
+  bindAddServer(handler: (server: Partial<Server>) => void): void {
     this.$serverList?.addEventListener('click', (event) => {
       const $target = event.target;
       if (!($target instanceof HTMLElement) || !$target.closest(`.${ServersBarView.classes.addingServerItem}`)) {
@@ -49,14 +53,14 @@ class ServersBarView extends View {
 
       const server: Partial<Server> = {
         name: `New Server #${Math.ceil(Math.random() * 100)}`,
-        avatar: 'https://source.boringavatars.com',
+        // image: 'https://source.boringavatars.com',
       };
 
-      handler(server);
+      // handler(server);
     });
   }
 
-  toggleActiveStatus(serverId: string | undefined) {
+  toggleActiveStatus(serverId: string | undefined): void {
     this.serverListMap.forEach((data, $item) => {
       $item.classList.remove(ServersBarView.classes.listItemActive);
       if (data.server.id === serverId) {
@@ -65,12 +69,27 @@ class ServersBarView extends View {
     });
   }
 
-  private createServerItem({ id, name, avatar }: Server): HTMLLIElement {
+  bindShowModal(): void {
+    this.$addServerButton.removeEventListener('click', this.onShowServerForm);
+    this.$addServerButton.addEventListener('click', this.onShowServerForm);
+  }
+
+  bindShowServerForm(handler: (mode: 'create' | 'edit') => EventListener): void {
+    this.onShowServerForm = handler('create');
+  }
+
+  onShowServerForm: EventListener = () => {};
+
+  private createServerItem({ id, name, image }: Server): HTMLLIElement {
     const $item = $('li', ServersBarView.classes.listItem);
     const $itemImg = $('img', 'servers-bar__img');
     const $itemName = $('div', 'servers-bar__name');
     $itemName.textContent = `${name}`;
-    $itemImg.src = `${avatar}`;
+    if (image) {
+      $itemImg.src = 'data:image/jpeg;base64,' + image;
+    } else {
+      $itemImg.alt = name.slice(0, 1).toUpperCase();
+    }
     $item.append($itemImg, $itemName);
 
     $item.onclick = () => {
@@ -79,7 +98,7 @@ class ServersBarView extends View {
     return $item;
   }
 
-  private createAddServerItem() {
+  private createAddServerButton(): HTMLLIElement {
     const $item = $('li', ServersBarView.classes.addingServerItem);
     const $addingServerItemImg = $('span', 'servers-bar__img-add');
     const $addingServerItemName = $('span', 'servers-bar__name');
@@ -89,7 +108,7 @@ class ServersBarView extends View {
     return $item;
   }
 
-  private onAppendServerItem($item: HTMLLIElement, server: Server) {
+  private onAppendServerItem($item: HTMLLIElement, server: Server): void {
     this.serverListMap.set($item, { server });
   }
 }

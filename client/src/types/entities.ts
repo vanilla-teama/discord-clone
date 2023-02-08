@@ -35,9 +35,9 @@ export interface ChannelMessage extends MongoEntity {
   message: string;
 }
 
-export interface Server extends MongoEntity {
+export interface Server<S extends 'data' | 'formData' = 'data'> extends MongoEntity {
   name: string;
-  avatar: string;
+  image: S extends 'formData' ? File : string | null;
 }
 
 export interface Chat {

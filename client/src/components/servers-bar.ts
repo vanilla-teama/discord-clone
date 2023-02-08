@@ -3,9 +3,10 @@ import Controller from '../lib/controller';
 import { RouteControllers } from '../lib/router';
 import { appStore } from '../store/app-store';
 import { Server } from '../types/entities';
-import { CustomEventData, CustomEvents } from '../types/types';
+import { CustomEvents } from '../types/types';
 import { getTypedCustomEvent } from '../utils/functions';
 import ServersBarView from '../views/servers-bar-view';
+import ServerCreateFormComponent from './servers-create-form';
 
 class ServersBarComponent extends Controller<ServersBarView> {
   constructor() {
@@ -14,8 +15,8 @@ class ServersBarComponent extends Controller<ServersBarView> {
 
   async init(): Promise<void> {
     this.view.render();
+    this.view.bindShowServerForm(this.showServerForm);
     this.onServerListChanged(appStore.servers);
-    this.view.bindAddServer(this.handleAddServer);
     appStore.bindServerListChanged(this.onServerListChanged);
     this.bindRouteChanged();
   }
@@ -25,10 +26,12 @@ class ServersBarComponent extends Controller<ServersBarView> {
     this.toggleActiveStatus();
   };
 
-  async handleAddServer(server: Partial<Server>) {
-    // Store server in the database and get Id
-    const id = Math.ceil(Math.random() * 100).toString();
-    appStore.addServer({ ...server, id } as Server);
+  showServerForm(mode: 'create' | 'edit'): EventListener {
+    return async () => {
+      if (mode === 'create') {
+        await new ServerCreateFormComponent().init();
+      }
+    };
   }
 
   toggleActiveStatus() {
