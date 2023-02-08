@@ -2,6 +2,7 @@ import Router, { RouteControllers, SettingsParams } from '../lib/router';
 import View from '../lib/view';
 import { $, isClosestElementOfCssClass } from '../utils/functions';
 import SettingsScreenView from './settings-screen-view';
+
 class SettingsSidebarView extends View {
   static readonly classes = {
     list: 'settings-bar__list',
