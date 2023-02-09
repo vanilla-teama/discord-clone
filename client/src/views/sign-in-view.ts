@@ -21,14 +21,30 @@ class SignInView extends View {
 
   build(): void {
     const $container = $('div', 'sign-in');
-    $container.append('Sign In', this.$form, this.$signUpButton);
+    const $box = $('div', 'sign-in__box');
+    const $title = $('div', 'sign-in__title');
+    $title.textContent = 'Welcome back!';
 
-    this.$form.innerHTML = `<input type="email" name="email" placeholder="Your E-mail" />
-      <input type="password" name="password" placeholder="Your Password" />
-      <button type="submit">Sign In!</button>
+    this.$form.innerHTML = `
+      <div class="sign-in__form-wrapper">
+        <label class="sign-in__form-label" for="email">Email:</label>
+        <input class="sign-in__input-email" type="email" name="email">
+      </div>
+      <div class="sign-in__form-wrapper">
+        <label class="sign-in__form-label" for="password">Password:</label>
+        <input class="sign-in__input-password" type="password" id="password" name="password">
+      </div>
+      <button class="sign-in__btn-submit  type="submit">Log In</button>
     `;
 
-    this.$signUpButton.textContent = 'Sign Up!';
+    const $btnSignUpBox = $('span', 'sign-in__btn-auth-box');
+    const $text = $('span', 'sign-in__text');
+    $text.textContent = 'Need an account';
+    this.$signUpButton.textContent = 'Register';
+    $btnSignUpBox.append($text, this.$signUpButton);
+
+    $box.append($title, this.$form, $btnSignUpBox);
+    $container.append($box);
     this.$container.append($container);
   }
 
