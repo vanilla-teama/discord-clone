@@ -6,6 +6,7 @@ import { Server } from '../types/entities';
 import { CustomEvents } from '../types/types';
 import { getTypedCustomEvent } from '../utils/functions';
 import ServersBarView from '../views/servers-bar-view';
+import ModalComponent from './modal';
 import ServerCreateFormComponent from './servers-create-form';
 
 class ServersBarComponent extends Controller<ServersBarView> {
@@ -29,6 +30,7 @@ class ServersBarComponent extends Controller<ServersBarView> {
   showServerForm(mode: 'create' | 'edit'): EventListener {
     return async () => {
       if (mode === 'create') {
+        await new ModalComponent().init();
         await new ServerCreateFormComponent().init();
       }
     };

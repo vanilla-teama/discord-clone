@@ -7,6 +7,9 @@ import { CustomEventData as CustomEventType, CustomEvents } from '../types/types
 import { getTypedCustomEvent } from '../utils/functions';
 import { bindEvent as bindSocketEvent } from '../lib/socket';
 import ChatsSideBarView from '../views/chats-sidebar-view';
+import PopupComponent from './popup';
+import { PopupCoords } from '../views/popup-view';
+import ChatsCreateFormComponent from './chats-create-form';
 
 class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
   constructor() {
@@ -18,6 +21,7 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
       throw Error('User is not defined');
     }
     this.view.render();
+    this.view.bindShowCreateChat(this.onShowCreateChat);
     this.onInit(appStore.user);
     this.onChatListChanged(appStore.chats);
     this.bindRouteChanged();
@@ -36,6 +40,10 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
 
   onChatUpdate = (chat: Chat): void => {
     this.view.updateChat(chat);
+  };
+
+  onShowCreateChat = (coords: PopupCoords) => {
+    new PopupComponent(coords, ChatsCreateFormComponent).init();
   };
 
   toggleActiveStatus() {

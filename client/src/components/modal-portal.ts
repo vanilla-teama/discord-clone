@@ -9,7 +9,7 @@ class ModalPortalComponent extends Controller<ModalPortalView> {
 
   async init(): Promise<void> {
     this.view.render();
-    await new ModalComponent().init();
+    // await new ModalComponent().init();
   }
 }
 

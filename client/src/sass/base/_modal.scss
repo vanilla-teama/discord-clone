@@ -18,7 +18,8 @@
   }
 }
 
-.modal {
+.modal, 
+.popup {
   position: fixed;
   left: 0;
   top: 0;
@@ -40,4 +41,15 @@
   &.hiding {
     animation: modal-hide 300ms ease-out forwards;
   }
+}
+
+.popup {
+  max-width: calc(100% - 20px);
+  max-height: calc(100% - 20px);
+  background: none;
+  backdrop-filter: initial;
+  // top: initial;
+  // left: initial;
+  right: initial;
+  bottom: initial;
 }

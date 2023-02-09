@@ -2,6 +2,7 @@ import Router, { RouteControllers, SettingsParams } from '../lib/router';
 import View from '../lib/view';
 import { Chat, User } from '../types/entities';
 import { $, isClosestElementOfCssClass, isElementOfCssClass, replaceWith } from '../utils/functions';
+import PopupView, { PopupCoords } from './popup-view';
 import ScreenView from './screen-view';
 
 class ChatsSideBarView extends View {
@@ -19,11 +20,13 @@ class ChatsSideBarView extends View {
     this.$chatList = $('ul', 'chats-sidebar__list');
     this.$userBar = this.createUserBar();
     this.chatListMap = new Map();
+    this.$showCreateChat = this.createShowCreateChatElement();
   }
 
   $chatList: HTMLUListElement;
   $userBar: HTMLDivElement;
   chatListMap: Map<HTMLLIElement, { chat: Chat }>;
+  $showCreateChat: HTMLSpanElement;
 
   build(): void {
     const $chatsContainer = $('div', 'chats-sidebar__container');
@@ -31,13 +34,17 @@ class ChatsSideBarView extends View {
     const $directMessagesContainer = $('div', 'chats-sidebar__dm-container');
     const $directMessagesTitle = $('div', 'chats-sidebar__dm-title');
     $directMessagesTitle.textContent = 'Direct messages';
-    const $directMessagesAddBtn = $('span', 'chats-sidebar__dm-add');
-    $directMessagesAddBtn.dataset.name = 'Create DM';
 
-    $directMessagesContainer.append($directMessagesTitle, $directMessagesAddBtn);
+    $directMessagesContainer.append($directMessagesTitle, this.$showCreateChat);
 
     $chatsContainer.append($directMessagesContainer, this.$chatList, this.$userBar);
     this.$container.append($chatsContainer);
+  }
+
+  private createShowCreateChatElement(): HTMLSpanElement {
+    const $directMessagesAddBtn = $('span', 'chats-sidebar__dm-add');
+    $directMessagesAddBtn.dataset.name = 'Create DM';
+    return $directMessagesAddBtn;
   }
 
   displayChats(chats: Chat[]): void {
@@ -59,6 +66,14 @@ class ChatsSideBarView extends View {
 
   displayUser(user: User | null): void {
     this.$userBar = replaceWith(this.$userBar, this.createUserBar(user || undefined));
+  }
+
+  bindShowCreateChat(handler: (coords: PopupCoords, $root: HTMLElement) => void): void {
+    this.$showCreateChat.onclick = (event) => {
+      console.log(event);
+      const coords: PopupCoords = { top: event.pageY, left: event.pageX };
+      handler(coords, PopupView.getContainer());
+    };
   }
 
   bindChatItemClick($item: HTMLLIElement) {

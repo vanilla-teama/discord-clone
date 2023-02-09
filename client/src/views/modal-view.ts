@@ -1,6 +1,7 @@
 import View from '../lib/view';
 import { $, isClosestElementOfCssClass, isElementOfCssClass } from '../utils/functions';
 import ModalPortalView from './modal-portal-view';
+import PopupView from './popup-view';
 
 class ModalView extends View {
   static readonly classNames = {
@@ -15,14 +16,14 @@ class ModalView extends View {
   private static $container: HTMLDivElement;
 
   constructor() {
-    const $root = ModalPortalView.$portal;
+    const $root = ModalPortalView.$modalPortal;
     if (!$root) {
       ModalView.throwNoRootInTheDomError('Modal');
     }
     super($root);
     ModalView.$modal = $('div', ModalView.classNames.modal);
     ModalView.$container = $('div', ModalView.classNames.container);
-    ModalView.$portal = $root;
+    // ModalView.$portal = $root;
   }
   build(): void {
     ModalView.$modal.append(ModalView.$container);
@@ -37,6 +38,7 @@ class ModalView extends View {
   static show(): void {
     ModalView.$modal.onanimationend = null;
     ModalView.$modal.classList.add(ModalView.classNames.show);
+    PopupView.hide();
   }
 
   static hide(): void {

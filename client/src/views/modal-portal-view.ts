@@ -4,20 +4,23 @@ import ScreenView from './screen-view';
 
 class ModalPortalView extends View<HTMLDivElement> {
   static readonly classNames = {
-    portal: 'modal-portal',
+    portal: 'portal',
   };
 
-  static $portal: HTMLDivElement | null = null;
+  static $modalPortal: HTMLDivElement | null = null;
+  static $popupPortal: HTMLDivElement | null = null;
 
   constructor() {
-    const $root = ScreenView.$modalPortal;
+    const $root = ScreenView.$portal;
     if (!$root) {
-      ModalPortalView.throwNoRootInTheDomError('Modal-Portal');
+      ModalPortalView.throwNoRootInTheDomError('Portal');
     }
     super($root);
   }
   build(): void {
-    ModalPortalView.$portal = this.$root;
+    ModalPortalView.$modalPortal = $('div', 'modal-portal');
+    ModalPortalView.$popupPortal = $('div', 'popup-portal');
+    this.$container.append(ModalPortalView.$modalPortal, ModalPortalView.$popupPortal);
   }
 }
 
