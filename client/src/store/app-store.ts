@@ -10,7 +10,7 @@ export type IncomingPersonalMessage = AppOmit<PersonalMessage, 'id'>;
 class AppStore {
   private static instance: AppStore;
 
-  user: User | null = null;
+  private _user: User | null = null;
 
   private _users: User[] = [];
 
@@ -25,6 +25,14 @@ class AppStore {
 
   get isAuth(): boolean {
     return Boolean(this.user);
+  }
+
+  get user(): User | null {
+    return this._user;
+  }
+
+  private set user(user: User | null) {
+    this._user = user;
   }
 
   get users(): User[] {
@@ -101,6 +109,25 @@ class AppStore {
     } else {
       this.servers = [];
     }
+  }
+
+  async checkAuth(): Promise<boolean> {
+    const response = await http.get<{ user: User | null }>('/users/check-auth').catch((error) => console.error(error));
+    if (response) {
+      this.user = response.data.user;
+      return true;
+    }
+    return false;
+  }
+
+  async login(email: string, password: string): Promise<void> {
+    const response = await http.post('/users/login', { email, password });
+    console.log(response);
+  }
+
+  async register(email: string, password: string, name: string, phone: string): Promise<void> {
+    const response = await http.post('/users/register', { email, password, name, phone });
+    console.log(response);
   }
 
   async addPersonalMessage(message: IncomingPersonalMessage): Promise<void> {

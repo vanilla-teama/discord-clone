@@ -66,38 +66,18 @@ const createServer: Handler = (req, res, next) => {
 
   server
     .save()
-    .then((result) => {
+    .then(() => {
       res.status(201).json({
         message: 'Server created successfully!',
         server,
       });
     })
-    .catch((err) => {
+    .catch((err: { statusCode: number; }) => {
       if (!err.statusCode) {
         err.statusCode = 500;
       }
       next(err);
     });
-};
-
-const seedServers = (): void => {
-  const servers = ['RS School', 'Vanilla Team', 'Twin Fin'].map(
-    (name) =>
-      new Server({
-        name: name,
-      })
-  );
-
-  servers.forEach((server) => {
-    server
-      .save()
-      .then((result) => {
-        console.log(`Server ${server.name} was created.`);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  });
 };
 
 const updateServer: Handler = (req, res, next) => {
@@ -146,4 +126,4 @@ const deleteServer: Handler = (req, res, next) => {
     });
 };
 
-export default { getServers, createServer, getServer, seedServers, updateServer, deleteServer };
+export default { getServers, createServer, getServer, updateServer, deleteServer };

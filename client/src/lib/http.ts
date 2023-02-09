@@ -72,6 +72,10 @@ class Http {
     return this.http.request(config);
   }
 
+  head<T = unknown, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
+    return this.http.head<T, R>(url, config);
+  }
+
   get<T = unknown, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
     return this.http.get<T, R>(url, config);
   }

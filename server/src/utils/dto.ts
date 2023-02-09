@@ -1,10 +1,10 @@
 import { HydratedDocument } from 'mongoose';
-import { IUser } from '../models/user';
+import { UserDocument } from '../models/user';
 import { DTOChat, DTOUser } from '../types/dto';
 
-export type FetchedUser = HydratedDocument<IUser>;
+export type FetchedUser = HydratedDocument<UserDocument>;
 
-export type FetchedChat = HydratedDocument<Pick<IUser, 'name'>>;
+export type FetchedChat = HydratedDocument<Pick<UserDocument, 'name'>>;
 
 export const userDTO = ({ _id, email, name, password, phone, availability }: FetchedUser): DTOUser => ({
   id: _id.toString(),

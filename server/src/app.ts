@@ -1,7 +1,11 @@
 import express from 'express';
 import http from 'http';
 import mongoose from 'mongoose';
+import compression from "compression";
 import path from 'path';
+import bodyParser from 'body-parser';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
 import { Server } from 'socket.io';
 import serversRoutes from './routes/servers';
 import usersRoutes from './routes/users';
@@ -11,8 +15,16 @@ import channelsRoutes from './routes/channels';
 import testRoutes from './routes/test';
 import { initSocket } from './socket';
 import cors from 'cors';
+import * as passportConfig from './passport';
+import env from './config';
+import passport from "passport";
 
-const port: number = 3001;
+declare module "express-session" {
+  interface SessionData {
+    returnTo: string;
+  }
+}
+
 const whitelist = ['http://localhost:3000', 'http://localhost:8005'];
 
 mongoose.set('strictQuery', true);
@@ -35,6 +47,8 @@ export class App {
   constructor(port: number) {
     this.port = port;
     const app = express();
+
+    app.set('port', this.port || 3000);
     app.use(express.static(path.join(__dirname, '../../client/dist')));
 
     app.use(
@@ -50,8 +64,42 @@ export class App {
         credentials: true,
       })
     );
-
+    app.use(compression());
     app.use(express.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(
+      session({
+        resave: true,
+        saveUninitialized: true,
+        secret: env.SESSION_SECRET,
+        store: new MongoStore({
+          mongoUrl: env.MONGO_URI_LOCAL,
+          mongoOptions: {
+            connectTimeoutMS: 10000,
+          },
+        }),
+      })
+    );
+    app.use(passport.initialize());
+    app.use(passport.session());
+    app.use((req, res, next) => {
+      res.locals.user = req.user;
+      next();
+    });
+    app.use((req, res, next) => {
+      // After successful login, redirect back to the intended page
+      if (!req.user &&
+      req.path !== "/login" &&
+      req.path !== "/signup" &&
+      !req.path.match(/^\/auth/) &&
+      !req.path.match(/\./)) {
+          req.session.returnTo = req.path;
+      } else if (req.user &&
+      req.path == "/account") {
+          req.session.returnTo = req.path;
+      }
+      next();
+  });
 
     // TODO: add validation
     app.use('/test', testRoutes);
@@ -68,7 +116,7 @@ export class App {
 
   public Start() {
     mongoose
-      .connect(mongooseUrl)
+      .connect(env.MONGO_URI_LOCAL)
       .then((result) => {
         // serversController.seedServers();
         this.server.listen(this.port, () => {
@@ -91,4 +139,4 @@ export class App {
   }
 }
 
-new App(port).Start();
+new App(env.PORT).Start();

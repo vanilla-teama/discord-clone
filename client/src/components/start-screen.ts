@@ -1,6 +1,7 @@
 import App from '../lib/app';
 import Controller from '../lib/controller';
 import Router, { RouteControllers } from '../lib/router';
+import { appStore } from '../store/app-store';
 import { Dispatch } from '../types/types';
 import StartScreenView from '../views/start-screen-view';
 import SignInComponent from './sign-in';
@@ -25,6 +26,7 @@ class StartScreen extends Controller<StartScreenView> {
   }
 
   async init(): Promise<void> {
+    await this.checkAuthAndRedirect();
     this.renderChild();
   }
 
@@ -33,6 +35,13 @@ class StartScreen extends Controller<StartScreenView> {
       new SignInComponent({ setState: this.setState }).init();
     } else {
       new SignUpComponent({ setState: this.setState }).init();
+    }
+  }
+
+  async checkAuthAndRedirect(): Promise<void> {
+    const isAuth = await appStore.checkAuth();
+    if (isAuth) {
+      Router.push(RouteControllers.Chats);
     }
   }
 }

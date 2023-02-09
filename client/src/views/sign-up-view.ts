@@ -6,8 +6,8 @@ import { $ } from '../utils/functions';
 class SignUpView extends View {
   static readonly classNames = {};
 
-  $signInButton: HTMLButtonElement | null = null;
-  $form: HTMLFormElement | null = null;
+  $signInButton: HTMLButtonElement;
+  $form: HTMLFormElement;
 
   constructor() {
     const $root = document.getElementById('root');
@@ -15,11 +15,11 @@ class SignUpView extends View {
       SignUpView.throwNoRootInTheDomError('Root');
     }
     super($root);
+    this.$form = $('form', 'sign-up__form');
+    this.$signInButton = $('button', 'btn btn-auth');
   }
   build(): void {
     const $container = $('div', 'sign-up');
-    this.$form = $('form', 'sign-up__form');
-    this.$signInButton = $('button', 'btn btn-auth');
 
     this.$form.innerHTML = `<input name="name" placeholder="Your Name" />
       <input type="email" name="email" placeholder="Your E-mail" />
@@ -38,6 +38,13 @@ class SignUpView extends View {
     if (this.$signInButton) {
       this.$signInButton.addEventListener('click', () => handler({ render: 'signin' }));
     }
+  }
+
+  bindSignUp(handler: (data: FormData) => void) {
+    this.$form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      handler(new FormData(this.$form));
+    });
   }
 }
 

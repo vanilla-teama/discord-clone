@@ -15,7 +15,7 @@ class SignInComponent extends Controller<SignInView> {
     this.props = props;
 
     // Initiatializing user to skip the auth screen
-    appStore.user = users[1];
+    // appStore.user = users[1];
     if (appStore.isAuth) {
       this.onSignedIn();
     }
@@ -29,9 +29,13 @@ class SignInComponent extends Controller<SignInView> {
     this.bindSocketEvents();
   }
 
-  onFormSubmit = (data: FormData) => {
-    appStore.user = users[0];
-    this.onSignedIn();
+  onFormSubmit = async (formData: FormData): Promise<void> => {
+    const email = formData.get('email');
+    const password = formData.get('password');
+    if (email && password && typeof email === 'string' && typeof password === 'string') {
+      await appStore.login(email, password);
+      this.onSignedIn();
+    }
   };
 
   onSignedIn() {
