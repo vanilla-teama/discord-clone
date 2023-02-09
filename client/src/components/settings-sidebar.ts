@@ -1,6 +1,7 @@
 import App from '../lib/app';
 import Controller from '../lib/controller';
 import Router, { RouteControllers } from '../lib/router';
+import { appStore } from '../store/app-store';
 import { CustomEvents } from '../types/types';
 import { getTypedCustomEvent, isKeyOf } from '../utils/functions';
 import SettingsSidebarView from '../views/settings-sidebar-view';
@@ -14,12 +15,20 @@ class SettingsSidebarComponent extends Controller<SettingsSidebarView> {
     this.view.render();
     this.view.toggleActiveStatus(App.getRouter().getParams()[0]);
     this.bindRouteChanged();
+    this.view.bindLogout(this.logOut);
   }
 
   bindRouteChanged() {
     document.removeEventListener(CustomEvents.AFTERROUTERPUSH, this.routeChangeHandler);
     document.addEventListener(CustomEvents.AFTERROUTERPUSH, this.routeChangeHandler);
   }
+
+  logOut: EventListener = async () => {
+    await appStore.logOut();
+    if (!appStore.isAuth) {
+      Router.push(RouteControllers.Start);
+    }
+  };
 
   private routeChangeHandler = (event: Event): void => {
     const {

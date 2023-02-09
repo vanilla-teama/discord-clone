@@ -10,7 +10,7 @@ export const userDTO = ({ _id, email, name, password, phone, availability }: Fet
   id: _id.toString(),
   name,
   email,
-  password,
+  // password,
   phone,
   availability,
 });

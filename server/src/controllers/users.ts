@@ -51,7 +51,7 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
       if (err) {
         return next(err);
       }
-      res.status(200).end();
+      res.status(200).json({ user: userDTO(user as FetchedUser)});
     });
   })(req, res, next);
 };
@@ -95,6 +95,15 @@ const register = async (req: Request, res: Response, next: NextFunction): Promis
         res.status(200).end();
       });
     });
+  });
+};
+
+const logout = (req: Request, res: Response, next: NextFunction): void => {
+  req.logout((err) => {
+    if (err) {
+      next(err);
+    }
+    res.status(200).end();
   });
 };
 
@@ -297,4 +306,4 @@ const updateFriends: Handler = async (req, res, next) => {
     });
 };
 
-export default { getUsers, createUser, getUser, updateUser, deleteUser, getFriends, updateFriends, login, register, checkAuth };
+export default { getUsers, createUser, getUser, updateUser, deleteUser, getFriends, updateFriends, login, register, checkAuth, logout };

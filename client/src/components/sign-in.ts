@@ -14,11 +14,7 @@ class SignInComponent extends Controller<SignInView> {
     super(new SignInView());
     this.props = props;
 
-    // Initiatializing user to skip the auth screen
-    // appStore.user = users[1];
-    if (appStore.isAuth) {
-      this.onSignedIn();
-    }
+    this.checkAuthAndRedirect();
   }
 
   async init(): Promise<void> {
@@ -33,16 +29,22 @@ class SignInComponent extends Controller<SignInView> {
     const email = formData.get('email');
     const password = formData.get('password');
     if (email && password && typeof email === 'string' && typeof password === 'string') {
-      await appStore.login(email, password);
-      this.onSignedIn();
+      await appStore.logIn(email, password);
+      this.onAfterLogginAttempt();
     }
   };
 
-  onSignedIn() {
+  onAfterLogginAttempt() {
     if (appStore.user) {
-      Router.push(RouteControllers.Chats);
       const socketEvent = createSocketEvent('userLoggedInClient', { data: { id: appStore.user.id } });
       socket.emit(socketEvent.name, socketEvent.data);
+      Router.push(RouteControllers.Chats);
+    }
+  }
+
+  checkAuthAndRedirect() {
+    if (appStore.isAuth) {
+      Router.push(RouteControllers.Chats);
     }
   }
 

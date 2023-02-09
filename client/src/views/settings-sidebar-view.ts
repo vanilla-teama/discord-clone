@@ -11,6 +11,7 @@ class SettingsSidebarView extends View {
   };
 
   itemsMap: Map<HTMLLIElement, SettingsParams>;
+  $logOut: HTMLLIElement;
 
   constructor() {
     const $root = SettingsScreenView.$sidebar;
@@ -19,6 +20,7 @@ class SettingsSidebarView extends View {
     }
     super($root);
     this.itemsMap = new Map();
+    this.$logOut = this.createLogOutItem();
   }
   async build(): Promise<void> {
     const $list = $('ul', SettingsSidebarView.classes.list);
@@ -32,7 +34,7 @@ class SettingsSidebarView extends View {
     $appearance.textContent = 'Appearance';
     $keybinds.textContent = 'Keybinds';
     $language.textContent = 'Language';
-    $list.append($myAccount, $profiles, $appearance, $keybinds, $language);
+    $list.append($myAccount, $profiles, $appearance, $keybinds, $language, this.$logOut);
     this.$container.append($list);
 
     this.itemsMap.set($myAccount, SettingsParams.Account);
@@ -42,6 +44,10 @@ class SettingsSidebarView extends View {
     this.itemsMap.set($language, SettingsParams.Language);
 
     this.bindItemClick();
+  }
+
+  bindLogout(handler: EventListener) {
+    this.$logOut.onclick = handler;
   }
 
   private bindItemClick() {
@@ -60,6 +66,12 @@ class SettingsSidebarView extends View {
     }
     Router.push(RouteControllers.Settings, '', [param]);
   };
+
+  private createLogOutItem(): HTMLLIElement {
+    return Object.assign($('li', SettingsSidebarView.classes.listItem), {
+      textContent: 'Log Out',
+    });
+  }
 
   toggleActiveStatus = (param: string | undefined) => {
     this.itemsMap.forEach((itemParam, $item) => {

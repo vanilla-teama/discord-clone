@@ -6,7 +6,7 @@ export const users: User[] = [
     id: '63dd3d9da1340145e9b74055',
     name: 'Hlib Hodovaniuk',
     password: '1111333',
-    email: 'email1@gmail.com',
+    email: 'gleb.godovanyuk@gmail.com',
     phone: '+380991234567',
     availability: Availability.Offline,
   },

@@ -16,12 +16,12 @@ class ChatsScreen extends Controller<ChatsScreenView> {
 
   constructor() {
     super(new ChatsScreenView());
-    if (!appStore.user) {
-      Router.push(RouteControllers.Start);
-    }
   }
 
   async init(): Promise<void> {
+    // if (!appStore.user) {
+    //   Router.push(RouteControllers.Start);
+    // }
     if (!appStore.user) {
       throw Error('User is not defined');
     }

@@ -115,19 +115,35 @@ class AppStore {
     const response = await http.get<{ user: User | null }>('/users/check-auth').catch((error) => console.error(error));
     if (response) {
       this.user = response.data.user;
-      return true;
+      return this.isAuth;
     }
     return false;
   }
 
-  async login(email: string, password: string): Promise<void> {
-    const response = await http.post('/users/login', { email, password });
-    console.log(response);
+  async logIn(email: string, password: string): Promise<void> {
+    const response = await http
+      .post<{ email: string; password: string }, { data: { user: User } }>('/users/login', { email, password })
+      .catch((error) => console.error(error));
+    if (response) {
+      console.log(response);
+      this.user = response.data.user;
+    } else {
+      this.user = users.find((user) => email === user.email) || users[0];
+    }
   }
 
   async register(email: string, password: string, name: string, phone: string): Promise<void> {
     const response = await http.post('/users/register', { email, password, name, phone });
     console.log(response);
+  }
+
+  async logOut(): Promise<void> {
+    const response = await http.get('/users/logout').catch((err) => console.error(err));
+    if (response) {
+      this.user = null;
+    } else {
+      console.error('Something really odd happened');
+    }
   }
 
   async addPersonalMessage(message: IncomingPersonalMessage): Promise<void> {
