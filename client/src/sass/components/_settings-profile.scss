@@ -3,10 +3,10 @@
   display: flex;
 }
 .info-block {
-  width: 340px;
+  max-width: 350px;
   border-radius: 10px;
-  background-color: rgb(63, 57, 57);
-  height: 280px;
+  background-color: var(--background-color-black);
+  height: 300px;
 }
 .info-block-header {
   border-radius: 10px 10px 0px 0px;
@@ -15,20 +15,21 @@
 }
 .avatar-block-header {
   position: relative;
-  border-radius: 20px;
+  border-radius: 30px;
   border: 5px solid black;
   background: url('/src/assets/icons/discord.svg') center no-repeat;
-  width: 32px;
-  height: 32px;
+  background-size: cover;
+  height: 50px;
+  width: 50px;
   top: 25px;
   left: 11px;
 }
 .block-body-profile {
   border-radius: 20px;
-  margin: 10px;
-  width: 320px;
+  margin: 35px 10px 10px 10px;
+  max-width: 320px;
   height: 200px;
-  background-color: black;
+  background: var(--background-color-light-gray);
   margin-bottom: 10px;
 }
 
