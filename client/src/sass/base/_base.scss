@@ -1,20 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
-
-
 :root {
   --background-color-dark-grey: #202225;
-  --background-color-gray: #2F3136;
-  --background-color-light-gray: #36393F;
-  --background-color-gray-hover: #42464D;
+  --background-color-gray: #2f3136;
+  --background-color-light-gray: #36393f;
+  --background-color-gray-hover: #42464d;
   --background-color-green: #3ba55d;
   --background-color-black: #000000;
   --background-color-black-light: #202225;
-  --background-color-blue: #5865F2;
-  --background-color-blue-light: #00AFF4;
-  --text-primary: #DCDDDE;
-  --text-secondary: #FFFFFF;
-  --text-gray: #D2D3D5;
+  --background-color-blue: #5865f2;
+  --background-color-blue-light: #00aff4;
+  --background-color-white: #ffffff;
+  --background-color-white-dark: #e3e5e8;
+  --text-primary: #dcddde;
+  --text-secondary: #ffffff;
+  --text-gray: #d2d3d5;
+  --text-gray-dark: #4f5660;
 }
 
 body {
@@ -42,4 +43,63 @@ ul {
   display: flex;
   //min-height: 100%;
   width: 100%;
+}
+
+.form {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  border-radius: 7px;
+  background-color: var(--background-color-gray);
+  z-index: 2;
+  &_white {
+    background-color: var(--background-color-white);
+  }
+  &__title {
+    margin: 0 auto 0 auto;
+    text-align: center;
+    font-weight: 600;
+    font-size: 24px;
+  }
+
+  &__subtitle {
+    text-align: center;
+    max-width: 390px;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  &__input-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    width: 410px;
+  }
+  &__label {
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  &__input {
+    padding: 10px;
+    background-color: var(--background-color-dark-grey);
+    border: none;
+    outline: none;
+    border-radius: 2px;
+    color: var(--text-primary);
+  }
+  &__btn-submit {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: var(--background-color-blue);
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+  }
+  &__image {
+  }
 }
