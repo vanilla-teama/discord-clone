@@ -110,13 +110,13 @@ class ChatsSideBarView extends View {
     return $userBar;
   }
 
-  private createChatItem({ userName }: Chat): HTMLLIElement {
+  private createChatItem({ userName, availability }: Chat): HTMLLIElement {
     const $item = $('li', ChatsSideBarView.classes.chatItem);
     const $itemBox = $('div', 'chats-sidebar__item-box');
     const $itemIcon = $('div', 'chats-sidebar__icon');
     const $itemName = $('div', 'chats-sidebar__name');
     const $itemClose = $('span', 'chats-sidebar__close');
-    $itemName.textContent = `${userName}`;
+    $itemName.textContent = `${userName} ${availability}`;
     $itemBox.append($itemIcon, $itemName);
     $item.append($itemBox, $itemClose);
 

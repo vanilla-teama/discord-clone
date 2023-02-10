@@ -154,4 +154,9 @@ export const validateUserField = <
   return true;
 };
 
-export default mongoose.model('User', UserSchema);
+const User = mongoose.model('User', UserSchema);
+
+User.watch().
+  on('change', data => console.log(data));
+
+export default User;

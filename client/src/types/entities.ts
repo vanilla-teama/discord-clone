@@ -45,7 +45,7 @@ export interface Server<S extends 'data' | 'formData' = 'data'> extends MongoEnt
 export interface Chat extends MongoEntity {
   userId: MongoObjectId;
   userName: string;
-  availability?: Availability;
+  availability: Availability;
 }
 
 export enum Availability {

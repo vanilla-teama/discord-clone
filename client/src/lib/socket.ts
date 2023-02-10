@@ -63,6 +63,21 @@ export const createSocketEvent = <K extends SocketClientEventName>(name: K, data
   data,
 });
 
+export type BindSocketEventName = SocketClientEventName | SocketServerEventName;
+export type BindSocketEventHandler<K extends BindSocketEventName> = FallbackToUntypedListener<
+  K extends 'connect' | 'disconnect' | 'connect_error'
+    ? () => void
+    : K extends string
+    ? (
+        data: K extends SocketClientEventName
+          ? SocketClientEvents[K]['data']
+          : K extends SocketServerEventName
+          ? SocketServerEvents[K]['data']
+          : unknown
+      ) => void
+    : never
+>;
+
 const socketOptions: Partial<ManagerOptions & SocketOptions> | undefined = {
   // reconnection: false,
   // reconnectionAttempts: 1,
@@ -71,48 +86,40 @@ const socketOptions: Partial<ManagerOptions & SocketOptions> | undefined = {
 };
 const socket = io(socketOptions);
 
-export const bindEvent = <K extends SocketClientEventName | SocketServerEventName>(
-  event: K,
-  handler: FallbackToUntypedListener<
-    K extends 'connect' | 'disconnect' | 'connect_error'
-      ? () => void
-      : K extends string
-      ? (
-          data: K extends SocketClientEventName
-            ? SocketClientEvents[K]['data']
-            : K extends SocketServerEventName
-            ? SocketServerEvents[K]['data']
-            : unknown
-        ) => void
-      : never
-  >
-): void => {
+export const bindSocketEvent = <K extends BindSocketEventName>(event: K, handler: BindSocketEventHandler<K>): void => {
   socket.on(event, handler);
 };
 
-export const removeSocketEvent = <K extends SocketClientEventName | SocketServerEventName>(event: K): void => {
+export const removeSocketEvent = <K extends SocketClientEventName | SocketServerEventName>(
+  event: K,
+  handler: BindSocketEventHandler<K>
+): void => {
+  socket.removeListener(event, handler);
+};
+
+export const removeAllSocketEvents = <K extends SocketClientEventName | SocketServerEventName>(event: K): void => {
   socket.removeListener(event);
 };
 
 export const bindGlobalSocketEvents = () => {
-  bindEvent('connect', () => {
+  bindSocketEvent('connect', () => {
     console.log('connect');
   });
 
-  bindEvent('disconnect', () => {
+  bindSocketEvent('disconnect', () => {
     console.log('disconnect');
   });
 
-  bindEvent('connect_error', () => {
+  bindSocketEvent('connect_error', () => {
     // TODO: Handle this error
     console.log('connect error');
   });
 
-  bindEvent('id', (id: unknown) => {
+  bindSocketEvent('id', (id: unknown) => {
     console.log('id');
   });
 
-  bindEvent('client', (clients: unknown) => {
+  bindSocketEvent('client', (clients: unknown) => {
     console.log('client');
   });
 };

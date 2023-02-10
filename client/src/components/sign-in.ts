@@ -1,7 +1,7 @@
 import { users } from '../develop/data';
 import Controller from '../lib/controller';
 import Router, { RouteControllers } from '../lib/router';
-import socket, { bindEvent, createSocketEvent } from '../lib/socket';
+import socket, { bindSocketEvent, createSocketEvent } from '../lib/socket';
 import { appStore } from '../store/app-store';
 import { Dispatch } from '../types/types';
 import SignInView from '../views/sign-in-view';

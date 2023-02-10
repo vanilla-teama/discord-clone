@@ -114,15 +114,18 @@ export const chats: Chat[] = [
     id: '63dd3dd9938e35dad6409e12',
     userId: '63dd3d9da1340145e9b74055',
     userName: 'Hlib Hodovaniuk',
+    availability: Availability.Away,
   },
   {
     id: '63dd3d9da1340145e9b74055',
     userId: '63dd3dd9938e35dad6409e12',
     userName: 'Alexander Chornyi',
+    availability: Availability.Away,
   },
   {
     id: '63dd3de6938e35dad6409e14',
     userId: '63dd3de6938e35dad6409e14',
     userName: 'Alexander Kiroi',
+    availability: Availability.Away,
   },
 ];

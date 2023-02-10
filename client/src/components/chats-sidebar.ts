@@ -5,7 +5,7 @@ import { appStore } from '../store/app-store';
 import { Chat, User } from '../types/entities';
 import { CustomEventData as CustomEventType, CustomEvents } from '../types/types';
 import { getTypedCustomEvent } from '../utils/functions';
-import { bindEvent as bindSocketEvent } from '../lib/socket';
+import { BindSocketEventHandler, bindSocketEvent as bindSocketEvent, removeSocketEvent } from '../lib/socket';
 import ChatsSideBarView from '../views/chats-sidebar-view';
 import PopupComponent from './popup';
 import { PopupCoords } from '../views/popup-view';
@@ -69,10 +69,14 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
   }
 
   bindSocketUserLoggedInServer() {
-    bindSocketEvent('userLoggedInServer', ({ user }) => {
-      appStore.updateChatLocally(user.id, { availability: user.availability });
-    });
+    removeSocketEvent('userLoggedInServer', ChatsSideBarComponent.onSocketUserLoggedInServer);
+    bindSocketEvent('userLoggedInServer', ChatsSideBarComponent.onSocketUserLoggedInServer);
   }
+
+  static onSocketUserLoggedInServer: BindSocketEventHandler<'userLoggedInServer'> = ({ user }) => {
+    console.log('userLoggedInServer 1', user);
+    appStore.updateChatLocally(user.id, { availability: user.availability });
+  };
 }
 
 export default ChatsSideBarComponent;
