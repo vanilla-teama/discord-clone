@@ -15,7 +15,7 @@ const getChats: Handler = (req, res, next) => {
         //error.statusCode = 404;
         throw error;
       }
-      res.status(200).json({ chats: user.chats.map((c) => chatDTO(c as FetchedChat))})
+      res.status(200).json({ chats: (user.chats || []).map((c) => chatDTO(c as FetchedChat))})
     })
   // PersonalMessage.find({
   //   $and: [
@@ -107,14 +107,19 @@ const createChat: RequestHandler = (req, res, next) => {
       User
         // .findById(userTwoId)
         .findById(userTwoId)
+        .populate('chats')
         .select('id')
         .then((userTwo) => {
           if (!userTwo) {
             //error.statusCode = 404;
             throw new Error('Could not find second user.');
           }
-          userOne.chats = [...new Set((userOne.chats || []).map((c) => c.id.toString()).concat(userTwo.id.toString()))];
-          userTwo.chats = [...new Set((userTwo.chats || []).map((c) => c.id.toString()).concat(userOne.id.toString()))];
+
+          const chatsOne = [...new Set((userOne.chats || []).map((c) => c.id).concat(userTwo.id))];
+          const chatsTwo = [...new Set((userTwo.chats || []).map((c) => c.id).concat(userOne.id))];
+          
+          userOne.chats = chatsOne;
+          userTwo.chats = chatsTwo;
 
           userOne
             .save()

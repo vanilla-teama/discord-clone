@@ -44,6 +44,7 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
 
   onChatUpdate = (chat: Chat): void => {
     this.view.updateChat(chat);
+    this.toggleActiveStatus();
   };
 
   onShowCreateChat = (coords: PopupCoords) => {

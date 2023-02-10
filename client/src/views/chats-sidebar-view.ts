@@ -57,12 +57,20 @@ class ChatsSideBarView extends View {
   }
 
   updateChat(chat: Chat): void {
-    this.chatListMap.forEach(({ chat: { userId } }, $item) => {
+    const $newItem = this.createChatItem(chat);
+    for (const [
+      $item,
+      {
+        chat: { userId },
+      },
+    ] of this.chatListMap) {
       if (userId === chat.userId) {
-        const $newItem = replaceWith($item, this.createChatItem(chat));
-        this.onUpdateChatItem($newItem, chat);
+        $item.replaceWith($newItem);
+        this.chatListMap.delete($item);
+        break;
       }
-    });
+    }
+    this.onAppendChatItem($newItem, chat);
   }
 
   displayUser(user: User | null): void {
@@ -117,10 +125,6 @@ class ChatsSideBarView extends View {
   }
 
   private onAppendChatItem($item: HTMLLIElement, chat: Chat): void {
-    this.chatListMap.set($item, { chat });
-  }
-
-  private onUpdateChatItem($item: HTMLLIElement, chat: Chat): void {
     this.chatListMap.set($item, { chat });
   }
 

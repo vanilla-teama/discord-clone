@@ -55,6 +55,9 @@ class PopupView extends View {
 
   static hide(): void {
     const $popup = PopupView.$popup;
+    if (!$popup) {
+      return;
+    }
     $popup.onanimationend = () => {
       $popup.classList.remove(PopupView.classNames.show, PopupView.classNames.hiding);
       $popup.onanimationend = null;

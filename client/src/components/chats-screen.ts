@@ -40,18 +40,12 @@ class ChatsScreen extends Controller<ChatsScreenView> {
     new MainComponent().init();
 
     this.maybeRedirectToFirstChat(appStore.chats);
-    // new StartBarComponent().init();
-    // new ChatsSideBarComponent().init();
-    // new MainComponent().init();
-    // if (ChatsScreen.chat) {
-    //   ChatsScreen.onUrlChatIdChanged(ChatsScreen.chat.userId);
-    // }
 
     this.bindSocketEvents();
   }
 
   bindSocketEvents() {
-    bindEvent('userLoggedInServer', (data: unknown) => {});
+    // bindEvent('userLoggedInServer', (data: unknown) => {});
   }
 
   static bindRouteChanged() {

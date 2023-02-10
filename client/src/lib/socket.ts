@@ -64,9 +64,10 @@ export const createSocketEvent = <K extends SocketClientEventName>(name: K, data
 });
 
 const socketOptions: Partial<ManagerOptions & SocketOptions> | undefined = {
-  reconnection: false,
-  reconnectionAttempts: 1,
-  reconnectionDelay: 100,
+  // reconnection: false,
+  // reconnectionAttempts: 1,
+  // reconnectionDelay: 100,
+  port: 3000,
 };
 const socket = io(socketOptions);
 
@@ -94,18 +95,26 @@ export const removeSocketEvent = <K extends SocketClientEventName | SocketServer
 };
 
 export const bindGlobalSocketEvents = () => {
-  bindEvent('connect', () => {});
+  bindEvent('connect', () => {
+    console.log('connect');
+  });
 
-  bindEvent('disconnect', () => {});
+  bindEvent('disconnect', () => {
+    console.log('disconnect');
+  });
 
   bindEvent('connect_error', () => {
     // TODO: Handle this error
     console.log('connect error');
   });
 
-  bindEvent('id', (id: unknown) => {});
+  bindEvent('id', (id: unknown) => {
+    console.log('id');
+  });
 
-  bindEvent('client', (clients: unknown) => {});
+  bindEvent('client', (clients: unknown) => {
+    console.log('client');
+  });
 };
 
 export const emitPersonalMessage = (message: IncomingPersonalMessage) => {

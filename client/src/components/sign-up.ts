@@ -22,19 +22,16 @@ class SignUpComponent extends Controller<SignUpView> {
     const email = formData.get('email');
     const password = formData.get('password');
     const name = formData.get('name');
-    const phone = formData.get('phone');
 
     if (
       email &&
       password &&
       name &&
-      phone &&
       typeof email === 'string' &&
       typeof password === 'string' &&
-      typeof name === 'string' &&
-      typeof phone === 'string'
+      typeof name === 'string'
     ) {
-      await appStore.register(email, password, name, phone);
+      await appStore.register(email, password, name);
     }
   };
 }

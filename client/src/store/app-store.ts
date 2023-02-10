@@ -134,8 +134,8 @@ class AppStore {
     }
   }
 
-  async register(email: string, password: string, name: string, phone: string): Promise<void> {
-    const response = await http.post('/users/register', { email, password, name, phone });
+  async register(email: string, password: string, name: string): Promise<void> {
+    const response = await http.post('/users/register', { email, password, name });
     console.log(response);
   }
 

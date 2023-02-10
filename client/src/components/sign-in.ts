@@ -49,7 +49,7 @@ class SignInComponent extends Controller<SignInView> {
   }
 
   bindSocketEvents() {
-    bindEvent('userLoggedInServer', (data: unknown) => {});
+    // bindEvent('userLoggedInServer', (data: unknown) => {});
   }
 }
 

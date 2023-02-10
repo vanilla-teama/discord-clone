@@ -42,11 +42,15 @@ class ModalView extends View {
   }
 
   static hide(): void {
-    ModalView.$modal.onanimationend = () => {
-      ModalView.$modal.classList.remove(ModalView.classNames.show, ModalView.classNames.hiding);
-      ModalView.$modal.onanimationend = null;
+    const $modal = ModalView.$modal;
+    if (!$modal) {
+      return;
+    }
+    $modal.onanimationend = () => {
+      $modal.classList.remove(ModalView.classNames.show, ModalView.classNames.hiding);
+      $modal.onanimationend = null;
     };
-    ModalView.$modal.classList.add(ModalView.classNames.hiding);
+    $modal.classList.add(ModalView.classNames.hiding);
   }
 
   bindOverlayClick(): void {

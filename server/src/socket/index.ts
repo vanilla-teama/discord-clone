@@ -21,10 +21,12 @@ export const initSocket = (app: App) => {
     });
 
     socket.on('userLoggedInClient', (data) => {
+      console.log(data);
       User
         .findById(data.data.id)
         .then((user) => {
           if (user) {
+            console.log(user);
             // We keep statuses like `Away` and `Do not disturb`
             if (user.availability !== Availability.Away && user.availability !== Availability.DoNotDisturb) {
               user.availability = Availability.Online;
