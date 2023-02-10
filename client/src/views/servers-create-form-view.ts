@@ -2,6 +2,8 @@ import View from '../lib/view';
 import { Server } from '../types/entities';
 import { $ } from '../utils/functions';
 import ModalView from './modal-view';
+import * as upload from '../assets/icons/upload.svg';
+import * as plus from '../assets/icons/plus.svg';
 
 class ServersCreateFormView extends View {
   static readonly classNames = {};
@@ -26,23 +28,48 @@ class ServersCreateFormView extends View {
   };
 
   private createForm(): HTMLFormElement {
-    const $form = Object.assign($('form', 'form-create-server'), {
+    const $form = Object.assign($('form', ['form-create-server', 'form', 'form_white']), {
       enctype: 'multipart/form-data',
     });
-    const $header = $('h3');
-    const $nameInput = Object.assign($('input', 'form-create-server__name'), {
-      name: 'name',
-    });
-    const $imageInput = Object.assign($('input', 'form-create-server__name'), {
+    const $closeBtn = $('button', ['form-create-server__close-btn']);
+
+    const $title = $('h3', ['form__title', 'form-create-server__title']);
+    $title.textContent = 'Create your server';
+
+    const $subtitle = $('div', ['form__subtitle', 'form-create-server__subtitle']);
+    $subtitle.textContent =
+      'Give your new server a personality with a name and an icon. You can always change it later.';
+
+    const $imageInputContainer = $('div', ['form__image-input-container', 'form-create-server__image-input-container']);
+    const $imageInput = Object.assign($('input', 'form-create-server__input-image'), {
       name: 'image',
       type: 'file',
     });
-    const $button = Object.assign($('button', 'form-create-server__submit'), {
+    const $imageUpload = $('img', ['form-create-server__image-upload', 'form__image']);
+    $imageUpload.src = upload.default;
+
+    $imageInput.addEventListener('change', (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      if (target.value) {
+        $imageUpload.src = plus.default;
+      }
+    });
+
+    const $inputContainer = $('div', ['form__input-container', 'form-create-server__input-container']);
+    const $label = $('label', ['form__label', 'form-create-server__label']);
+    $label.textContent = 'Server name';
+    const $nameInput = Object.assign($('input', ['form__input', 'form-create-server__name']), {
+      name: 'name',
+    });
+
+    const $button = Object.assign($('button', ['form__btn-submit', 'form-create-server__submit']), {
       type: 'submit',
       textContent: 'Create',
     });
-    $header.textContent = 'Create Server';
-    $form.append($header, $nameInput, $imageInput, $button);
+
+    $imageInputContainer.append($imageInput, $imageUpload);
+    $inputContainer.append($label, $nameInput);
+    $form.append($closeBtn, $title, $subtitle, $imageInputContainer, $inputContainer, $button);
 
     return $form;
   }
