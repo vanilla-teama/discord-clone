@@ -21,16 +21,31 @@ class SignUpView extends View {
   build(): void {
     const $container = $('div', 'sign-up');
 
-    this.$form.innerHTML = `<input name="name" placeholder="Your Name" />
-      <input type="email" name="email" placeholder="Your E-mail" />
-      <input type="tel" name="phone" placeholder="Your Phone Number" />
-      <input type="password" name="password" placeholder="Your Password" />
-      <button type="submit">Sign Up!</button>
-    `;
+    const $box = $('div', 'sign-up__box');
+    const $title = $('div', 'sign-up__title');
+    $title.textContent = 'Create an account';
 
-    $container.append('Sign Up', this.$form, this.$signInButton);
+    this.$form.innerHTML = `
+    <div class="sign-up__form-wrapper">
+      <label class="sign-up__form-label" for="email">Email:</label>
+      <input class="sign-up__input-email" type="email" name="email">
+    </div>
+    <div class="sign-up__form-wrapper">
+      <label class="sign-up__form-label" for="name">Username:</label>
+      <input class="sign-up__input-name" type="text" name="name">
+    </div>
+    <div class="sign-up__form-wrapper">
+      <label class="sign-up__form-label" for="password">Password:</label>
+      <input class="sign-up__input-password" type="password" id="password" name="password">
+    </div>
+    <button class="sign-up__btn-submit type="submit">Continue</button>
+  `;
 
-    this.$signInButton.textContent = 'Sign In!';
+    this.$signInButton.textContent = 'Already have an account?';
+
+    $box.append($title, this.$form, this.$signInButton);
+    $container.append($box);
+
     this.$container.append($container);
   }
 
