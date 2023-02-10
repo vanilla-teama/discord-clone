@@ -48,6 +48,7 @@ class ChatsSideBarView extends View {
   }
 
   displayChats(chats: Chat[]): void {
+    this.$chatList.innerHTML = '';
     chats.forEach((chat) => {
       const $item = this.createChatItem(chat);
       this.$chatList.append($item);

@@ -11,6 +11,7 @@ export interface User extends MongoEntity {
   email: string;
   phone: string;
   availability: Availability;
+  chats: Chat[] | null;
 }
 
 export interface FetchedUser {
@@ -41,7 +42,7 @@ export interface Server<S extends 'data' | 'formData' = 'data'> extends MongoEnt
   image: S extends 'formData' ? File : string | null;
 }
 
-export interface Chat {
+export interface Chat extends MongoEntity {
   userId: MongoObjectId;
   userName: string;
   availability?: Availability;

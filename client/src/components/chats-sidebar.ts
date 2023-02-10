@@ -12,8 +12,12 @@ import { PopupCoords } from '../views/popup-view';
 import ChatsCreateFormComponent from './chats-create-form';
 
 class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
+  // Keeps last instance of itself
+  static instance: ChatsSideBarComponent;
+
   constructor() {
     super(new ChatsSideBarView());
+    ChatsSideBarComponent.instance = this;
   }
 
   async init(): Promise<void> {
@@ -35,7 +39,7 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
 
   onChatListChanged = (chats: Chat[]): void => {
     this.view.displayChats(chats);
-    this.toggleActiveStatus();
+    // this.toggleActiveStatus();
   };
 
   onChatUpdate = (chat: Chat): void => {

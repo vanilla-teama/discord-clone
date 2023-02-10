@@ -10,6 +10,7 @@ export interface DTOUser extends DTOEntity {
   email: string;
   phone: string;
   availability: Availability;
+  chats: DTOChat[];
 }
 
 export interface DTOPersonalMessage extends DTOEntity {
@@ -28,10 +29,11 @@ export interface DTOChannelMessage extends DTOEntity {
 
 export interface DTOServer extends DTOEntity {
   name: string;
-  avatar: string;
+  image: string;
 }
 
 export interface DTOChat {
   userId: string;
   userName: string;
+  availability: string;
 }

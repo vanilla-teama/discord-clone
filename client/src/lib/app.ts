@@ -33,7 +33,6 @@ class App {
       // Render content
       if (isKeyOf(controller, routes)) {
         const prevControllerObj = App.controller;
-        console.log(prevControllerObj, controller);
 
         if (!prevControllerObj || !(prevControllerObj instanceof routes[controller])) {
           App.controller = new routes[controller]();

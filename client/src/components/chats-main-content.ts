@@ -1,6 +1,5 @@
-import App from '../lib/app';
 import Controller from '../lib/controller';
-import socket, { bindEvent as bindSocketEvent, emitPersonalMessage, removeSocketEvent } from '../lib/socket';
+import { bindEvent as bindSocketEvent, emitPersonalMessage, removeSocketEvent } from '../lib/socket';
 import { IncomingPersonalMessage, appStore } from '../store/app-store';
 import { Chat } from '../types/entities';
 import ChatsMainContentView, { RenderedPersonalMessage } from '../views/chats-main-content-view';
@@ -38,6 +37,7 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
   }
 
   onMessageListChange = (messages: RenderedPersonalMessage[]) => {
+    console.log('Main Content in message list change', messages);
     this.view.displayMessages(messages);
   };
 

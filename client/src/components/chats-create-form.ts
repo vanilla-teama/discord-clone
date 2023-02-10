@@ -1,34 +1,55 @@
 import Controller from '../lib/controller';
+import Router, { RouteControllers } from '../lib/router';
 import { appStore } from '../store/app-store';
-import { Server } from '../types/entities';
+import { Chat, User } from '../types/entities';
 import ChatsCreateFormView from '../views/chats-create-form-view';
-import ServersCreateFormView from '../views/servers-create-form-view';
+import ChatsSideBarComponent from './chats-sidebar';
 
 class ChatsCreateFormComponent extends Controller<ChatsCreateFormView> {
+  lastChatAdded: Chat['userId'] | null = null;
+
   constructor($root: HTMLElement) {
     super(new ChatsCreateFormView($root));
+    this.lastChatAdded = null;
   }
 
   async init(): Promise<void> {
     this.view.render();
-    this.view.bindFormSubmit(this.handleAddServer);
+    this.onFriendListChanged(appStore.users);
+    this.view.bindFormSubmit(this.handleAddChat);
+    appStore.bindChatListChanged(this.onChatListChanged);
   }
 
-  handleAddServer = async (formData: FormData): Promise<void> => {
-    await appStore.addServer(this.extractServer(formData));
+  handleAddChat = async (formData: FormData): Promise<void> => {
+    const friendIDs = this.extractChat(formData);
+    if (friendIDs.length === 0) {
+      return;
+    }
+    this.lastChatAdded = friendIDs[0];
+    await appStore.createChat(friendIDs);
+    // await appStore.fetchChats(appStore.user!.id);
   };
 
-  private extractServer = (formData: FormData): Partial<Server<'formData'>> => {
-    const server: Partial<Server<'formData'>> = {};
-    const name = formData.get('name');
-    const image = formData.get('image');
+  onFriendListChanged(friends: User[]): void {
+    this.view.displayFriends(friends);
+  }
 
-    if (typeof name === 'string' && image instanceof File) {
-      server.name = name.trim();
-      server.image = image;
+  onChatListChanged = (chats: Chat[]): void => {
+    ChatsSideBarComponent.instance.onChatListChanged(chats);
+    console.log('ChatsCreateFormComponent.onChatListChanged', chats);
+    if (this.lastChatAdded) {
+      Router.push(RouteControllers.Chats, '', [this.lastChatAdded]);
     }
+  };
 
-    return server;
+  private extractChat = (formData: FormData): string[] => {
+    const friendIDs: User['id'][] = [];
+    formData.forEach((value, key) => {
+      if (key === 'friendId' && typeof value === 'string') {
+        friendIDs.push(value);
+      }
+    });
+    return friendIDs;
   };
 }
 

@@ -35,10 +35,17 @@ class ChatsScreen extends Controller<ChatsScreenView> {
       this.view.displayUser(appStore.user);
     }
 
-    this.maybeRedirectToFirstChat(appStore.chats);
     new StartBarComponent().init();
     new ChatsSideBarComponent().init();
     new MainComponent().init();
+
+    this.maybeRedirectToFirstChat(appStore.chats);
+    // new StartBarComponent().init();
+    // new ChatsSideBarComponent().init();
+    // new MainComponent().init();
+    // if (ChatsScreen.chat) {
+    //   ChatsScreen.onUrlChatIdChanged(ChatsScreen.chat.userId);
+    // }
 
     this.bindSocketEvents();
   }
@@ -63,7 +70,7 @@ class ChatsScreen extends Controller<ChatsScreenView> {
     } = getTypedCustomEvent(CustomEvents.AFTERROUTERPUSH, event);
 
     if (controller === RouteControllers.Chats && params.length > 0) {
-      ChatsScreen.chat = appStore.chats.find((chat) => chat.userId === params[0]) || null;
+      ChatsScreen.onUrlChatIdChanged(params[0]);
     }
   };
 
@@ -72,6 +79,15 @@ class ChatsScreen extends Controller<ChatsScreenView> {
       return;
     }
     Router.push(RouteControllers.Chats, '', [chats[0].userId]);
+  }
+
+  private static onUrlChatIdChanged(chatId: Chat['userId']) {
+    ChatsScreen.chat = appStore.chats.find((chat) => chat.userId === chatId) || null;
+    if (ChatsScreen.chat) {
+      // new StartBarComponent().init();
+      // new ChatsSideBarComponent().init();
+      new MainComponent().init();
+    }
   }
 }
 

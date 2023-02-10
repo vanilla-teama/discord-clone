@@ -85,7 +85,9 @@ class AppStore {
   }
 
   async fetchChats(userId: User['id']): Promise<void> {
+    console.log('fetch chats', userId);
     const response = await http.get<{ chats: Chat[] }>(`/chats/users/${userId}`);
+    console.log(response);
     if (response) {
       this.chats = response.data.chats || [];
     } else {
@@ -146,6 +148,19 @@ class AppStore {
     }
   }
 
+  async createChat(friendIDs: string[]): Promise<void> {
+    if (!this.user) {
+      return;
+    }
+    const response = await http
+      .post(`/chats/users/${this.user.id}`, { userId: friendIDs[0] })
+      .catch((err) => console.error(err));
+    if (response) {
+      await this.fetchChats(this.user.id);
+    }
+    this.onChatListChanged(this.chats);
+  }
+
   async addPersonalMessage(message: IncomingPersonalMessage): Promise<void> {
     await http.post('/personal-messages', message).catch((error) => console.error(error));
     this.onPersonalMessageListChanged(this.getFormattedRenderedPersonalMessages());
@@ -180,6 +195,7 @@ class AppStore {
   onSigningIn = (data: FormData): void => {};
   onPersonalMessageListChanged = (messages: RenderedPersonalMessage[]): void => {};
   onChatLocallyUpdate = (chat: Chat): void => {};
+  onChatListChanged = (chats: Chat[]): void => {};
 
   async bindServerListChanged(callback: (servers: Server[]) => void): Promise<void> {
     this.onServerListChanged = callback;
@@ -195,6 +211,10 @@ class AppStore {
 
   bindChatLocallyUpdate = (callback: (chat: Chat) => void): void => {
     this.onChatLocallyUpdate = callback;
+  };
+
+  bindChatListChanged = (callback: (chats: Chat[]) => void): void => {
+    this.onChatListChanged = callback;
   };
 
   getFormattedRenderedPersonalMessages(): RenderedPersonalMessage[] {

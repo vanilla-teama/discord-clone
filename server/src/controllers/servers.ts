@@ -15,10 +15,6 @@ const getServers: Handler = (req, res, next) => {
         message: 'Fetched servers successfully.',
         count: docsCount,
         servers: servers.map((server) => {
-          // console.log(server);
-          // if (server.image) {
-          //   return { ...server, image: server.image.toString('base64')};
-          // }
           return server;
         }),
       });

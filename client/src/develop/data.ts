@@ -9,6 +9,7 @@ export const users: User[] = [
     email: 'gleb.godovanyuk@gmail.com',
     phone: '+380991234567',
     availability: Availability.Offline,
+    chats: null,
   },
   {
     id: '63dd3dd9938e35dad6409e12',
@@ -17,6 +18,7 @@ export const users: User[] = [
     email: 'email2@gmail.com',
     phone: '+380992234567',
     availability: Availability.DoNotDisturb,
+    chats: null,
   },
   {
     id: '63dd3de6938e35dad6409e14',
@@ -25,6 +27,7 @@ export const users: User[] = [
     email: 'email3@gmail.com',
     phone: '+380993234567',
     availability: Availability.Online,
+    chats: null,
   },
   {
     id: '63dede6beac45c545ad1e616',
@@ -33,6 +36,7 @@ export const users: User[] = [
     email: 'email4@gmail.com',
     phone: '+380994234567',
     availability: Availability.Away,
+    chats: [],
   },
 ];
 
@@ -107,14 +111,17 @@ export const personalMessages: PersonalMessage[] = [
 
 export const chats: Chat[] = [
   {
+    id: '63dd3dd9938e35dad6409e12',
     userId: '63dd3d9da1340145e9b74055',
     userName: 'Hlib Hodovaniuk',
   },
   {
+    id: '63dd3d9da1340145e9b74055',
     userId: '63dd3dd9938e35dad6409e12',
     userName: 'Alexander Chornyi',
   },
   {
+    id: '63dd3de6938e35dad6409e14',
     userId: '63dd3de6938e35dad6409e14',
     userName: 'Alexander Kiroi',
   },

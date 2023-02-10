@@ -26,7 +26,7 @@ class StartScreen extends Controller<StartScreenView> {
   }
 
   async init(): Promise<void> {
-    await this.checkAuthAndRedirect();
+    // await this.checkAuthAndRedirect();
     this.renderChild();
   }
 

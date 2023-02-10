@@ -1,6 +1,6 @@
-import mongoose, { ValidateFn, Types, HydratedDocument } from 'mongoose';
 import bcrypt from 'bcrypt-nodejs';
-import crypto from 'crypto';
+import mongoose, { Types } from 'mongoose';
+import { FetchedUser, chatDTO } from '../utils/dto';
 
 const Schema = mongoose.Schema;
 
@@ -12,6 +12,7 @@ export interface UserDocument extends mongoose.Document {
   email: string;
   phone: string;
   friends: Types.ObjectId[];
+  chats: UserDocument[];
   availability: Availability;
   profile: {
     avatar: Buffer;
@@ -29,12 +30,6 @@ export interface AuthToken {
 
 type comparePasswordFunction = (candidatePassword: string, cb: (err: unknown, isMatch: boolean) => void) => void;
 
-export interface IChat {
-  userId: Types.ObjectId;
-  username: string;
-  availability: Availability;
-}
-
 export enum Availability {
   Online = 'online',
   Offline = 'offline',
@@ -49,54 +44,95 @@ const availabilityEnum: Availability[] = [
   Availability.DoNotDisturb,
 ];
 
-const userSchema = new Schema<UserDocument>({
-  name: {
-    type: String,
+const UserSchema = new Schema<UserDocument>(
+  {
+    name: {
+      type: String,
+    },
+    password: {
+      type: String,
+    },
+    email: {
+      type: String,
+    },
+    phone: {
+      type: String,
+    },
+    friends: [{ type: Types.ObjectId, ref: 'User' }],
+    chats: [{ 
+      type: Types.ObjectId, 
+      ref: 'User', 
+      get: function(this: FetchedUser) {
+        return chatDTO(this);
+      } 
+    }],
+    availability: {
+      type: String,
+      enum: availabilityEnum,
+    },
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    tokens: Array,
+    profile: {
+      avatar: Buffer,
+      banner: String,
+      about: String,
+    },
   },
-  password: {
-    type: String,
-  },
-  email: {
-    type: String,
-  },
-  phone: {
-    type: String,
-  },
-  friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  availability: {
-    type: String,
-    enum: availabilityEnum,
-  },
-  passwordResetToken: String,
-  passwordResetExpires: Date,
-  tokens: Array,
-  profile: {
-    avatar: Buffer,
-    banner: String,
-    about: String,
-  },
-}, { timestamps: true });
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
 
-userSchema.pre("save", function save(next) {
+// UserSchema.virtual('chats', {
+//   ref: 'User',
+//   localField: 'chats',
+//   foreignField: '_id',
+// })
+//   .get(function (this: UserDocument) {
+//     const chat: ChatDocument = {
+//       userId: this.id.toString(),
+//       userName: this.name,
+//       availability: this.availability,
+//     };
+//     return chat;
+//   })
+//   .set(function () {
+//     this.set(this);
+//   });
+
+UserSchema.pre('save', function save(next) {
   const user = this as UserDocument;
-  if (!user.isModified("password")) { return next(); }
+  if (!user.isModified('password')) {
+    return next();
+  }
   bcrypt.genSalt(10, (err, salt) => {
-      if (err) { return next(err); }
-      bcrypt.hash(user.password, salt, null, (err: mongoose.Error, hash) => {
-          if (err) { return next(err); }
-          user.password = hash;
-          next();
-      });
+    if (err) {
+      return next(err);
+    }
+    bcrypt.hash(user.password, salt, null, (err: mongoose.Error, hash) => {
+      if (err) {
+        return next(err);
+      }
+      user.password = hash;
+      next();
+    });
   });
 });
 
-const comparePassword: comparePasswordFunction = function (this: typeof userSchema['methods'], candidatePassword, cb) {
+const comparePassword: comparePasswordFunction = function (
+  this: (typeof UserSchema)['methods'],
+  candidatePassword,
+  cb
+) {
   bcrypt.compare(candidatePassword, this.password, (err: mongoose.Error, isMatch: boolean) => {
-      cb(err, isMatch);
+    cb(err, isMatch);
   });
 };
 
-userSchema.methods.comparePassword = comparePassword;
+UserSchema.methods.comparePassword = comparePassword;
 
 export const validateUserField = <
   F extends keyof UserDocument,
@@ -118,4 +154,4 @@ export const validateUserField = <
   return true;
 };
 
-export default mongoose.model('User', userSchema);
+export default mongoose.model('User', UserSchema);

@@ -1,17 +1,13 @@
-import { Handler, Request, Response, NextFunction } from 'express';
-import { FetchedUser, userDTO } from '../utils/dto';
-import crypto from 'crypto';
-import passport from 'passport';
-import User, { UserDocument, AuthToken, validateUserField } from '../models/user';
-import { IVerifyOptions } from 'passport-local';
-import { WriteError } from 'mongodb';
+import { Handler, NextFunction, Request, Response } from 'express';
 import { body, check, validationResult } from 'express-validator';
+import passport from 'passport';
+import { IVerifyOptions } from 'passport-local';
+import User, { UserDocument, validateUserField } from '../models/user';
 import '../passport';
-import { CallbackError } from 'mongoose';
+import { FetchedUser, userDTO } from '../utils/dto';
 
 const checkAuth = (req: Request, res: Response, next: NextFunction): void => {
   if (req.user) {
-    console.log(req.user);
     req.logIn(req.user, (err) => {
       if (err) {
         return next(err);
@@ -33,7 +29,6 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
   if (!errors.isEmpty()) {
     // req.flash("errors", errors.array());
     // return res.redirect("/login");
-    console.log(errors);
     res.status(401).json(errors);
     return;
   }
@@ -114,7 +109,7 @@ const getUsers: Handler = (req, res, next) => {
     .countDocuments()
     .then((count) => {
       docsCount = count;
-      return User.find();
+      return User.find().populate('chats');
     })
     .then((users) => {
       const exportedUsers = users.map((u) => userDTO(u));
