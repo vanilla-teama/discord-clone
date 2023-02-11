@@ -2,20 +2,20 @@
 
 :root {
   --background-color-dark-grey: #202225;
-  --background-color-gray: #2f3136;
-  --background-color-light-gray: #36393f;
-  --background-color-gray-hover: #42464d;
+  --background-color-gray: #2F3136;
+  --background-color-light-gray: #36393F;
+  --background-color-gray-hover: #42464D;
   --background-color-green: #3ba55d;
   --background-color-black: #000000;
   --background-color-black-light: #202225;
-  --background-color-blue: #5865f2;
-  --background-color-blue-light: #00aff4;
-  --background-color-white: #ffffff;
-  --background-color-white-dark: #e3e5e8;
-  --text-primary: #dcddde;
-  --text-secondary: #ffffff;
-  --text-gray: #d2d3d5;
-  --text-gray-dark: #4f5660;
+  --background-color-blue: #5865F2;
+  --background-color-blue-light: #00AFF4;
+  --background-color-white: #FFFFFF;
+  --background-color-white-dark: #E3E5E8;
+  --text-primary: #DCDDDE;
+  --text-secondary: #FFFFFF;
+  --text-gray: #D2D3D5;
+  --text-gray-dark: #4F5660;
 }
 
 body {
@@ -101,5 +101,66 @@ ul {
     cursor: pointer;
   }
   &__image {
+  }
+}
+
+.user-item {
+  &__box{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  &__close{
+    background: url('/src/assets/icons/close.svg') center no-repeat;
+    width: 15px;
+    height: 15px;
+    opacity: 0.5;
+    z-index: 10;
+    transition: all 0.3s ease 0s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+  &__avatar{
+   position: relative;
+  }
+  &__icon{
+    background: url('/src/assets/icons/discord.svg') center no-repeat;
+    width: 32px;
+    height: 32px;
+  }
+  &__status{
+    position: absolute;
+    height: 10px;
+    width: 10px;
+    bottom: -5px;
+    left: 20px;
+    background-color: var(--text-primary);
+    border-radius: 50px;
+    border: 3px solid var(--background-color-light-gray);
+    &::before {
+      content: '';
+      position: absolute;
+      height: 5px;
+      width: 5px;
+      background-color: var(--background-color-light-gray);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50px;
+    }
+
+    &_online{
+      background-color: var(--background-color-green);
+      &::before {
+        display: none;
+      }
+    }
+  }
+  &__name{
+    opacity: 0.5;
+    color: var(--text-gray);
+    transition: all 0.3s ease 0s;
   }
 }

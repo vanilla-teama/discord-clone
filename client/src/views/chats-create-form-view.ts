@@ -28,7 +28,7 @@ class ChatsCreateFormView extends View {
 
   private createForm(): HTMLFormElement {
     const $form = $('form', 'form-create-chat');
-    const $header = $('h3');
+    const $header = $('h3', 'form-create-chat__title');
     const $submit = $('button', 'form-create-chat__submit');
     $submit.textContent = 'Create DM';
     $submit.type = 'submit';
@@ -40,12 +40,26 @@ class ChatsCreateFormView extends View {
 
   private createFriendListItem(friend: User): HTMLLIElement {
     const $item = $('li', 'form-create-chat__friend-list-item');
+    const $label = $('label', 'form-create-chat__label');
+
     const $checkbox = $('input', 'form-create-chat__friend-list-checkbox');
     $checkbox.type = 'checkbox';
     $checkbox.name = 'friendId';
     $checkbox.value = friend.id;
 
-    $item.append(friend.name, $checkbox);
+    const $customCheckbox = $('span', 'form-create-chat__custom-checkbox');
+
+    const $itemBox = $('div', 'user-item__box');
+    const $itemAvatar = $('div', 'user-item__avatar');
+    const $itemIcon = $('div', 'user-item__icon');
+    const $itemStatus = $('div', 'user-item__status');
+    const $itemName = $('div', 'user-item__name');
+    $itemName.textContent = `${friend.name}`;
+
+    $itemAvatar.append($itemIcon, $itemStatus);
+    $itemBox.append($itemAvatar, $itemName);
+    $label.append($checkbox, $itemBox, $customCheckbox);
+    $item.append($label);
 
     return $item;
   }
