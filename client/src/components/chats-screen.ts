@@ -1,6 +1,5 @@
 import Controller from '../lib/controller';
 import Router, { RouteControllers } from '../lib/router';
-import { bindSocketEvent } from '../lib/socket';
 import { appStore } from '../store/app-store';
 import { Chat } from '../types/entities';
 import { CustomEvents } from '../types/types';

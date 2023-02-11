@@ -1,15 +1,15 @@
 import App from '../lib/app';
 import Controller from '../lib/controller';
 import { RouteControllers } from '../lib/router';
+import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
-import { Chat, User } from '../types/entities';
-import { CustomEventData as CustomEventType, CustomEvents } from '../types/types';
+import { Availability, Chat, User } from '../types/entities';
+import { CustomEvents } from '../types/types';
 import { getTypedCustomEvent } from '../utils/functions';
-import { BindSocketEventHandler, bindSocketEvent as bindSocketEvent, removeSocketEvent } from '../lib/socket';
 import ChatsSideBarView from '../views/chats-sidebar-view';
-import PopupComponent from './popup';
 import { PopupCoords } from '../views/popup-view';
 import ChatsCreateFormComponent from './chats-create-form';
+import PopupComponent from './popup';
 
 class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
   // Keeps last instance of itself
@@ -29,7 +29,7 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
     this.onInit(appStore.user);
     this.onChatListChanged(appStore.chats);
     this.bindRouteChanged();
-    this.bindSocketUserLoggedInServer();
+    this.bindSocketUserStatusChangedServer();
     appStore.bindChatLocallyUpdate(this.onChatUpdate);
   }
 
@@ -68,14 +68,20 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
     });
   }
 
-  bindSocketUserLoggedInServer() {
-    removeSocketEvent('userLoggedInServer', ChatsSideBarComponent.onSocketUserLoggedInServer);
-    bindSocketEvent('userLoggedInServer', ChatsSideBarComponent.onSocketUserLoggedInServer);
+  bindSocketUserStatusChangedServer() {
+    socket.removeListener('userChangedAvailability', ChatsSideBarComponent.onSocketUserStatusChangedServer);
+    socket.on('userChangedAvailability', ChatsSideBarComponent.onSocketUserStatusChangedServer);
   }
 
-  static onSocketUserLoggedInServer: BindSocketEventHandler<'userLoggedInServer'> = ({ user }) => {
-    console.log('userLoggedInServer 1', user);
-    appStore.updateChatLocally(user.id, { availability: user.availability });
+  static onSocketUserStatusChangedServer = ({
+    availability,
+    userId,
+  }: {
+    availability: Availability;
+    userId: string;
+  }): void => {
+    console.log('availability changed');
+    appStore.updateChatLocally(userId, { availability: availability });
   };
 }
 

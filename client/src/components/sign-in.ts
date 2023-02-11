@@ -1,7 +1,7 @@
 import { users } from '../develop/data';
 import Controller from '../lib/controller';
 import Router, { RouteControllers } from '../lib/router';
-import socket, { bindSocketEvent, createSocketEvent } from '../lib/socket';
+import socket, { createSocketEvent } from '../lib/socket';
 import { appStore } from '../store/app-store';
 import { Dispatch } from '../types/types';
 import SignInView from '../views/sign-in-view';
@@ -36,7 +36,7 @@ class SignInComponent extends Controller<SignInView> {
 
   onAfterLogginAttempt() {
     if (appStore.user) {
-      const socketEvent = createSocketEvent('userLoggedInClient', { data: { id: appStore.user.id } });
+      const socketEvent = createSocketEvent('userLoggedIn', { userId: appStore.user.id });
       socket.emit(socketEvent.name, socketEvent.data);
       Router.push(RouteControllers.Chats);
     }

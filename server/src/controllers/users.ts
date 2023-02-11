@@ -5,6 +5,7 @@ import { IVerifyOptions } from 'passport-local';
 import User, { UserDocument, validateUserField } from '../models/user';
 import '../passport';
 import { FetchedUser, userDTO } from '../utils/dto';
+import { App } from '../app';
 
 const checkAuth = (req: Request, res: Response, next: NextFunction): void => {
   if (req.user) {

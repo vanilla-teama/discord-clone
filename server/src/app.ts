@@ -41,8 +41,12 @@ export class App {
   private server: http.Server;
   private port: number;
 
-  private io: Server;
+  static io: Server;
   private clients: AppClients = {};
+
+  static getIo(): Server {
+    return App.io;
+  }
 
   constructor(port: number) {
     this.port = port;
@@ -111,7 +115,7 @@ export class App {
 
     this.server = new http.Server(app);
 
-    this.io = initSocket(this);
+    App.io = initSocket(this);
   }
 
   public Start() {

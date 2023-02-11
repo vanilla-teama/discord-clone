@@ -1,10 +1,5 @@
 import Controller from '../lib/controller';
-import {
-  bindSocketEvent as bindSocketEvent,
-  emitPersonalMessage,
-  removeAllSocketEvents,
-  removeSocketEvent,
-} from '../lib/socket';
+import socket, { emitPersonalMessage } from '../lib/socket';
 import { IncomingPersonalMessage, appStore } from '../store/app-store';
 import { Chat } from '../types/entities';
 import ChatsMainContentView, { RenderedPersonalMessage } from '../views/chats-main-content-view';
@@ -62,8 +57,8 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
   };
 
   onSocketPersonalMessage() {
-    removeAllSocketEvents('personalMessageServer');
-    bindSocketEvent('personalMessageServer', async ({ fromUserId, toUserId }) => {
+    socket.removeAllListeners('personalMessage');
+    socket.on('personalMessage', async ({ fromUserId, toUserId }) => {
       if (!this.chat) {
         return;
       }
