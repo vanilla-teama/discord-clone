@@ -1,6 +1,10 @@
+import ChatsAppBarComponent from '../components/chats-app-bar';
+import ChatsInfoBarComponent from '../components/chats-info-bar';
+import ChatsSideBarComponent from '../components/chats-sidebar';
 import { chats, users } from '../develop/data';
 import { http } from '../lib/http';
 import moment from '../lib/moment';
+import socket from '../lib/socket';
 import { Chat, Availability, ChatAvailabilitiesMap, PersonalMessage, Server, User } from '../types/entities';
 import { AppOmit } from '../types/utils';
 import { RenderedPersonalMessage } from '../views/chats-main-content-view';
@@ -85,13 +89,24 @@ class AppStore {
   }
 
   async fetchChats(userId: User['id']): Promise<void> {
-    console.log('fetch chats', userId);
     const response = await http.get<{ chats: Chat[] }>(`/chats/users/${userId}`);
-    console.log(response);
     if (response) {
       this.chats = response.data.chats || [];
     } else {
       this.chats = chats;
+    }
+  }
+
+  async fetchChat(userOneId: string, userTwoId: string): Promise<void> {
+    const response = await http.get<{ chat: Chat }>(`/chats/users/${userOneId}/${userTwoId}`);
+    if (response) {
+      this.chats.forEach((chat, i) => {
+        if (chat.userId === userTwoId) {
+          console.log('updating chat', chat.userId, response.data.chat);
+          this.chats[i] = response.data.chat;
+          this.onChatUpdate(response.data.chat);
+        }
+      });
     }
   }
 
@@ -187,15 +202,21 @@ class AppStore {
     let chat = this.chats.find(({ userId }) => userId === chatId);
     if (chat) {
       chat = { ...chat, ...data };
-      this.onChatLocallyUpdate(chat);
+      Object.entries(this.onChatLocallyUpdate).forEach(([_, callback]) => callback(chat as Chat));
     }
   }
 
   onServerListChanged = (servers: Server[]): void => {};
   onSigningIn = (data: FormData): void => {};
   onPersonalMessageListChanged = (messages: RenderedPersonalMessage[]): void => {};
-  onChatLocallyUpdate = (chat: Chat): void => {};
+  onChatLocallyUpdate: Record<'appbar' | 'sidebar' | 'main-content' | 'infobar', (chat: Chat) => void> = {
+    appbar: (chat: Chat) => {},
+    sidebar: (chat: Chat) => {},
+    infobar: (chat: Chat) => {},
+    'main-content': (chat: Chat) => {},
+  };
   onChatListChanged = (chats: Chat[]): void => {};
+  onChatUpdate = (chat: Chat): void => {};
 
   async bindServerListChanged(callback: (servers: Server[]) => void): Promise<void> {
     this.onServerListChanged = callback;
@@ -209,12 +230,19 @@ class AppStore {
     this.onPersonalMessageListChanged = callback;
   };
 
-  bindChatLocallyUpdate = (callback: (chat: Chat) => void): void => {
-    this.onChatLocallyUpdate = callback;
+  bindChatLocallyUpdate = (
+    name: 'appbar' | 'sidebar' | 'main-content' | 'infobar',
+    callback: (chat: Chat) => void
+  ): void => {
+    this.onChatLocallyUpdate[name] = callback;
   };
 
   bindChatListChanged = (callback: (chats: Chat[]) => void): void => {
     this.onChatListChanged = callback;
+  };
+
+  bindChatUpdate = (callback: (chat: Chat) => void): void => {
+    this.onChatUpdate = callback;
   };
 
   getFormattedRenderedPersonalMessages(): RenderedPersonalMessage[] {

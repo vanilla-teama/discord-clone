@@ -18,6 +18,7 @@ import cors from 'cors';
 import * as passportConfig from './passport';
 import env from './config';
 import passport from "passport";
+import { AppSocket, ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketData } from './socket/types';
 
 declare module "express-session" {
   interface SessionData {
@@ -35,16 +36,16 @@ const mongooseUrl = isLocalConnection
   ? `mongodb://localhost:27017/discord`
   : 'mongodb+srv://superconscience:QrtczmnqiciavAoI@node.wiauk.mongodb.net/?retryWrites=true&w=majority';
 
-type AppClients = Record<string, unknown>;
+type AppClients = Record<string, AppSocket>;
 
 export class App {
   private server: http.Server;
   private port: number;
 
-  static io: Server;
-  private clients: AppClients = {};
+  private static io: Server;
+  private static clients: AppClients = {};
 
-  static getIo(): Server {
+  static getIo(): Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData> {
     return App.io;
   }
 
@@ -130,12 +131,16 @@ export class App {
       .catch((err) => console.log(err));
   }
 
-  getClients(): AppClients {
-    return this.clients;
+  static getClients(): AppClients {
+    return App.clients;
   }
 
-  setClient(id: string, value: unknown): void {
-    this.clients[id] = value;
+  static getClient(id: string): AppSocket {
+    return App.clients[id];
+  }
+
+  static setClient(id: string, value: AppSocket): void {
+    App.clients[id] = value;
   }
 
   getServer(): http.Server {

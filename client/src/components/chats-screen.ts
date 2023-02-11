@@ -1,7 +1,8 @@
 import Controller from '../lib/controller';
 import Router, { RouteControllers } from '../lib/router';
+import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
-import { Chat } from '../types/entities';
+import { Availability, Chat } from '../types/entities';
 import { CustomEvents } from '../types/types';
 import { getTypedCustomEvent } from '../utils/functions';
 import ChatsScreenView from '../views/chats-screen-view';
@@ -18,9 +19,6 @@ class ChatsScreen extends Controller<ChatsScreenView> {
   }
 
   async init(): Promise<void> {
-    // if (!appStore.user) {
-    //   Router.push(RouteControllers.Start);
-    // }
     if (!appStore.user) {
       throw Error('User is not defined');
     }
@@ -39,12 +37,8 @@ class ChatsScreen extends Controller<ChatsScreenView> {
     new MainComponent().init();
 
     this.maybeRedirectToFirstChat(appStore.chats);
-
-    this.bindSocketEvents();
-  }
-
-  bindSocketEvents() {
-    // bindEvent('userLoggedInServer', (data: unknown) => {});
+    this.bindSocketUserAvailabilityChangedServer();
+    appStore.bindChatUpdate(ChatsScreen.onChatUpdate);
   }
 
   static bindRouteChanged() {
@@ -82,6 +76,39 @@ class ChatsScreen extends Controller<ChatsScreenView> {
       new MainComponent().init();
     }
   }
+
+  bindSocketUserAvailabilityChangedServer() {
+    socket.removeListener('userChangedAvailability', ChatsScreen.onSocketUserAvailabilityChangedServer);
+    socket.on('userChangedAvailability', ChatsScreen.onSocketUserAvailabilityChangedServer);
+  }
+
+  static onSocketUserAvailabilityChangedServer = async ({ userId }: { userId: string }): Promise<void> => {
+    if (appStore.user) {
+      if (appStore.user.id === userId) {
+        return;
+      }
+      console.log('onSocketUserAvailabilityChangedServer', appStore.user.id, userId);
+      await appStore.fetchChat(appStore.user.id, userId);
+    }
+  };
+
+  static chatUpdateHandlers: Record<'appbar' | 'sidebar' | 'main-content' | 'infobar', (chat: Chat) => void> = {
+    appbar: (chat: Chat) => {},
+    sidebar: (chat: Chat) => {},
+    infobar: (chat: Chat) => {},
+    'main-content': (chat: Chat) => {},
+  };
+
+  static bindChatUpdate = (
+    name: 'appbar' | 'sidebar' | 'main-content' | 'infobar',
+    callback: (chat: Chat) => void
+  ): void => {
+    ChatsScreen.chatUpdateHandlers[name] = callback;
+  };
+
+  static onChatUpdate = (chat: Chat): void => {
+    Object.entries(ChatsScreen.chatUpdateHandlers).forEach(([_, callback]) => callback(chat));
+  };
 }
 
 export default ChatsScreen;

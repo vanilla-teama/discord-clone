@@ -9,18 +9,22 @@ export interface ServerToClientEvents {
   withAck: (d: string, callback: (e: number) => void) => void;
   id: (id: string) => void;
   removeClient: (id: string) => void;
-  userChangedAvailability: (data: { availability: Availability; userId: string }) => void;
+  userChangedAvailability: (data: { userId: string }) => void;
+  userLoggedOut: (userId: string) => void;
   personalMessage: (data: { fromUserId: string; toUserId: string }) => void;
 }
 
 export interface ClientToServerEvents {
   userLoggedIn: (data: { userId: string }) => void;
+  userLoggedOut: (data: { userId: string }) => void;
   personalMessage: (data: { fromUserId: string; toUserId: string }) => void;
   run: () => void;
 }
 
 export interface InterServerEvents {
   ping: () => void;
+  userLoggedIn: (data: { userId: string }) => void;
+  userLoggedOut: (data: { userId: string }) => void;
 }
 
 export interface SocketData {

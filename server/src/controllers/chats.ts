@@ -1,7 +1,9 @@
-import { Handler, RequestHandler } from 'express';
+import { Handler, RequestHandler, NextFunction, Request, Response } from 'express';
 import PersonalMessage from '../models/personal-message';
 import User from '../models/user';
 import { FetchedChat, chatDTO } from '../utils/dto';
+import { TypedRequest } from 'express.types';
+import { handleDocumentNotFound, requestErrorHandler } from '../utils/functions';
 
 const getChats: Handler = (req, res, next) => {
   const userId = req.params.userId;
@@ -10,45 +12,28 @@ const getChats: Handler = (req, res, next) => {
     .findById(userId)
     .populate('chats')
     .then((user) => {
-      if (!user) {
-        const error = new Error('Could not find user.');
-        //error.statusCode = 404;
-        throw error;
+      if (handleDocumentNotFound(user)) {
+        res.status(200).json({ chats: (user.chats || []).map((c) => chatDTO(c as FetchedChat))})
       }
-      res.status(200).json({ chats: (user.chats || []).map((c) => chatDTO(c as FetchedChat))})
     })
-  // PersonalMessage.find({
-  //   $and: [
-  //     { $or: [{ fromUserId: userId }, { toUserId: userId }] },
-  //     { deleted: false },
-  //   ],
-  // })
-  //   .select('fromUserId toUserId')
-  //   .then((chats) => {
-  //     const userIds = [
-  //       ...new Set(chats.map(({ fromUserId, toUserId }) => [fromUserId, toUserId]).flat()),
-  //     ].filter((id) => id.toString() !== userId);
-
-  //     User.find({
-  //       _id: {
-  //         $in: userIds,
-  //       }
-  //     })
-  //       .select('name')
-  //       .then((users) => {
-  //         res.status(200).json({
-  //           message: 'Fetched chats successfully.',
-  //           chats: users.map((u) => chatDTO(u)),
-  //         });
-  //       });
-  //   })
-  //   .catch((err) => {
-  //     if (!err.statusCode) {
-  //       err.statusCode = 500;
-  //     }
-  //     next(err);
-  //   });
 };
+
+const getChat = (req: TypedRequest, res: Response, next: NextFunction): void => {
+  const { userOneId, userTwoId } = req.params;
+  
+  User
+    .findById(userTwoId)
+    // .populate('chats')
+    .then((user) => {
+      if (handleDocumentNotFound(user)) {
+        console.log('get chat', user);
+        if (handleDocumentNotFound(user)) {
+          res.status(200).json({ chat: chatDTO(user as FetchedChat) });
+        }
+      }
+    })
+      .catch(err => requestErrorHandler(err, next)());
+}
 
 const deleteChat: Handler = (req, res, next) => {
   const { fromUserId, toUserId } = req.params;
@@ -145,4 +130,4 @@ const createChat: RequestHandler = (req, res, next) => {
     })
 }
 
-export default { getChats, deleteChat, getChatMessages, createChat };
+export default { getChats, deleteChat, getChatMessages, createChat, getChat };

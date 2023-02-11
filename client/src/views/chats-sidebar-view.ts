@@ -105,6 +105,9 @@ class ChatsSideBarView extends View {
     const $userName = $('div', 'user-item__name');
     //const $userIcon = $('div', 'chats-sidebar__user-icon');
     //const $userName = $('div', 'chats-sidebar__user-name');
+    if (user) {
+      $userStatus.classList.add(`user-item__status_${user.availability}`);
+    }
     $userName.textContent = user ? user.name : 'User is loading...';
     const $userSettings = $('span', 'chats-sidebar__user-settings');
     $userAvatar.append($userIcon, $userStatus);
@@ -120,7 +123,7 @@ class ChatsSideBarView extends View {
     const $itemBox = $('div', 'user-item__box');
     const $itemAvatar = $('div', 'user-item__avatar');
     const $itemIcon = $('div', 'user-item__icon');
-    const $itemStatus = $('div', 'user-item__status');
+    const $itemStatus = $('div', ['user-item__status', `user-item__status_${availability}`]);
     const $itemName = $('div', 'user-item__name');
     const $itemClose = $('span', 'user-item__close');
     $itemName.textContent = `${userName}`;

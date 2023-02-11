@@ -31,10 +31,14 @@
     width: 16px;
     position: absolute;
     border-radius: 50%;
-    background: var(--background-color-green);
+    background: var(--text-primary);
     border: 5px solid var(--background-color-gray);
     top: 60px;
     right: 0px;
+
+    &_online {
+      background: var(--background-color-green);
+    }
   }
 }
 

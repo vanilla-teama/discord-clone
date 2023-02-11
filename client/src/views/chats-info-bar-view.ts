@@ -1,5 +1,5 @@
 import View from '../lib/view';
-import { Chat } from '../types/entities';
+import { Availability, Chat } from '../types/entities';
 import { $ } from '../utils/functions';
 import MainView from './main-view';
 
@@ -7,6 +7,7 @@ class ChatsInfoBarView extends View {
   static readonly classNames = {};
 
   chat: Chat | null;
+  $status: HTMLSpanElement;
 
   constructor(chat: Chat | null) {
     const $root = MainView.$infobar;
@@ -15,16 +16,15 @@ class ChatsInfoBarView extends View {
     }
     super($root);
     this.chat = chat;
+    this.$status = $('span', 'chats-info-bar__status');
   }
   build(): void {
-    const $container = $('div', 'main');
-
     if (this.chat) {
       const $chatsInfoBar = $('div', 'chats-info-bar');
 
       const $header = $('div', 'chats-info-bar__header');
       const $avatar = $('div', 'chats-info-bar__avatar');
-      const $status = $('span', 'chats-info-bar__status');
+      const $status = this.$status;
       $avatar.append($status);
       $header.append($avatar);
 
@@ -69,6 +69,18 @@ class ChatsInfoBarView extends View {
       this.$container.append($chatsInfoBar);
     } else {
       this.$container.append('NO CHAT FOR INFOBAR!');
+    }
+  }
+
+  displayStatus(availability: Availability) {
+    const getClass = (availability: Availability): string => `chats-info-bar__status_${availability}`;
+    if (this.chat) {
+      [Availability.Online, Availability.Offline, Availability.Away, Availability.DoNotDisturb].forEach(
+        (availability) => this.$status.classList.remove(getClass(availability))
+      );
+      this.$status.dataset.text = availability;
+      this.$status.classList.add(getClass(availability));
+      this.chat.availability = availability;
     }
   }
 }

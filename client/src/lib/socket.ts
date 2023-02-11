@@ -35,7 +35,7 @@ export const bindGlobalSocketEvents = () => {
   });
 
   socket.on('id', (id) => {
-    console.log('id');
+    console.log('socket id', id);
   });
 };
 

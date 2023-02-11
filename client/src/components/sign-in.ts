@@ -22,7 +22,6 @@ class SignInComponent extends Controller<SignInView> {
     this.view.bindControllerState(this.props.setState);
     this.view.bindSignIn(this.onFormSubmit);
     appStore.bindSigningIn(this.onFormSubmit);
-    this.bindSocketEvents();
   }
 
   onFormSubmit = async (formData: FormData): Promise<void> => {
@@ -36,8 +35,8 @@ class SignInComponent extends Controller<SignInView> {
 
   onAfterLogginAttempt() {
     if (appStore.user) {
-      const socketEvent = createSocketEvent('userLoggedIn', { userId: appStore.user.id });
-      socket.emit(socketEvent.name, socketEvent.data);
+      // const socketEvent = createSocketEvent('userLoggedIn', { userId: appStore.user.id });
+      socket.emit('userLoggedIn', { userId: appStore.user.id });
       Router.push(RouteControllers.Chats);
     }
   }
@@ -46,10 +45,6 @@ class SignInComponent extends Controller<SignInView> {
     if (appStore.isAuth) {
       Router.push(RouteControllers.Chats);
     }
-  }
-
-  bindSocketEvents() {
-    // bindEvent('userLoggedInServer', (data: unknown) => {});
   }
 }
 

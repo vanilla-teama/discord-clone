@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import { API_URL } from '../constants';
+import socket from './socket';
 
 enum ErrorStatusCode {
   Unauthorized = 401,
@@ -52,6 +53,11 @@ class Http {
       if (config.url !== '/test' && !this.connected) {
         throw Error('NO CONNECTION!');
       }
+      return config;
+    });
+
+    http.interceptors.request.use((config) => {
+      config.params = { ...config.params, socketId: socket.id };
       return config;
     });
 

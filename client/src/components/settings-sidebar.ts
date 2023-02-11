@@ -1,6 +1,7 @@
 import App from '../lib/app';
 import Controller from '../lib/controller';
 import Router, { RouteControllers } from '../lib/router';
+import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
 import { CustomEvents } from '../types/types';
 import { getTypedCustomEvent, isKeyOf } from '../utils/functions';
@@ -24,9 +25,13 @@ class SettingsSidebarComponent extends Controller<SettingsSidebarView> {
   }
 
   logOut: EventListener = async () => {
-    await appStore.logOut();
-    if (!appStore.isAuth) {
-      Router.push(RouteControllers.Start);
+    if (appStore.user) {
+      const userId = appStore.user.id;
+      await appStore.logOut();
+      if (!appStore.isAuth) {
+        socket.emit('userLoggedOut', { userId });
+        Router.push(RouteControllers.Start);
+      }
     }
   };
 

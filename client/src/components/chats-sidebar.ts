@@ -9,6 +9,7 @@ import { getTypedCustomEvent } from '../utils/functions';
 import ChatsSideBarView from '../views/chats-sidebar-view';
 import { PopupCoords } from '../views/popup-view';
 import ChatsCreateFormComponent from './chats-create-form';
+import ChatsScreen from './chats-screen';
 import PopupComponent from './popup';
 
 class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
@@ -29,12 +30,13 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
     this.onInit(appStore.user);
     this.onChatListChanged(appStore.chats);
     this.bindRouteChanged();
-    this.bindSocketUserStatusChangedServer();
-    appStore.bindChatLocallyUpdate(this.onChatUpdate);
+    ChatsScreen.bindChatUpdate('sidebar', this.onChatUpdate);
+    // this.bindSocketUserAvailabilityChangedServer();
+    // appStore.bindChatLocallyUpdate('sidebar', this.onChatUpdate);
   }
 
   onInit = (user: User | null): void => {
-    this.view.displayUser(user);
+    // this.view.displayUser(user);
   };
 
   onChatListChanged = (chats: Chat[]): void => {
@@ -43,6 +45,7 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
   };
 
   onChatUpdate = (chat: Chat): void => {
+    console.log(chat);
     this.view.updateChat(chat);
     this.toggleActiveStatus();
   };
@@ -68,19 +71,18 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
     });
   }
 
-  bindSocketUserStatusChangedServer() {
-    socket.removeListener('userChangedAvailability', ChatsSideBarComponent.onSocketUserStatusChangedServer);
-    socket.on('userChangedAvailability', ChatsSideBarComponent.onSocketUserStatusChangedServer);
+  bindSocketUserAvailabilityChangedServer() {
+    socket.removeListener('userChangedAvailability', ChatsSideBarComponent.onSocketUserAvailabilityChangedServer);
+    socket.on('userChangedAvailability', ChatsSideBarComponent.onSocketUserAvailabilityChangedServer);
   }
 
-  static onSocketUserStatusChangedServer = ({
+  static onSocketUserAvailabilityChangedServer = async ({
     availability,
     userId,
   }: {
     availability: Availability;
     userId: string;
-  }): void => {
-    console.log('availability changed');
+  }): Promise<void> => {
     appStore.updateChatLocally(userId, { availability: availability });
   };
 }

@@ -8,7 +8,7 @@ export const initSocket = (app: App) => {
 
   io.on('connection', (socket) => {
     console.log(socket.constructor.name);
-    app.setClient(socket.id, {});
+    App.setClient(socket.id, socket);
     socket.emit('id', socket.id);
 
     bindSocketEvents(socket, io, app);

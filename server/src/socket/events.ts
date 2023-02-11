@@ -10,7 +10,7 @@ export const bindSocketEvents = (
 ): void => {
   socket.on('disconnect', () => {
     console.log('socket disconnected : ' + socket.id);
-    const clients = app.getClients();
+    const clients = App.getClients();
     if (clients && clients[socket.id]) {
       delete clients[socket.id];
       io.emit('removeClient', socket.id);
@@ -18,30 +18,34 @@ export const bindSocketEvents = (
   });
 
   socket.on('userLoggedIn', ({ userId }) => {
-    console.log(userId);
-    User.findById(userId)
-      .then((user) => {
-        if (user) {
-          // We keep statuses like `Away` and `Do not disturb`
-          const currentAvailability = user.availability;
-          let newAvailability = currentAvailability;
-          if (currentAvailability !== Availability.Away && currentAvailability !== Availability.DoNotDisturb) {
-            newAvailability = Availability.Online;
-          }
+    socket.broadcast.emit('userChangedAvailability', { userId });
+    // User.findById(userId)
+    //   .then((user) => {
+    //     if (user) {
+    //       // We keep statuses like `Away` and `Do not disturb`
+    //       const currentAvailability = user.availability;
+    //       let newAvailability = currentAvailability;
+    //       if (currentAvailability !== Availability.Away && currentAvailability !== Availability.DoNotDisturb) {
+    //         newAvailability = Availability.Online;
+    //       }
 
-          if (newAvailability !== currentAvailability) {
-            user.save().then((result) => {
-              socket.broadcast.emit('userChangedAvailability', {
-                availability: user.availability,
-                userId: user.id.toString(),
-              });
-            });
-          }
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    //       if (newAvailability !== currentAvailability) {
+    //         user.save().then((result) => {
+    //           socket.broadcast.emit('userChangedAvailability', {
+    //             availability: user.availability,
+    //             userId: user.id.toString(),
+    //           });
+    //         });
+    //       }
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+  });
+
+  socket.on('userLoggedOut', ({ userId }) => {
+    socket.broadcast.emit('userChangedAvailability', { userId });
   });
 
   socket.on('personalMessage', (data) => {

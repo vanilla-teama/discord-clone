@@ -2,10 +2,13 @@ import { Handler, NextFunction, Request, Response } from 'express';
 import { body, check, validationResult } from 'express-validator';
 import passport from 'passport';
 import { IVerifyOptions } from 'passport-local';
-import User, { UserDocument, validateUserField } from '../models/user';
+import User, { Availability, UserDocument, validateUserField } from '../models/user';
 import '../passport';
 import { FetchedUser, userDTO } from '../utils/dto';
 import { App } from '../app';
+import { TypedRequest } from 'express.types';
+import { HydratedDocument } from 'mongoose';
+import { requestErrorHandler } from '../utils/functions';
 
 const checkAuth = (req: Request, res: Response, next: NextFunction): void => {
   if (req.user) {
@@ -20,7 +23,7 @@ const checkAuth = (req: Request, res: Response, next: NextFunction): void => {
   res.status(200).json({ user: null });
 };
 
-const login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const login = async (req: TypedRequest, res: Response, next: NextFunction): Promise<void> => {
   await check('email', 'Email is not valid').isEmail().run(req);
   await check('password', 'Password cannot be blank').isLength({ min: 1 }).run(req);
   await body('email').normalizeEmail({ gmail_remove_dots: false }).run(req);
@@ -28,8 +31,6 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    // req.flash("errors", errors.array());
-    // return res.redirect("/login");
     res.status(401).json(errors);
     return;
   }
@@ -47,9 +48,50 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
       if (err) {
         return next(err);
       }
-      res.status(200).json({ user: userDTO(user as FetchedUser)});
+      const { id } = user;
+      User.findById(id)
+        .then((user) => {
+          if (!user) {
+            const error = new Error('Could not find user.');
+            //error.statusCode = 404;
+            throw error;
+          }
+          user.availability = Availability.Online;
+          user
+            .save()
+            .then(() => {
+              res.status(200).json({ user: userDTO(user as FetchedUser) });
+            })
+            .catch((err) => requestErrorHandler(err, next)());
+        })
+        .catch((err) => requestErrorHandler(err, next)());
     });
   })(req, res, next);
+};
+
+const logout = (req: TypedRequest, res: Response, next: NextFunction): void => {
+  const { id } = req.user as HydratedDocument<UserDocument>;
+  req.logout((err) => {
+    if (err) {
+      next(err);
+    }
+    User.findById(id)
+      .then((user) => {
+        if (!user) {
+          const error = new Error('Could not find user.');
+          //error.statusCode = 404;
+          throw error;
+        }
+        user.availability = Availability.Offline;
+        user
+          .save()
+          .then(() => {
+            res.status(200).end();
+          })
+          .catch((err) => requestErrorHandler(err, next)());
+      })
+      .catch((err) => requestErrorHandler(err, next)());
+  });
 };
 
 const register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -91,15 +133,6 @@ const register = async (req: Request, res: Response, next: NextFunction): Promis
         res.status(200).end();
       });
     });
-  });
-};
-
-const logout = (req: Request, res: Response, next: NextFunction): void => {
-  req.logout((err) => {
-    if (err) {
-      next(err);
-    }
-    res.status(200).end();
   });
 };
 
@@ -302,4 +335,16 @@ const updateFriends: Handler = async (req, res, next) => {
     });
 };
 
-export default { getUsers, createUser, getUser, updateUser, deleteUser, getFriends, updateFriends, login, register, checkAuth, logout };
+export default {
+  getUsers,
+  createUser,
+  getUser,
+  updateUser,
+  deleteUser,
+  getFriends,
+  updateFriends,
+  login,
+  register,
+  checkAuth,
+  logout,
+};
