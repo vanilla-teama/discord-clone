@@ -99,11 +99,16 @@ class ChatsSideBarView extends View {
   private createUserBar(user?: User): HTMLDivElement {
     const $userBar = $('div', 'chats-sidebar__user-bar');
     const $userContainer = $('div', 'chats-sidebar__user-container');
-    const $userIcon = $('div', 'chats-sidebar__user-icon');
-    const $userName = $('div', 'chats-sidebar__user-name');
+    const $userAvatar = $('div', 'user-item__avatar');
+    const $userIcon = $('div', 'user-item__icon');
+    const $userStatus = $('div', 'user-item__status');
+    const $userName = $('div', 'user-item__name');
+    //const $userIcon = $('div', 'chats-sidebar__user-icon');
+    //const $userName = $('div', 'chats-sidebar__user-name');
     $userName.textContent = user ? user.name : 'User is loading...';
     const $userSettings = $('span', 'chats-sidebar__user-settings');
-    $userContainer.append($userIcon, $userName);
+    $userAvatar.append($userIcon, $userStatus);
+    $userContainer.append($userAvatar, $userName);
     $userBar.append($userContainer, $userSettings);
 
     $userSettings.onclick = () => Router.push(RouteControllers.Settings, '', [SettingsParams.Language]);
@@ -112,12 +117,16 @@ class ChatsSideBarView extends View {
 
   private createChatItem({ userName, availability }: Chat): HTMLLIElement {
     const $item = $('li', ChatsSideBarView.classes.chatItem);
-    const $itemBox = $('div', 'chats-sidebar__item-box');
-    const $itemIcon = $('div', 'chats-sidebar__icon');
-    const $itemName = $('div', 'chats-sidebar__name');
-    const $itemClose = $('span', 'chats-sidebar__close');
-    $itemName.textContent = `${userName} ${availability}`;
-    $itemBox.append($itemIcon, $itemName);
+    const $itemBox = $('div', 'user-item__box');
+    const $itemAvatar = $('div', 'user-item__avatar');
+    const $itemIcon = $('div', 'user-item__icon');
+    const $itemStatus = $('div', 'user-item__status');
+    const $itemName = $('div', 'user-item__name');
+    const $itemClose = $('span', 'user-item__close');
+    $itemName.textContent = `${userName}`;
+
+    $itemAvatar.append($itemIcon, $itemStatus);
+    $itemBox.append($itemAvatar, $itemName);
     $item.append($itemBox, $itemClose);
 
     this.bindChatItemClick($item);
