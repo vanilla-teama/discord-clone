@@ -5,6 +5,7 @@ import ChatsSideBarComponent from './chats-sidebar';
 import MainComponent from './main';
 import Screen from './screen';
 import ServersBarComponent from './servers-bar';
+import ServersSideBarComponent from './servers-sidebar';
 import StartBarComponent from './start-bar';
 
 class ServersScreen extends Controller<ServersScreenView> {
@@ -21,7 +22,7 @@ class ServersScreen extends Controller<ServersScreenView> {
     await new Screen().init();
 
     new StartBarComponent().init();
-    new ChatsSideBarComponent().init();
+    new ServersSideBarComponent().init();
     new MainComponent().init();
   }
 }

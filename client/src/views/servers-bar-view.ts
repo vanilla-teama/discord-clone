@@ -35,15 +35,17 @@ class ServersBarView extends View {
   displayServers(servers: Server[]): void {
     //this.$serverList.innerHTML = '';
 
-        const serversFake = [
+    const serversFake: Server[] = [
       {
         name: 'server2',
-        image: '/src/assets/icons/discord.svg'
+        image: '/src/assets/icons/discord.svg',
+        id: '123',
       },
       {
         name: 'server1',
-        image: ''
-      },  
+        image: '',
+        id: '456',
+      },
     ];
 
     serversFake.forEach((server) => {
@@ -104,11 +106,10 @@ class ServersBarView extends View {
     $itemImg.alt = name;
     const $itemName = $('div', 'servers-bar__name');
     $itemName.textContent = `${name}`;
-    
+
     if (image) {
       $itemImg.src = upload.default;
-
-    } 
+    }
     $item.append($itemImg, $itemName);
 
     $item.onclick = () => {
