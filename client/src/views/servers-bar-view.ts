@@ -44,7 +44,7 @@ class ServersBarView extends View {
     //    name: 'server1',
     //    img: '/src/assets/icons/discord.svg'
     //  },
-      
+
     //];
 
     //serversFake.forEach((server) => {
@@ -100,8 +100,6 @@ class ServersBarView extends View {
   onShowServerForm: EventListener = () => {};
 
   private createServerItem({ id, name, image }: Server): HTMLLIElement {
-
-
     const $item = $('li', ServersBarView.classes.listItem);
     const $itemImg = $('img', 'servers-bar__img');
     const $itemName = $('div', 'servers-bar__name');
