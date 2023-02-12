@@ -1,27 +1,42 @@
-import { PersonalMessage, Server, User } from '../types/entities';
+import { Availability, Chat, PersonalMessage, Server, User } from '../types/entities';
 import moment from '../lib/moment';
 
 export const users: User[] = [
   {
-    id: '1',
+    id: '63dd3d9da1340145e9b74055',
     name: 'Hlib Hodovaniuk',
-    email: 'email1@gmail.com',
-    password: '1111',
+    password: '1111333',
+    email: 'gleb.godovanyuk@gmail.com',
     phone: '+380991234567',
+    availability: Availability.Offline,
+    chats: null,
   },
   {
-    id: '2',
+    id: '63dd3dd9938e35dad6409e12',
     name: 'Alexander Chornyi',
-    email: 'email2@gmail.com',
     password: '1111',
-    phone: '+380991234567',
+    email: 'email2@gmail.com',
+    phone: '+380992234567',
+    availability: Availability.DoNotDisturb,
+    chats: null,
   },
   {
-    id: '3',
+    id: '63dd3de6938e35dad6409e14',
     name: 'Alexander Kiroi',
-    email: 'email3@gmail.com',
     password: '1111',
-    phone: '+380991234567',
+    email: 'email3@gmail.com',
+    phone: '+380993234567',
+    availability: Availability.Online,
+    chats: null,
+  },
+  {
+    id: '63dede6beac45c545ad1e616',
+    name: 'Serhii Serdiuk',
+    password: '1111',
+    email: 'email4@gmail.com',
+    phone: '+380994234567',
+    availability: Availability.Away,
+    chats: [],
   },
 ];
 
@@ -76,20 +91,41 @@ export const personalMessages: PersonalMessage[] = [
   },
 ];
 
-export const servers: Server[] = [
+// export const servers: Server[] = [
+//   {
+//     id: '1',
+//     name: 'RS School',
+//     image: Buffer.from(''),
+//   },
+//   {
+//     id: '2',
+//     name: 'Twin Fin',
+//     image: Buffer.from(''),
+//   },
+//   {
+//     id: '3',
+//     name: 'Vanilla Team',
+//     image: Buffer.from(''),
+//   },
+// ];
+
+export const chats: Chat[] = [
   {
-    id: '1',
-    name: 'RS School',
-    avatar: 'https://source.boringavatars.com/pixel',
+    id: '63dd3dd9938e35dad6409e12',
+    userId: '63dd3d9da1340145e9b74055',
+    userName: 'Hlib Hodovaniuk',
+    availability: Availability.Away,
   },
   {
-    id: '2',
-    name: 'Twin Fin',
-    avatar: 'https://source.boringavatars.com/sunset',
+    id: '63dd3d9da1340145e9b74055',
+    userId: '63dd3dd9938e35dad6409e12',
+    userName: 'Alexander Chornyi',
+    availability: Availability.Away,
   },
   {
-    id: '3',
-    name: 'Vanilla Team',
-    avatar: 'https://source.boringavatars.com/beam',
+    id: '63dd3de6938e35dad6409e14',
+    userId: '63dd3de6938e35dad6409e14',
+    userName: 'Alexander Kiroi',
+    availability: Availability.Away,
   },
 ];

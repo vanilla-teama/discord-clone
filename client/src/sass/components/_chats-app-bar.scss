@@ -1,0 +1,119 @@
+.chats-app-bar {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &__user-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  &__user-atIcon {
+    background: url('/src/assets/icons/at-icon.svg') center no-repeat;
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+  }
+  &__user-name {
+  }
+  &__user-status {
+    height: 10px;
+    width: 10px;
+    background-color: var(--text-primary);
+    border-radius: 50px;
+    position: relative;
+    &::before {
+      content: '';
+      position: absolute;
+      height: 5px;
+      width: 5px;
+      background-color: var(--background-color-dark-grey);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50px;
+    }
+
+    &_online {
+      background-color: var(--background-color-green);
+      &::before {
+        display: none;
+      }
+    }
+  }
+  &__panel-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__profile-btn {
+    background: url('/src/assets/icons/user-profile.svg') center/ cover no-repeat;
+    width: 25px;
+    height: 25px;
+    opacity: 0.5;
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    &:hover {
+      opacity: 1;
+    }
+  }
+  &__profile-btn {
+    background: url('/src/assets/icons/user-profile.svg') center / cover no-repeat;
+  }
+  &__help-btn {
+    background: url('/src/assets/icons/help.svg') center / cover no-repeat;
+    position: relative;
+  }
+
+  &__profile-btn,
+  &__help-btn {
+    width: 25px;
+    height: 25px;
+    opacity: 0.5;
+    transition: all 0.3s ease 0s;
+  }
+
+  &__search {
+    width: 130px;
+    border: 0;
+    outline: 0;
+    padding: 5px;
+    background-color: var(--background-color-black);
+    transition: all 0.3s ease 0s;
+
+    &::placeholder {
+      color: var(--text-primary);
+    }
+    &:focus {
+      width: 180px;
+    }
+  }
+}
+
+
+.tooltip {
+  position: relative;
+  z-index: 100;
+  &::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--text-primary);
+    background-color: var(--background-color-black);
+    padding: 5px 10px;
+    white-space: nowrap;
+    opacity: 0;
+    border-radius: 5px;
+    transition: all 0.3s ease 0s;
+  }
+  &:hover {
+    opacity: 1;
+    &::after {
+      opacity: 1;
+    }
+  }
+}

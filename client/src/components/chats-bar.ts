@@ -1,4 +1,6 @@
+import App from '../lib/app';
 import Controller from '../lib/controller';
+import { RouteControllers } from '../lib/router';
 import ChatsBarView from '../views/chats-bar-view';
 
 class ChatsBarComponent extends Controller<ChatsBarView> {
@@ -8,6 +10,8 @@ class ChatsBarComponent extends Controller<ChatsBarView> {
 
   async init(): Promise<void> {
     this.view.render();
+
+    this.view.toggleActiveStatus(App.getRouter().getController() === RouteControllers.Chats);
   }
 }
 

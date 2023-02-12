@@ -1,6 +1,10 @@
 import Controller from '../lib/controller';
 import AppStore from '../store/app-store';
 import ServersScreenView from '../views/servers-screen-view';
+import ChatsSideBarComponent from './chats-sidebar';
+import MainComponent from './main';
+import Screen from './screen';
+import ServersBarComponent from './servers-bar';
 import StartBarComponent from './start-bar';
 
 class ServersScreen extends Controller<ServersScreenView> {
@@ -13,8 +17,12 @@ class ServersScreen extends Controller<ServersScreenView> {
     await appStore.fetchUsers();
     await appStore.fetchServers();
 
-    this.view.render();
+    // Render Layout
+    await new Screen().init();
+
     new StartBarComponent().init();
+    new ChatsSideBarComponent().init();
+    new MainComponent().init();
   }
 }
 

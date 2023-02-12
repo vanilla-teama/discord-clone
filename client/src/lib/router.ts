@@ -1,27 +1,29 @@
+import { CustomEvents, CustomEventData } from '../types/types';
 import App from './app';
 
 export type RouterState = {
   url: string;
 };
 
-export enum Controllers {
+export enum RouteControllers {
+  Start = 'start',
   Chats = 'chats',
   Servers = 'servers',
   Settings = 'settings',
 }
 
-export type Actions = {
-  [Controllers.Chats]: ChatsActions;
-  [Controllers.Servers]: ServersActions;
-  [Controllers.Settings]: SettingsActions;
+export type RouteActions = {
+  [RouteControllers.Chats]: ChatsActions;
+  [RouteControllers.Servers]: ServersActions;
+  [RouteControllers.Settings]: SettingsParams;
 };
 
-export type Action<T extends Controllers> = T extends Controllers.Chats
+export type Action<T extends RouteControllers> = T extends RouteControllers.Chats
   ? ChatsActions
-  : T extends Controllers.Servers
+  : T extends RouteControllers.Servers
   ? ServersActions
-  : T extends Controllers.Settings
-  ? SettingsActions
+  : T extends RouteControllers.Settings
+  ? SettingsParams
   : never;
 
 export enum ChatsActions {
@@ -35,12 +37,20 @@ export enum ServersActions {
   Channels = 'channels',
 }
 
-export enum SettingsActions {
-  Index = 'index',
+export enum SettingsParams {
   Account = 'account',
   Profiles = 'profiles',
+  Appearance = 'appearance',
+  Keybinds = 'keybinds',
   Language = 'language',
 }
+
+export type RouterLinkFunc<R = void, C extends RouteControllers | '' = RouteControllers> = (
+  controller: C | '',
+  action?: C extends RouteControllers ? Action<RouteControllers> | '' : '',
+  params?: UrlParams,
+  search?: RouterSearch
+) => R;
 
 export type RouterSearch = Record<string, string>;
 
@@ -61,7 +71,7 @@ class Router {
 
   protected route: string;
 
-  public getUri(): string {
+  getUri(): string {
     return this.uri;
   }
 
@@ -95,7 +105,7 @@ class Router {
 
     // Get defaults
     this.route = '';
-    this.controller = Controllers.Chats;
+    this.controller = RouteControllers.Start;
     this.action = '';
     this.params = [];
 
@@ -117,10 +127,10 @@ class Router {
       }
 
       // Get action
-      if (pathParts[0]) {
-        this.action = pathParts[0].toLowerCase();
-        pathParts.shift();
-      }
+      // if (pathParts[0]) {
+      //   this.action = pathParts[0].toLowerCase();
+      //   pathParts.shift();
+      // }
 
       // Get params - all the rest
       this.params = pathParts;
@@ -134,32 +144,51 @@ class Router {
     return { url };
   }
 
-  static push(
-    controller: Controllers,
-    action?: Action<typeof controller>,
-    params?: UrlParams,
-    search?: RouterSearch
-  ): void {
+  static push: RouterLinkFunc = function (controller, action, params, search) {
     const route = Router.createLink(controller, action, params, search);
-
+    Router.bindBeforePushEvent();
     window.history.pushState(Router.createState(route), '', route);
-
+    Router.bindAfterPushEvent();
     App.run();
+  };
+
+  static bindBeforePushEvent() {
+    const router = new Router();
+    const [controller, action, params, search] = [
+      router.getController(),
+      router.getAction(),
+      router.getParams(),
+      router.getSearch(),
+    ];
+    const event = new CustomEvent(CustomEvents.BEFOREROUTERPUSH, {
+      detail: { controller, action, params, search },
+      bubbles: true,
+    });
+    document.dispatchEvent(event);
+  }
+
+  static bindAfterPushEvent() {
+    const router = new Router();
+    const [controller, action, params, search] = [
+      router.getController(),
+      router.getAction(),
+      router.getParams(),
+      router.getSearch(),
+    ];
+    const event = new CustomEvent<CustomEventData[CustomEvents.AFTERROUTERPUSH]>(CustomEvents.AFTERROUTERPUSH, {
+      detail: { controller, action, params, search },
+      bubbles: true,
+    });
+    document.dispatchEvent(event);
   }
 
   static redirect(location: string): void {
     window.location.href = location;
   }
 
-  static createLink(
-    controller: Controllers,
-    action?: Action<typeof controller>,
-    params?: UrlParams,
-    search?: RouterSearch
-  ): string {
+  static createLink: RouterLinkFunc<string> = function (controller, action?, params?, search?): string {
     const paramsStr = params ? params.map(String).join('/') : '';
     const searchStr = search && Object.keys(search).length > 0 ? `?${Router.strinfifySearch(search)}` : '';
-    // let url = `/${controller}/${action}/${paramsStr}${searchStr}`;
     let url = `/${controller}`;
     if (action) {
       url += `/${action}`;
@@ -171,7 +200,7 @@ class Router {
       url += searchStr;
     }
     return url;
-  }
+  };
 
   static parseSearch(input: string): RouterSearch {
     if (!input) {

@@ -1,12 +1,15 @@
+import { CustomEventData, CustomEvents } from '../types/types';
+import { Construct } from '../types/utils';
+
 export const capitalize = (value: string) => value.slice(0, 1).toUpperCase() + value.slice(1);
 
 export const createElement = <K extends keyof HTMLElementTagNameMap>(
   tagName: K,
-  className?: string
+  className?: string | string[]
 ): HTMLElementTagNameMap[K] => {
   const $element = document.createElement(tagName);
   if (className) {
-    $element.className = className;
+    $element.className = [className].flat(Infinity).join(' ');
   }
   return $element;
 };
@@ -19,4 +22,24 @@ export const replaceWith = <T extends HTMLElement = HTMLElement>($element: T, $n
     return $newElement;
   }
   return $newElement;
+};
+
+export const isKeyOf = <T extends object>(value: unknown, obj: T): value is keyof typeof obj =>
+  (value as string) in obj;
+
+// export const isElementOfClass = ($item: EventTarget | null, className: string): $item is Element =>
+//   $item instanceof Element && $item.classList.contains(className);
+
+export const isElementOfCssClass = <T extends HTMLElement = HTMLElement>(
+  $item: EventTarget | null,
+  className: string
+): $item is T => $item instanceof Element && $item.classList.contains(className);
+
+export const isClosestElementOfCssClass = <T extends HTMLElement = HTMLElement>(
+  $item: EventTarget | null,
+  className: string
+): $item is T => $item instanceof Element && Boolean($item.closest(`.${className}`));
+
+export const getTypedCustomEvent = <K extends CustomEvents>(name: K, event: Event) => {
+  return event as unknown as CustomEvent<CustomEventData[K]>;
 };

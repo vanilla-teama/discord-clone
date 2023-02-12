@@ -11,7 +11,7 @@ class ServersScreenView extends View {
   constructor() {
     const $root = document.getElementById('root');
     if (!$root) {
-      throw new Error('Root element not found in index.html. Please, provide an element with id `root`');
+      ServersScreenView.throwNoRootInTheDomError('Root');
     }
     super($root);
     ServersScreenView.$startBar = null;

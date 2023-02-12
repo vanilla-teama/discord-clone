@@ -1,4 +1,5 @@
 import View from '../lib/view';
+import { User } from '../types/entities';
 import { $ } from '../utils/functions';
 
 class ChatsScreenView extends View {
@@ -9,11 +10,12 @@ class ChatsScreenView extends View {
 
   static $startBar: HTMLDivElement | null;
   static $chatsSideBar: HTMLDivElement | null;
+  static $main: HTMLDivElement | null;
 
   constructor() {
     const $root = document.getElementById('root');
     if (!$root) {
-      throw new Error('Root element not found in index.html. Please, provide an element with id `root`');
+      ChatsScreenView.throwNoRootInTheDomError('Chats-screen');
     }
     super($root);
     ChatsScreenView.$startBar = null;
@@ -28,6 +30,17 @@ class ChatsScreenView extends View {
   private createStartBar(): HTMLDivElement {
     const $container = $('div', ChatsScreenView.classNames.startBar);
     return $container;
+  }
+
+  displayUser(user: User): void {
+    document.querySelector('.user')?.remove();
+
+    const $userElement = $('div', 'user');
+    $userElement.style.position = 'fixed';
+    $userElement.style.top = '0';
+    $userElement.style.right = '0';
+    $userElement.innerHTML = `${user.name}`;
+    this.$container.append($userElement);
   }
 }
 

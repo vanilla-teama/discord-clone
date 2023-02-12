@@ -1,0 +1,13 @@
+.chats-list-item {
+  cursor: pointer;
+
+  &.active {
+    color: blueviolet;
+  }
+}
+
+.chats-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}

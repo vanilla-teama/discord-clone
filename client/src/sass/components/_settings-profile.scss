@@ -1,0 +1,108 @@
+.container-profile {
+  gap: 100px;
+  display: flex;
+}
+.info-block {
+  max-width: 350px;
+  border-radius: 10px;
+  background-color: var(--background-color-black);
+  height: 300px;
+}
+.info-block-header {
+  border-radius: 10px 10px 0px 0px;
+  height: 50px;
+  background-color: blue;
+}
+.avatar-block-header {
+  position: relative;
+  border-radius: 30px;
+  border: 5px solid black;
+  background: url('/src/assets/icons/discord.svg') center no-repeat;
+  background-size: cover;
+  height: 50px;
+  width: 50px;
+  top: 25px;
+  left: 11px;
+}
+.block-body-profile {
+  border-radius: 20px;
+  margin: 35px 10px 10px 10px;
+  max-width: 320px;
+  height: 200px;
+  background: var(--background-color-light-gray);
+  margin-bottom: 10px;
+}
+
+.nick-name-profile {
+  padding: 10px;
+  font-size: 25px;
+  border-bottom: 2px solid rgb(47, 45, 45);
+}
+
+.title-body-profile {
+  font-size: 14px;
+  padding: 10px;
+}
+.img-body-profile {
+  margin-left: 10px;
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  background: url('/src/assets/settings/settings.svg') center no-repeat;
+}
+
+.block-setting-profile {
+  display: flex;
+  margin-bottom: 30px;
+  gap: 30px;
+}
+.title-setting-body {
+  font-size: 12px;
+}
+.body-button-profile {
+  background-color: gray;
+  border-radius: 5px;
+  display: block;
+  margin: 0 auto;
+  width: 290px;
+  height: 25px;
+}
+
+.button-avatar {
+  margin-top: 20px;
+  border-radius: 10px;
+  color: white;
+  border: none;
+  width: 150px;
+  height: 40px;
+  background-color: rgb(33, 33, 165);
+}
+.title-color {
+  margin-top: 20px;
+}
+
+.input-color {
+  margin-top: 20px;
+  height: 40px;
+  width: 80px;
+}
+
+.title-main-profile {
+  margin-bottom: 40px;
+  font-size: 30px;
+}
+
+.img-close-settings {
+  width: 40px;
+  fill: white;
+}
+
+.btn-close-settings {
+  cursor: pointer;
+  margin-top: 70px;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  border: 3px solid #ffffff;
+  float: right;
+}

@@ -1,0 +1,95 @@
+$infobar-width: 340px;
+
+@keyframes main-content-show-info-bar {
+  0% {
+    padding-right: 0;
+  }
+  100% {
+    padding-right: $infobar-width;
+  }
+}
+
+@keyframes main-content-hide-info-bar {
+  0% {
+    padding-right: $infobar-width;
+  }
+  100% {
+    padding-right: 0;
+  }
+}
+
+@keyframes info-bar-show-info-bar {
+  0% {
+    right: -$infobar-width;
+  }
+  100% {
+    right: 0;
+  }
+}
+
+@keyframes info-bar-hide-info-bar {
+  0% {
+    right: 0;
+  }
+  100% {
+    right: -$infobar-width;
+  }
+}
+
+.main {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-bar {
+
+}
+
+.main-container {
+  display: flex;
+  height: 100%;
+
+  animation-duration: 200ms;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+
+  &_show-info-bar {
+    .main-content {
+      animation-name: main-content-show-info-bar;
+    }
+
+    .info-bar {
+      animation-name: info-bar-show-info-bar;
+    }
+
+    &.main-container_hiding-info-bar {
+      .main-content {
+        animation-name: main-content-hide-info-bar;
+      }
+
+      .info-bar {
+        animation-name: info-bar-hide-info-bar;
+      }
+    }
+  }
+}
+
+.main-content {
+  flex: 1 1 auto;
+  padding-right: 0;
+
+  animation-duration: 200ms;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+  
+.info-bar{
+  flex: 0 0 $infobar-width;
+  position: fixed;
+  right: -$infobar-width;
+
+  animation-duration: 200ms;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}

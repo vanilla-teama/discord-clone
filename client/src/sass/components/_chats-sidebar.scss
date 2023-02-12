@@ -1,0 +1,178 @@
+.sidebar {
+  min-height: 100%;
+  width: 240px;
+  background-color: var(--background-color-gray);
+}
+
+.chats-sidebar {
+  min-height: 100%;
+  background-color: var(--background-color-gray);
+  
+  &__container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+  }
+  &__dm-container {
+    padding: 18px 5px 4px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+  }
+  &__dm-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    opacity: 0.5;
+    transition: all 0.3s ease 0s;
+
+    &:hover{
+      opacity: 1;
+    }
+  }
+  &__dm-add {
+    background: url('/src/assets/icons/plus.svg') center no-repeat;
+    width: 15px;
+    height: 15px;
+    opacity: 0.5;
+    transition: all 0.3s ease 0s;
+    border-radius: 7px;
+    cursor: pointer;
+        
+    &:hover{
+      opacity: 1;
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+    row-gap: 5px;
+    padding: 10px 5px;
+  }
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+   
+    width: 100%;
+    border-radius: 7px;
+    transition: all 0.3s ease 0s;
+
+    &:hover,
+    &_active {
+      background-color: var(--background-color-gray-hover);
+      cursor: pointer;
+
+      .chats-sidebar__name {
+        transition: all 0.3s ease 0s;
+        opacity: 1;
+      }
+    }
+  }
+
+  //&__item-box {
+  //  display: flex;
+  //  gap: 10px;
+  //  align-items: center;
+  //}
+
+  //&__close {
+  //  background: url('/src/assets/icons/close.svg') center no-repeat;
+  //  width: 15px;
+  //  height: 15px;
+  //  opacity: 0.5;
+  //  z-index: 10;
+  //  transition: all 0.3s ease 0s;
+
+  //  &:hover {
+  //    opacity: 1;
+  //  }
+  //}
+
+  //&__avatar {
+  //  position: relative;
+  //}
+  //&__icon,
+  //&__user-icon {
+  //  background: url('/src/assets/icons/discord.svg') center no-repeat;
+  //  width: 32px;
+  //  height: 32px;
+  //}
+  //&__status {
+  //  height: 10px;
+  //  width: 10px;
+  //  bottom: 10px;
+  //  left: 20px;
+  //  background-color: var(--text-primary);
+  //  border-radius: 50px;
+  //  border: 3px solid var(--background-color-light-gray);
+  //  position: relative;
+  //  &::before {
+  //    content: '';
+  //    position: absolute;
+  //    height: 5px;
+  //    width: 5px;
+  //    background-color: var(--background-color-light-gray);
+  //    left: 50%;
+  //    top: 50%;
+  //    transform: translate(-50%, -50%);
+  //    border-radius: 50px;
+  //  }
+
+  //  &_online{
+  //    background-color: var(--background-color-green);
+  //    &::before {
+  //      display: none;
+  //    }
+  //  }
+  //}
+
+  //&__name {
+  //  opacity: 0.5;
+  //  color: var(--text-gray);
+  //  transition: all 0.3s ease 0s;
+  //}
+
+  &__user-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--background-color-dark-grey);
+    opacity: 0.8;
+    padding: 5px 0;
+  }
+
+  &__user-container {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 10px;
+    align-items: center;
+    padding: 3px;
+    border-radius: 7px;
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--background-color-gray-hover);
+    }
+  }
+
+  &__user-settings {
+    background: url('/src/assets/icons/settings.svg') center no-repeat;
+    width: 15px;
+    height: 15px;
+    opacity: 0.5;
+    transition: all 0.3s ease 0s;
+    padding: 10px;
+    border-radius: 7px;
+
+    &:hover{
+      opacity: 1;
+      background-color: var(--background-color-gray-hover);
+      cursor: pointer;
+    }
+  }
+}

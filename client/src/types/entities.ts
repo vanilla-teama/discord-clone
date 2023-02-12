@@ -1,8 +1,8 @@
-export type MongoEntityId = string;
+export type MongoObjectId = string;
 export type Timestamp = number;
 
 export interface MongoEntity {
-  id: MongoEntityId;
+  id: MongoObjectId;
 }
 
 export interface User extends MongoEntity {
@@ -10,23 +10,49 @@ export interface User extends MongoEntity {
   password: string;
   email: string;
   phone: string;
+  availability: Availability;
+  chats: Chat[] | null;
+}
+
+export interface FetchedUser {
+  _id: string;
+  name: string;
+  password: string;
+  email: string;
+  phone: string;
+  friends: string[];
 }
 
 export interface PersonalMessage extends MongoEntity {
-  fromUserId: MongoEntityId;
-  toUserId: MongoEntityId;
-  responseMessageId: MongoEntityId | null;
+  fromUserId: MongoObjectId;
+  toUserId: MongoObjectId;
+  responseMessageId: MongoObjectId | null;
   date: Timestamp;
   message: string;
 }
 
 export interface ChannelMessage extends MongoEntity {
-  responseMessageId: MongoEntityId;
+  responseMessageId: MongoObjectId;
   date: Timestamp;
   message: string;
 }
 
-export interface Server extends MongoEntity {
+export interface Server<S extends 'data' | 'formData' = 'data'> extends MongoEntity {
   name: string;
-  avatar: string;
+  image: S extends 'formData' ? File : string | null;
 }
+
+export interface Chat extends MongoEntity {
+  userId: MongoObjectId;
+  userName: string;
+  availability: Availability;
+}
+
+export enum Availability {
+  Online = 'online',
+  Offline = 'offline',
+  Away = 'away',
+  DoNotDisturb = 'donotdisturb',
+}
+
+export type ChatAvailabilitiesMap = Map<Chat, Availability>;

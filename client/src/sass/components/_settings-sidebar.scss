@@ -1,0 +1,26 @@
+.settings-bar__list {
+  list-style: none;
+  margin-left: 50px;
+  width: 218px;
+  padding: 100px 6px 60px 20px;
+}
+
+.settings-bar__list-item {
+  font-size: 16px;
+  line-height: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  padding-left: 10px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  margin-bottom: 2px;
+  border-radius: 4px;
+  text-align: left;
+  &_active {
+    background-color: #313131;
+  }
+}
+.settings {
+  width: 100%;
+  display: flex;
+}
