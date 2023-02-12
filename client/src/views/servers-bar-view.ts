@@ -3,6 +3,7 @@ import View from '../lib/view';
 import { Server } from '../types/entities';
 import { $ } from '../utils/functions';
 import StartBarView from './start-bar-view';
+import * as upload from '../assets/flags/flag-eng.png';
 
 class ServersBarView extends View {
   static readonly classes = {
@@ -32,32 +33,29 @@ class ServersBarView extends View {
   }
 
   displayServers(servers: Server[]): void {
-    console.log({ servers });
-    this.$serverList.innerHTML = '';
+    //this.$serverList.innerHTML = '';
 
-    //const serversFake: Server[] = [
-    //  {
-    //    name: 'server2',
-    //    img: '/src/assets/icons/discord.svg'
-    //  },
-    //  {
-    //    name: 'server1',
-    //    img: '/src/assets/icons/discord.svg'
-    //  },
+        const serversFake = [
+      {
+        name: 'server2',
+        image: '/src/assets/icons/discord.svg'
+      },
+      {
+        name: 'server1',
+        image: ''
+      },  
+    ];
 
-    //];
-
-    //serversFake.forEach((server) => {
+    serversFake.forEach((server) => {
+      const $item = this.createServerItem(server);
+      this.$serverList.append($item);
+      //this.onAppendServerItem($item, server);
+    });
+    //servers.forEach((server) => {
     //  const $item = this.createServerItem(server);
     //  this.$serverList.append($item);
     //  this.onAppendServerItem($item, server);
     //});
-
-    servers.forEach((server) => {
-      const $item = this.createServerItem(server);
-      this.$serverList.append($item);
-      this.onAppendServerItem($item, server);
-    });
 
     this.$serverList.append(this.$addServerButton);
     this.bindShowModal();
@@ -102,13 +100,15 @@ class ServersBarView extends View {
   private createServerItem({ id, name, image }: Server): HTMLLIElement {
     const $item = $('li', ServersBarView.classes.listItem);
     const $itemImg = $('img', 'servers-bar__img');
+    $itemImg.dataset.name = name.slice(0, 1).toUpperCase();
+    $itemImg.alt = name;
     const $itemName = $('div', 'servers-bar__name');
     $itemName.textContent = `${name}`;
+    
     if (image) {
-      $itemImg.src = 'data:image/jpeg;base64,' + image;
-    } else {
-      $itemImg.alt = name.slice(0, 1).toUpperCase();
-    }
+      $itemImg.src = upload.default;
+
+    } 
     $item.append($itemImg, $itemName);
 
     $item.onclick = () => {

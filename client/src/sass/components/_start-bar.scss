@@ -14,6 +14,11 @@
     display: flex;
     justify-content: center;
   }
+  &__separator {
+    font-size: 20px;
+    color: var(--text-gray-dark);
+    margin: 5px 0;
+  }
 }
 
 .chats-bar,
@@ -24,6 +29,7 @@
     align-items: center;
     justify-content: center;
     row-gap: 15px;
+    border-radius: 50%;
   }
   &__list-item,
   &__list-item_add {
@@ -66,7 +72,7 @@
   }
 
   &__list-item_add {
-    &:before  {
+    &:before {
       content: none;
     }
   }
@@ -74,6 +80,28 @@
   &__img {
     width: 48px;
     height: 48px;
+    border-radius: 50%;
+    position: relative;
+    &::after {
+      content: attr(data-name);
+      width: 48px;
+      height: 48px;
+      position: absolute;
+      background: var(--background-color-blue);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 20px;
+      color: var(--text-secondary);
+      z-index: 5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    &:hover {
+      border-radius: 15px;
+      transition: all 0.3s ease 0s;
+    }
 
     &-add {
       position: relative;
