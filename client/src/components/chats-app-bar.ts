@@ -3,7 +3,11 @@ import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
 import { Availability, Chat } from '../types/entities';
 import ChatsAppBarView from '../views/chats-app-bar-view';
+import InfoBarView from '../views/info-bar-view';
+import MainContentView from '../views/main-content-view';
+import MainView from '../views/main-view';
 import ChatsScreen from './chats-screen';
+import MainComponent from './main';
 
 class ChatsAppBarComponent extends Controller<ChatsAppBarView> {
   chat: Chat | null;
@@ -15,8 +19,10 @@ class ChatsAppBarComponent extends Controller<ChatsAppBarView> {
 
   async init(): Promise<void> {
     this.view.render();
-    // this.bindSocketUserAvailabilityChangedServer();
-    // appStore.bindChatLocallyUpdate('appbar', this.onChatUpdate);
+    this.bindSocketUserAvailabilityChangedServer();
+    ChatsScreen.bindChatUpdate('appbar', this.onChatUpdate);
+    this.view.bindShowInfoBarClick(this.toggleInfoBar);
+    MainView.bindToggleInfoBar(this.view.setShowInfoBarButtonHideTooltip, this.view.setShowInfoBarButtonShowTooltip);
   }
 
   bindSocketUserAvailabilityChangedServer() {
@@ -36,6 +42,10 @@ class ChatsAppBarComponent extends Controller<ChatsAppBarView> {
 
   onChatUpdate = (chat: Chat): void => {
     this.view.displayStatus(chat.availability);
+  };
+
+  toggleInfoBar = (): void => {
+    MainView.toggleInfoBar();
   };
 }
 

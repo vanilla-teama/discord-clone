@@ -1,6 +1,7 @@
 import View from '../lib/view';
 import { Availability, Chat } from '../types/entities';
 import { $ } from '../utils/functions';
+import InfoBarView from './info-bar-view';
 import MainView from './main-view';
 
 class ChatsInfoBarView extends View {
@@ -20,6 +21,7 @@ class ChatsInfoBarView extends View {
   }
   build(): void {
     if (this.chat) {
+      InfoBarView.show();
       const $chatsInfoBar = $('div', 'chats-info-bar');
 
       const $header = $('div', 'chats-info-bar__header');

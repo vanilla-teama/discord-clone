@@ -30,21 +30,7 @@ class SettingsContentComponent extends Controller<SettingsContentView> {
     const params = router.getParams();
 
     SettingsContentComponent.onRouteChanged(controller, action, params);
-    SettingsContentComponent.bindRouteChanged();
   }
-
-  static bindRouteChanged() {
-    document.removeEventListener(CustomEvents.AFTERROUTERPUSH, SettingsContentComponent.routeChangeHandler);
-    document.addEventListener(CustomEvents.AFTERROUTERPUSH, SettingsContentComponent.routeChangeHandler);
-  }
-
-  private static routeChangeHandler = (event: Event): void => {
-    const {
-      detail: { controller, action, params },
-    } = getTypedCustomEvent(CustomEvents.AFTERROUTERPUSH, event);
-
-    SettingsContentComponent.onRouteChanged(controller, action, params);
-  };
 
   private static onRouteChanged(controller: string, action: string, params: string[]): void {
     if (controller !== RouteControllers.Settings && action !== '') {

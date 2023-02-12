@@ -22,10 +22,10 @@ async function main() {
   socket.emit('run');
 }
 
-window.onpopstate = (event) => {
+window.addEventListener('popstate', (event) => {
   if (event.state) {
     App.run();
   }
-};
+});
 
 main();

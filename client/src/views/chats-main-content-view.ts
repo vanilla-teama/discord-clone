@@ -91,10 +91,10 @@ class ChatsMainContentView extends View {
   }
 
   displayMessages = (messages: RenderedPersonalMessage[]) => {
-    //this.$messageList.innerHTML = '';
-    //messages.forEach((message) => {
-    //this.$messageList.append(this.createMessageItem(message));
-    //});
+    this.$messageList.innerHTML = '';
+    messages.forEach((message) => {
+      this.$messageList.append(this.createMessageItemFake(message));
+    });
   };
 
   createMessageItemFake({ username, message, date }: RenderedPersonalMessage): HTMLLIElement {

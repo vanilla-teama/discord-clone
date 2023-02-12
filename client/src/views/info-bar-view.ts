@@ -12,11 +12,37 @@ class InfoBarView extends View {
     }
     super($root);
   }
-  build(): void {
-    const $container = $('div', 'main');
-    $container.textContent = 'I AM APP-BAR!';
+  build(): void {}
 
-    this.$container.append('I AM INFO-BAR!');
+  static show(): void {
+    if (MainView.$infobar) {
+      MainView.$infobar.style.display = 'flex';
+      MainView.$infobar.classList.add('info-bar_show');
+    }
+  }
+
+  static hide(): void {
+    if (MainView.$infobar) {
+      MainView.$infobar.onanimationend = () => {
+        if (MainView.$infobar) {
+          MainView.$infobar.classList.remove('info-bar_show');
+          MainView.$infobar.classList.remove('info-bar_hiding');
+          MainView.$infobar.style.display = 'none';
+          MainView.$infobar.onanimationend = null;
+        }
+      };
+      MainView.$infobar.classList.add('info-bar_hiding');
+    }
+  }
+
+  static toggle(): void {
+    if (MainView.$infobar) {
+      if (MainView.$infobar.classList.contains('info-bar_show')) {
+        InfoBarView.hide();
+      } else {
+        InfoBarView.show();
+      }
+    }
   }
 }
 

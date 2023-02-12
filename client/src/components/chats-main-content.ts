@@ -24,7 +24,7 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       await this.fetchMessages();
       this.onMessageListChange(appStore.getFormattedRenderedPersonalMessages());
       this.view.bindMessageEvent(this.handleSendMessage);
-      // appStore.bindPersonalMessageListChanged(this.onMessageListChange);
+      appStore.bindPersonalMessageListChanged(this.onMessageListChange);
       this.onSocketPersonalMessage();
     }
   }

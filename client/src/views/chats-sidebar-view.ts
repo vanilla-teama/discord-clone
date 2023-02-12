@@ -1,7 +1,7 @@
 import Router, { RouteControllers, SettingsParams } from '../lib/router';
 import View from '../lib/view';
 import { Chat, User } from '../types/entities';
-import { $, isClosestElementOfCssClass, isElementOfCssClass, replaceWith } from '../utils/functions';
+import { $, replaceWith } from '../utils/functions';
 import PopupView, { PopupCoords } from './popup-view';
 import ScreenView from './screen-view';
 
@@ -79,7 +79,6 @@ class ChatsSideBarView extends View {
 
   bindShowCreateChat(handler: (coords: PopupCoords, $root: HTMLElement) => void): void {
     this.$showCreateChat.onclick = (event) => {
-      console.log(event);
       const coords: PopupCoords = { top: event.pageY, left: event.pageX };
       handler(coords, PopupView.getContainer());
     };
@@ -114,7 +113,7 @@ class ChatsSideBarView extends View {
     $userContainer.append($userAvatar, $userName);
     $userBar.append($userContainer, $userSettings);
 
-    $userSettings.onclick = () => Router.push(RouteControllers.Settings, '', [SettingsParams.Language]);
+    $userSettings.onclick = () => Router.push(RouteControllers.Settings, '', [SettingsParams.Account]);
     return $userBar;
   }
 

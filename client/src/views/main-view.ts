@@ -27,7 +27,47 @@ class MainView extends View {
     MainView.$mainContainer.append(MainView.$mainContent, MainView.$infobar);
 
     this.$container.append(MainView.$appbar, MainView.$mainContainer);
+    MainView.showInfoBar();
   }
+
+  static showInfoBar(): void {
+    if (MainView.$mainContainer) {
+      MainView.$mainContainer.classList.add('main-container_show-info-bar');
+    }
+    MainView.onShowInfoBar();
+  }
+
+  static hideInfoBar(): void {
+    if (MainView.$mainContainer) {
+      MainView.$mainContainer.onanimationend = () => {
+        if (MainView.$mainContainer) {
+          MainView.$mainContainer.classList.remove('main-container_show-info-bar');
+          MainView.$mainContainer.classList.remove('main-container_hiding-info-bar');
+          MainView.$mainContainer.onanimationend = null;
+        }
+      };
+      MainView.$mainContainer.classList.add('main-container_hiding-info-bar');
+    }
+    MainView.onHideInfoBar();
+  }
+
+  static toggleInfoBar(): void {
+    if (MainView.$mainContainer) {
+      if (MainView.$mainContainer.classList.contains('main-container_show-info-bar')) {
+        MainView.hideInfoBar();
+      } else {
+        MainView.showInfoBar();
+      }
+    }
+  }
+
+  static onShowInfoBar = (): void => {};
+  static onHideInfoBar = (): void => {};
+
+  static bindToggleInfoBar = (showHandler: () => void, hideHandler: () => void): void => {
+    MainView.onShowInfoBar = showHandler;
+    MainView.onHideInfoBar = hideHandler;
+  };
 }
 
 export default MainView;

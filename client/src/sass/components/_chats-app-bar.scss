@@ -54,6 +54,7 @@
     height: 25px;
     opacity: 0.5;
     transition: all 0.3s ease 0s;
+    cursor: pointer;
     &:hover {
       opacity: 1;
     }
@@ -94,6 +95,7 @@
 
 .tooltip {
   position: relative;
+  z-index: 100;
   &::after {
     content: attr(data-text);
     position: absolute;

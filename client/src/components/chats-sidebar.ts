@@ -31,21 +31,18 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
     this.onChatListChanged(appStore.chats);
     this.bindRouteChanged();
     ChatsScreen.bindChatUpdate('sidebar', this.onChatUpdate);
-    // this.bindSocketUserAvailabilityChangedServer();
-    // appStore.bindChatLocallyUpdate('sidebar', this.onChatUpdate);
+    this.bindSocketUserAvailabilityChangedServer();
   }
 
   onInit = (user: User | null): void => {
-    // this.view.displayUser(user);
+    this.view.displayUser(user);
   };
 
   onChatListChanged = (chats: Chat[]): void => {
     this.view.displayChats(chats);
-    // this.toggleActiveStatus();
   };
 
   onChatUpdate = (chat: Chat): void => {
-    console.log(chat);
     this.view.updateChat(chat);
     this.toggleActiveStatus();
   };

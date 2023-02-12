@@ -8,6 +8,7 @@ class ChatsAppBarView extends View {
 
   chat: Chat | null;
   $userStatus: HTMLDivElement;
+  $showInfoBar: HTMLButtonElement;
 
   constructor(chat: Chat | null) {
     const $root = MainView.$appbar;
@@ -17,6 +18,7 @@ class ChatsAppBarView extends View {
     super($root);
     this.chat = chat;
     this.$userStatus = $('div', ['chats-app-bar__user-status', 'tooltip']);
+    this.$showInfoBar = $('button', ['chats-app-bar__profile-btn', 'tooltip']);
   }
   build(): void {
     if (this.chat) {
@@ -31,8 +33,8 @@ class ChatsAppBarView extends View {
       $userStatus.classList.add(`chats-app-bar__user-status_${this.chat.availability}`);
 
       const $panelContainer = $('div', 'chats-app-bar__panel-container');
-      const $showProfileBtn = $('button', ['chats-app-bar__profile-btn', 'tooltip']);
-      $showProfileBtn.dataset.text = 'Show user profile';
+      const $showInfoBar = this.$showInfoBar;
+      $showInfoBar.dataset.text = 'Show user profile';
 
       const $search = $('input', 'chats-app-bar__search');
       $search.type = 'text';
@@ -42,7 +44,7 @@ class ChatsAppBarView extends View {
       $helpBtn.dataset.text = 'Help';
 
       $userContainer.append($iconAt, $userName, $userStatus);
-      $panelContainer.append($showProfileBtn, $search, $helpBtn);
+      $panelContainer.append($showInfoBar, $search, $helpBtn);
       $chatsAppBar.append($userContainer, $panelContainer);
 
       this.$container.append($chatsAppBar);
@@ -62,6 +64,18 @@ class ChatsAppBarView extends View {
       this.chat.availability = availability;
     }
   }
+
+  bindShowInfoBarClick = (handler: EventListener): void => {
+    this.$showInfoBar.onclick = handler;
+  };
+
+  setShowInfoBarButtonShowTooltip = (): void => {
+    this.$showInfoBar.dataset.text = 'Show user profile';
+  };
+
+  setShowInfoBarButtonHideTooltip = (): void => {
+    this.$showInfoBar.dataset.text = 'Hide user profile';
+  };
 }
 
 export default ChatsAppBarView;

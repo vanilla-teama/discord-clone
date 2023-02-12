@@ -9,6 +9,7 @@ class SettingsScreenView extends View {
 
   static $sidebar: HTMLDivElement | null;
   static $content: HTMLDivElement | null;
+  $closeButton: HTMLDivElement;
 
   constructor() {
     const $root = document.getElementById('root');
@@ -16,9 +17,10 @@ class SettingsScreenView extends View {
       SettingsScreenView.throwNoRootInTheDomError('Root');
     }
     super($root);
+    this.$closeButton = $('div', SettingsScreenView.classNames.btnClose);
   }
   build(): void {
-    const $btnClose = $('div', SettingsScreenView.classNames.btnClose);
+    const $btnClose = this.$closeButton;
     const $imgBtn = Object.assign($('img', SettingsScreenView.classNames.imgBtn), { src: close.default });
     $btnClose.append($imgBtn);
     const $container = $('div', 'settings');
@@ -27,6 +29,10 @@ class SettingsScreenView extends View {
 
     $container.append(SettingsScreenView.$sidebar, SettingsScreenView.$content, $btnClose);
     this.$container.append($container);
+  }
+
+  bindClose(handler: EventListener) {
+    this.$closeButton.onclick = handler;
   }
 }
 
