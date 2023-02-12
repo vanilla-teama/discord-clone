@@ -34,6 +34,25 @@ class ServersBarView extends View {
   displayServers(servers: Server[]): void {
     console.log({ servers });
     this.$serverList.innerHTML = '';
+
+    //const serversFake: Server[] = [
+    //  {
+    //    name: 'server2',
+    //    img: '/src/assets/icons/discord.svg'
+    //  },
+    //  {
+    //    name: 'server1',
+    //    img: '/src/assets/icons/discord.svg'
+    //  },
+      
+    //];
+
+    //serversFake.forEach((server) => {
+    //  const $item = this.createServerItem(server);
+    //  this.$serverList.append($item);
+    //  this.onAppendServerItem($item, server);
+    //});
+
     servers.forEach((server) => {
       const $item = this.createServerItem(server);
       this.$serverList.append($item);
@@ -81,6 +100,8 @@ class ServersBarView extends View {
   onShowServerForm: EventListener = () => {};
 
   private createServerItem({ id, name, image }: Server): HTMLLIElement {
+
+
     const $item = $('li', ServersBarView.classes.listItem);
     const $itemImg = $('img', 'servers-bar__img');
     const $itemName = $('div', 'servers-bar__name');
