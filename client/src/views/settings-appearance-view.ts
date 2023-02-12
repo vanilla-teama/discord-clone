@@ -28,9 +28,24 @@ class SettingsAppearanceView extends View {
     $containerThemeDark.append($inputThemeDark, $labelThemeDark);
     const $containerThemeSinhronization = $('div', SettingsAppearanceView.classNames.container);
     const $inputThemeSinhronization = Object.assign($('input'), { id: 'light', type: 'radio', name: 'radio-theme' });
-    const $labelThemeSinhronization = Object.assign($('label'), { htmlFor: 'light', textContent: 'Темная' });
+    const $labelThemeSinhronization = Object.assign($('label'), {
+      htmlFor: 'light',
+      textContent: 'Синхронизация с компьютером',
+    });
     $containerThemeSinhronization.append($inputThemeSinhronization, $labelThemeSinhronization);
     $containerTheme.append($containerThemeLight, $containerThemeDark, $containerThemeSinhronization);
+    const $containerMessage = $('div', SettingsAppearanceView.classNames.container);
+    const $containerMessModern = $('div', SettingsAppearanceView.classNames.container);
+    const $inputMessModern = Object.assign($('input'), { id: 'light', type: 'radio', name: 'radio-theme' });
+    const $labelMessModern = Object.assign($('label'), {
+      htmlFor: 'light',
+      textContent: 'Уютно совремеено приятно для глаз',
+    });
+    $containerMessModern.append($inputMessModern, $labelMessModern);
+    const $containerMessCompact = $('div', SettingsAppearanceView.classNames.container);
+    const $inputMessCompact = Object.assign($('input'), { id: 'light', type: 'radio', name: 'radio-theme' });
+    const $labelMessCompact = Object.assign($('label'), { htmlFor: 'light', textContent: 'Темная' });
+    $containerMessCompact.append($inputMessCompact, $labelMessCompact);
     this.$container.append('I AM SETTINGS APPEARANCE!');
   }
 }
