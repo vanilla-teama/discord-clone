@@ -1,7 +1,7 @@
 import { Handler, RequestHandler, NextFunction, Request, Response } from 'express';
 import PersonalMessage from '../models/personal-message';
 import User from '../models/user';
-import { FetchedChat, chatDTO } from '../utils/dto';
+import { FetchedChat, chatDTO, personalMessageDTO } from '../utils/dto';
 import { TypedRequest } from 'express.types';
 import { handleDocumentNotFound, requestErrorHandler } from '../utils/functions';
 
@@ -65,7 +65,7 @@ const getChatMessages: Handler = (req, res, next) => {
     .then((messages) => {
       res.status(200).json({
         message: 'Fetched chat messages successfully.',
-        messages: messages.map((m) => m),
+        messages: messages.map((m) => personalMessageDTO(m)),
       });
     })
     .catch((err) => {

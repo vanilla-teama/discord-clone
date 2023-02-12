@@ -33,6 +33,10 @@
 .personal-message{
   display: flex;
   gap: 20px;
+
+  &:hover {
+    background-color: var(--background-color-gray-hover);
+  }
   &__icon{
     width: 40px;
     height: 40px;

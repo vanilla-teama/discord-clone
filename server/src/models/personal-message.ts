@@ -1,7 +1,7 @@
 import mongoose, { HydratedDocument, Model, QueryWithHelpers, Types } from 'mongoose';
 import mongooseDelete from 'mongoose-delete';
 
-export interface IPersonalMessage {
+export interface PersonalMessageDocument {
   fromUserId: Types.ObjectId;
   toUserId: Types.ObjectId;
   responsedMessageId: Types.ObjectId;
@@ -13,8 +13,8 @@ interface PersonalMessageQueryHelpers {
   byDeleted(
     deleted: boolean
   ): QueryWithHelpers<
-    HydratedDocument<IPersonalMessage>[],
-    HydratedDocument<IPersonalMessage>,
+    HydratedDocument<PersonalMessageDocument>[],
+    HydratedDocument<PersonalMessageDocument>,
     PersonalMessageQueryHelpers
   >;
 }
@@ -22,8 +22,8 @@ interface PersonalMessageQueryHelpers {
 const Schema = mongoose.Schema;
 
 export const personalMessageSchema = new Schema<
-  IPersonalMessage,
-  Model<IPersonalMessage, PersonalMessageQueryHelpers>,
+  PersonalMessageDocument,
+  Model<PersonalMessageDocument, PersonalMessageQueryHelpers>,
   {},
   PersonalMessageQueryHelpers
 >(
@@ -58,7 +58,7 @@ export const personalMessageSchema = new Schema<
 );
 
 personalMessageSchema.query.byDeleted = function byDeleted(
-  this: QueryWithHelpers<any, HydratedDocument<IPersonalMessage>, PersonalMessageQueryHelpers>,
+  this: QueryWithHelpers<any, HydratedDocument<PersonalMessageDocument>, PersonalMessageQueryHelpers>,
   deleted: boolean
 ) {
 return this.find({ deleted });

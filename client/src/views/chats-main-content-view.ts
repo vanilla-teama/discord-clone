@@ -1,6 +1,6 @@
 import View from '../lib/view';
 import { Chat, MongoObjectId } from '../types/entities';
-import { $ } from '../utils/functions';
+import { $, isClosestElementOfCssClass } from '../utils/functions';
 import MainView from './main-view';
 import * as userIcon from '../assets/icons/discord.svg';
 
@@ -20,7 +20,7 @@ class ChatsMainContentView extends View {
   chat: Chat | null;
   $chatInput: HTMLInputElement;
   $messageList: HTMLUListElement;
-  messagesRecord: Record<string, HTMLLIElement> = {};
+  messagesMap: Map<HTMLLIElement, { $fastMenu: HTMLDivElement; $menu: HTMLDivElement }>;
 
   constructor(chat: Chat | null) {
     const $root = MainView.$mainContent;
@@ -31,6 +31,7 @@ class ChatsMainContentView extends View {
     this.chat = chat;
     this.$chatInput = $('input', 'chat__input');
     this.$messageList = $('ul', 'chat__messages-list');
+    this.messagesMap = new Map();
   }
 
   build(): void {
@@ -38,15 +39,6 @@ class ChatsMainContentView extends View {
     const $inputContainer = $('div', 'chat__input-container');
 
     if (this.chat) {
-      //console.log(this.chat.userName);
-      //const $header = $('div', 'chat__header');
-      //const $userAvatar = $('div', 'chat__user-avatar');
-      //const $userIcon = $('img', 'chat__user-icon');
-      //const $userName = $('div', 'chat__user-name');
-      //const $headerText = $('div', 'chat__header-text');
-      //$headerText.textContent = `This is the beginning of your direct message history with ${this.chat.userName}`;
-      //const $headerServer = $('div', 'chat__header-server-block');
-
       const messages: RenderedPersonalMessage[] = [
         {
           id: '01',
@@ -69,13 +61,13 @@ class ChatsMainContentView extends View {
       ];
 
       messages.forEach((message) => {
-        this.$messageList.append(this.createMessageItemFake(message));
+        this.$messageList.append(this.createMessageItem(message));
       });
 
       $inputContainer.append(this.$chatInput);
       $container.append(this.$messageList, $inputContainer);
     } else {
-      $container.append('CHATS NOT FOUND!!!!!!!!!!!!!');
+      $container.append('CHATS NOT FOUND!');
     }
 
     this.$container.append($container);
@@ -92,12 +84,13 @@ class ChatsMainContentView extends View {
 
   displayMessages = (messages: RenderedPersonalMessage[]) => {
     this.$messageList.innerHTML = '';
+    this.messagesMap = new Map();
     messages.forEach((message) => {
-      this.$messageList.append(this.createMessageItemFake(message));
+      this.$messageList.append(this.createMessageItem(message));
     });
   };
 
-  createMessageItemFake({ username, message, date }: RenderedPersonalMessage): HTMLLIElement {
+  createMessageItem({ id, username, message, date }: RenderedPersonalMessage): HTMLLIElement {
     const $item = $('li', ['chat__messages-list-item', 'personal-message']);
     const $userIconBlock = $('div', 'personal-message__icon-block');
     const $userIcon = $('img', 'personal-message__icon');
@@ -109,6 +102,8 @@ class ChatsMainContentView extends View {
     const $spaceFake = $('span', 'personal-message__space');
     const $messageDate = $('span', 'personal-message__date');
     const $message = $('p', 'personal-message__message');
+    const $fastMenu = $('div', 'chat__fast-menu');
+    const $menu = $('div', 'chat__menu');
 
     $userName.textContent = `${username}`;
     $spaceFake.textContent = 'x';
@@ -118,27 +113,35 @@ class ChatsMainContentView extends View {
     $userIconBlock.append($userIcon);
     $info.append($userName, $spaceFake, $messageDate);
     $massagesBlock.append($info, $message);
-    $item.append($userIconBlock, $massagesBlock);
+    $item.append($userIconBlock, $massagesBlock, $fastMenu, $menu);
+
+    this.messagesMap.set($item, { $fastMenu, $menu });
 
     return $item;
   }
 
-  //createMessageItem({ username, message, date }: RenderedPersonalMessage): HTMLLIElement {
-  //  const $item = $('li', ['chat__messages-list-item', 'personal-message']);
-  //  const $info = $('div', 'personal-message__info');
-  //  const $message = $('p', 'personal-message__message');
-
-  //  $info.textContent = `${username} | ${date}`;
-  //  $message.textContent = message;
-
-  //  $item.append($info, $message);
-
-  //  return $item;
-  //}
-
   private resetInput() {
     this.$chatInput.value = '';
   }
+
+  bindMessageHover = (handler: ($root: HTMLElement) => Promise<void>): void => {
+    this.$messageList.onmouseover = async (event) => {
+      if (isClosestElementOfCssClass<HTMLLIElement>(event.target, 'personal-message')) {
+        const data = this.messagesMap.get(event.target);
+        if (data) {
+          await handler(data.$fastMenu);
+        }
+
+        event.target.onmouseleave = this.onMessageLeave;
+      }
+    };
+  };
+
+  bindMessageLeave = (handler: ($root: HTMLElement) => void): void => {
+    // this.onMessageLeave = handler;
+  };
+
+  onMessageLeave = (): void => {};
 }
 
 export default ChatsMainContentView;

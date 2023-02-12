@@ -22,7 +22,7 @@ const getPersonalMessages: Handler = (req, res, next) => {
       res.status(200).json({
         message: 'Fetched personal messages successfully.',
         count: docsCount,
-        servers: personalMessages,
+        messages: personalMessages,
       });
     })
     .catch((err) => {
