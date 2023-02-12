@@ -26,7 +26,8 @@ class StartBarView extends View {
   async build(): Promise<void> {
     StartBarView.$chatBar = $('div', StartBarView.classes.chatsBar);
     StartBarView.$serversBar = $('div', StartBarView.classes.serversBar);
-    const $separator = $('hr');
+    const $separator = $('div', 'start-bar__separator');
+    $separator.textContent = '-------';
 
     this.$container.append(StartBarView.$chatBar, $separator, StartBarView.$serversBar);
   }
