@@ -58,8 +58,11 @@
   justify-content: space-between;
   align-items: center;
   height: 30px;
-  background-color: rgb(32, 26, 26);
+  background: var(--background-color-gray);
   padding: 5px;
+  &:hover {
+    background: var(--background-color-gray-hover);
+  }
 }
 
 .settings__content {
