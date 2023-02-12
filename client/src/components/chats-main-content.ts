@@ -15,7 +15,6 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
 
   chat: Chat | null;
   fastMenusMap: Map<HTMLElement, MessageFastMenu>;
-  // menusMap: Map<HTMLElement, MessageFastMenu>;
 
   async init(): Promise<void> {
     if (!appStore.user) {

@@ -27,7 +27,6 @@ class ChatsCreateFormComponent extends Controller<ChatsCreateFormView> {
     }
     this.lastChatAdded = friendIDs[0];
     await appStore.createChat(friendIDs);
-    // await appStore.fetchChats(appStore.user!.id);
   };
 
   onFriendListChanged(friends: User[]): void {

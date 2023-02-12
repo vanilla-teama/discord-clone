@@ -11,6 +11,8 @@ import MainComponent from './main';
 import Screen from './screen';
 import StartBarComponent from './start-bar';
 
+type HandlerName = 'appbar' | 'sidebar' | 'main-content' | 'infobar';
+
 class ChatsScreen extends Controller<ChatsScreenView> {
   static chat: Chat | null = null;
 
@@ -92,17 +94,14 @@ class ChatsScreen extends Controller<ChatsScreenView> {
     }
   };
 
-  static chatUpdateHandlers: Record<'appbar' | 'sidebar' | 'main-content' | 'infobar', (chat: Chat) => void> = {
+  static chatUpdateHandlers: Record<HandlerName, (chat: Chat) => void> = {
     appbar: (chat: Chat) => {},
     sidebar: (chat: Chat) => {},
     infobar: (chat: Chat) => {},
     'main-content': (chat: Chat) => {},
   };
 
-  static bindChatUpdate = (
-    name: 'appbar' | 'sidebar' | 'main-content' | 'infobar',
-    callback: (chat: Chat) => void
-  ): void => {
+  static bindChatUpdate = (name: HandlerName, callback: (chat: Chat) => void): void => {
     ChatsScreen.chatUpdateHandlers[name] = callback;
   };
 
