@@ -5,7 +5,7 @@ import { chats, users } from '../develop/data';
 import { http } from '../lib/http';
 import moment from '../lib/moment';
 import socket from '../lib/socket';
-import { Chat, Availability, ChatAvailabilitiesMap, PersonalMessage, Server, User } from '../types/entities';
+import { Chat, Availability, ChatAvailabilitiesMap, PersonalMessage, Server, User, Channel } from '../types/entities';
 import { AppOmit } from '../types/utils';
 import { RenderedPersonalMessage } from '../views/chats-main-content-view';
 
@@ -17,6 +17,8 @@ class AppStore {
   private _user: User | null = null;
 
   private _users: User[] = [];
+
+  private _channels: Channel[] = [];
 
   private _chats: Chat[] = [];
 
@@ -51,10 +53,19 @@ class AppStore {
     return this._chats;
   }
 
+  
   private set chats(chats: Chat[]) {
     this._chats = chats;
   }
 
+  private set channels(channels: Channel[]) {
+    this._channels = channels;
+  }
+  
+  get channels(): Channel[] {
+    return this._channels;
+  }
+  
   get chatStatuses(): ChatAvailabilitiesMap {
     return this._chatStatuses;
   }
