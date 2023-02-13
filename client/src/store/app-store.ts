@@ -1,11 +1,7 @@
-import ChatsAppBarComponent from '../components/chats-app-bar';
-import ChatsInfoBarComponent from '../components/chats-info-bar';
-import ChatsSideBarComponent from '../components/chats-sidebar';
 import { chats, users } from '../develop/data';
 import { http } from '../lib/http';
 import moment from '../lib/moment';
-import socket from '../lib/socket';
-import { Chat, Availability, ChatAvailabilitiesMap, PersonalMessage, Server, User, Channel } from '../types/entities';
+import { Channel, Chat, ChatAvailabilitiesMap, PersonalMessage, Server, User } from '../types/entities';
 import { AppOmit } from '../types/utils';
 import { RenderedPersonalMessage } from '../views/chats-main-content-view';
 
@@ -53,7 +49,6 @@ class AppStore {
     return this._chats;
   }
 
-  
   private set chats(chats: Chat[]) {
     this._chats = chats;
   }
@@ -61,11 +56,11 @@ class AppStore {
   private set channels(channels: Channel[]) {
     this._channels = channels;
   }
-  
+
   get channels(): Channel[] {
     return this._channels;
   }
-  
+
   get chatStatuses(): ChatAvailabilitiesMap {
     return this._chatStatuses;
   }
@@ -123,12 +118,13 @@ class AppStore {
 
   async fetchPersonalMessages(userOneId: string, userTwoId: string): Promise<void> {
     const response = await http.get<{ messages: PersonalMessage[] }>(`/chats/messages/${userOneId}/${userTwoId}`);
-    console.log('fetch chat messages', response);
     if (response) {
       this.personalMessages = response.data.messages || [];
     } else {
       this.personalMessages = [];
     }
+    console.log('fetch personal messagfes', response?.data?.messages);
+    this.onPersonalMessageListChanged(this.getFormattedRenderedPersonalMessages());
   }
 
   async fetchServers(): Promise<void> {
@@ -210,8 +206,12 @@ class AppStore {
     }
   }
 
-  deletePersonalMessage(id: PersonalMessage['id']): void {
-    this.personalMessages = this.personalMessages.filter(({ id: currId }) => currId !== id);
+  async deletePersonalMessage(id: string): Promise<void> {
+    const response = await http.delete(`/personal-messages/${id}`).catch((error) => console.error(error));
+    if (response) {
+      this.personalMessages = this.personalMessages.filter(({ id: currId }) => currId !== id);
+      this.onPersonalMessageDeleted();
+    }
   }
 
   async addServer(server: Partial<Server<'formData'>>): Promise<void> {
@@ -247,6 +247,7 @@ class AppStore {
   onChatListChanged = (chats: Chat[]): void => {};
   onChatUpdate = (chat: Chat): void => {};
   onPersonalMessageChanged = (message: RenderedPersonalMessage): void => {};
+  onPersonalMessageDeleted = (): void => {};
 
   async bindServerListChanged(callback: (servers: Server[]) => void): Promise<void> {
     this.onServerListChanged = callback;
@@ -260,8 +261,12 @@ class AppStore {
     this.onPersonalMessageListChanged = callback;
   };
 
-  bindPersonalMessageChanged = (callback: (message: RenderedPersonalMessage) => void) => {
+  bindPersonalMessageChanged = (callback: (message: RenderedPersonalMessage) => void): void => {
     this.onPersonalMessageChanged = callback;
+  };
+
+  bindPersonalMessageDeleted = (callback: () => void): void => {
+    this.onPersonalMessageDeleted = callback;
   };
 
   bindChatLocallyUpdate = (

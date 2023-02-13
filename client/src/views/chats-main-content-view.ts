@@ -79,10 +79,6 @@ class ChatsMainContentView extends View {
         },
       ];
 
-      messages.forEach((message) => {
-        this.$messageList.append(this.createMessageItem(message));
-      });
-
       $inputContainer.append(this.$chatInput);
       $container.append(this.$messageList, $inputContainer);
     } else {
@@ -116,6 +112,10 @@ class ChatsMainContentView extends View {
     }
     items.$messageContent.textContent = message.message;
     items.message = message;
+  }
+
+  deleteMessage($message: HTMLLIElement): void {
+    $message.remove();
   }
 
   createMessageItem(message_: RenderedPersonalMessage): HTMLLIElement {
@@ -164,11 +164,11 @@ class ChatsMainContentView extends View {
     this.$messageList.onmouseover = async (mouseOverEvent) => {
       if (isClosestElementOfCssClass<HTMLLIElement>(mouseOverEvent.target, 'personal-message')) {
         if (!mouseOverEvent.target.classList.contains('personal-message_edit')) {
-          const data = this.messagesMap.get(mouseOverEvent.target);
-          if (data) {
-            await displayFastMenuHandler(data.$fastMenu, mouseOverEvent.target, data.message);
+          const items = this.messagesMap.get(mouseOverEvent.target);
+          if (items) {
+            await displayFastMenuHandler(items.$fastMenu, mouseOverEvent.target, items.message);
             mouseOverEvent.target.onmouseleave = () => {
-              this.destroyFastMenu(data.$fastMenu);
+              this.destroyFastMenu();
             };
           }
         }
@@ -176,11 +176,18 @@ class ChatsMainContentView extends View {
     };
   };
 
-  bindDestroyFastMenu = (destroyFastMenuHandler: ($fastMenuContainer: HTMLElement) => void): void => {
+  bindMessageListClicks = () => {
+    this.$messageList.addEventListener('click', (event) => {
+      this.onFastMenuEditButtonClick(event);
+      this.onFastMenuDeleteButtonClick(event);
+    });
+  };
+
+  bindDestroyFastMenu = (destroyFastMenuHandler: () => void): void => {
     this.destroyFastMenu = destroyFastMenuHandler;
   };
 
-  destroyFastMenu = ($fastMenuContainer: HTMLElement): void => {};
+  destroyFastMenu = (): void => {};
 
   createEditMessageForm($message: HTMLLIElement, message: RenderedPersonalMessage): HTMLFormElement {
     const $form = $('form', 'personal-message__edit-form');
@@ -229,10 +236,19 @@ class ChatsMainContentView extends View {
     const $form = this.createEditMessageForm($message, items.message);
     items.$editFormContainer.innerHTML = '';
     items.$editFormContainer.append($form);
-    this.destroyFastMenu(items.$fastMenu);
+    this.destroyFastMenu();
     this.destroyOtherEditMessageForms($message);
     $message.classList.add('personal-message_edit');
     this.bindFormHotKeys($message, $form);
+  };
+
+  onDisplayEditMessageForm = (event: MouseEvent): void => {
+    if (isClosestElementOfCssClass<HTMLLIElement>(event.target, 'personal-message')) {
+      const $message = event.target.closest<HTMLLIElement>('.personal-message');
+      if ($message) {
+        this.displayEditMessageForm($message);
+      }
+    }
   };
 
   destroyEditMessageForm($message: HTMLLIElement): void {
@@ -253,10 +269,77 @@ class ChatsMainContentView extends View {
     });
   }
 
+  displayDeleteConfirmDialog($container: HTMLElement, event: MouseEvent): void {
+    console.log(this.messagesMap);
+    if (!isClosestElementOfCssClass(event.target, 'personal-message')) {
+      return;
+    }
+    const $message = event.target.closest<HTMLLIElement>('.personal-message');
+    if (!$message) {
+      return;
+    }
+    const items = this.messagesMap.get($message);
+    if (!items) {
+      return;
+    }
+    const $cancelButton = $('button');
+    const $confirmButton = $('button');
+
+    $cancelButton.textContent = 'Cancel';
+    $confirmButton.textContent = 'Delete';
+
+    $container.append(
+      'Delete message.',
+      $('br'),
+      'Are you sure you want to delete this?',
+      $('br'),
+      items.message.username,
+      ' | ',
+      items.message.date,
+      $('br'),
+      items.message.message,
+      $('br'),
+      $cancelButton,
+      $confirmButton
+    );
+
+    $cancelButton.onclick = () => {
+      this.cancelDeleteConfirmDialog();
+    };
+
+    $confirmButton.onclick = () => {
+      this.onDeleteMessageDialogSubmit(items.message.id, $message);
+    };
+  }
+
+  onFastMenuEditButtonClick = (event: MouseEvent): void => {};
+
+  onFastMenuDeleteButtonClick = (event: MouseEvent): void => {};
+
   onEditMessageFormSubmit = async (formData: FormData, $message: HTMLLIElement): Promise<void> => {};
+
+  onDeleteMessageDialogSubmit = async (messageId: string, $message: HTMLLIElement): Promise<void> => {};
+
+  cancelDeleteConfirmDialog = (): void => {};
 
   bindEditMessageFormSubmit = (handler: (formData: FormData, $message: HTMLLIElement) => Promise<void>): void => {
     this.onEditMessageFormSubmit = handler;
+  };
+
+  bindDeleteMessageDialogSubmit = (handler: (messageId: string, $message: HTMLLIElement) => Promise<void>): void => {
+    this.onDeleteMessageDialogSubmit = handler;
+  };
+
+  bindFastMenuEditButtonClick = (handler: (event: MouseEvent) => void): void => {
+    this.onFastMenuEditButtonClick = handler;
+  };
+
+  bindFastMenuDeleteButtonClick = (handler: (event: MouseEvent) => void): void => {
+    this.onFastMenuDeleteButtonClick = handler;
+  };
+
+  bindCancelDeleteConfirmDialog = (handler: () => void): void => {
+    this.cancelDeleteConfirmDialog = handler;
   };
 
   setEditedMessageContent = (content: string): void => {
@@ -268,7 +351,6 @@ class ChatsMainContentView extends View {
       if (event.key === 'Escape') {
         this.destroyEditMessageForm($message);
       } else if (event.key === 'Enter') {
-        console.log('enter');
         $form.submit();
       }
     };
