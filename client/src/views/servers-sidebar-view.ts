@@ -51,17 +51,17 @@ class ServersSideBarView extends View {
     //this.$serverList.innerHTML = '';
 
     const channelsFake: Channel[] = [
-      { 
+      {
         id: 'efef',
         channelId: '12',
-        channelName: 'RS'
+        channelName: 'RS',
       },
       {
         id: 'efef',
         channelId: '45',
-        channelName: 'SCSS'
-      }
-    ]
+        channelName: 'SCSS',
+      },
+    ];
 
     channelsFake.forEach((channel) => {
       const $item = this.createServerItem(channel);
@@ -137,7 +137,7 @@ class ServersSideBarView extends View {
     const $itemName = $('div', 'servers-sidebar__name');
     $itemName.textContent = `${channelName}`;
 
-    $item.append($itemIcon, $itemName)
+    $item.append($itemIcon, $itemName);
 
     this.bindChatItemClick($item);
     return $item;

@@ -53,7 +53,6 @@ class AppStore {
     return this._chats;
   }
 
-  
   private set chats(chats: Chat[]) {
     this._chats = chats;
   }
@@ -61,11 +60,11 @@ class AppStore {
   private set channels(channels: Channel[]) {
     this._channels = channels;
   }
-  
+
   get channels(): Channel[] {
     return this._channels;
   }
-  
+
   get chatStatuses(): ChatAvailabilitiesMap {
     return this._chatStatuses;
   }
