@@ -16,9 +16,10 @@ export interface DTOUser extends DTOEntity {
 export interface DTOPersonalMessage extends DTOEntity {
   fromUserId: string;
   toUserId: string;
-  responseMessageId: string | null;
+  responsedToMessageId: string | null;
   date: Date;
   message: string;
+  responsedToMessage: DTOPersonalMessage | null;
 }
 
 export interface DTOChannelMessage extends DTOEntity {

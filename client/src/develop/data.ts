@@ -47,7 +47,8 @@ export const personalMessages: PersonalMessage[] = [
     toUserId: '2',
     message: moment().subtract(6, 'days').calendar(),
     date: moment().subtract(6, 'days').unix(),
-    responseMessageId: null,
+    responsedToMessageId: null,
+    responsedToMessage: null,
   },
   {
     id: '2',
@@ -55,7 +56,8 @@ export const personalMessages: PersonalMessage[] = [
     toUserId: '2',
     message: 'Yo man!',
     date: moment().subtract(6, 'days').unix(),
-    responseMessageId: null,
+    responsedToMessageId: null,
+    responsedToMessage: null,
   },
   {
     id: '3',
@@ -63,7 +65,8 @@ export const personalMessages: PersonalMessage[] = [
     toUserId: '1',
     message: 'Yo Yo!',
     date: moment().subtract(4, 'days').unix(),
-    responseMessageId: '2',
+    responsedToMessageId: '2',
+    responsedToMessage: null,
   },
   {
     id: '4',
@@ -71,7 +74,8 @@ export const personalMessages: PersonalMessage[] = [
     toUserId: '3',
     message: 'Yo User 3!',
     date: moment().subtract(2, 'days').unix(),
-    responseMessageId: null,
+    responsedToMessageId: null,
+    responsedToMessage: null,
   },
   {
     id: '5',
@@ -79,7 +83,8 @@ export const personalMessages: PersonalMessage[] = [
     toUserId: '2',
     message: 'Yo Yo Yo User 2!',
     date: moment().subtract(4, 'days').unix(),
-    responseMessageId: '4',
+    responsedToMessageId: '4',
+    responsedToMessage: null,
   },
   {
     id: '6',
@@ -87,7 +92,8 @@ export const personalMessages: PersonalMessage[] = [
     toUserId: '2',
     message: 'How is it going User 2',
     date: moment().subtract(4, 'days').unix(),
-    responseMessageId: null,
+    responsedToMessageId: null,
+    responsedToMessage: null,
   },
 ];
 

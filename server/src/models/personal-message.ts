@@ -1,12 +1,15 @@
 import mongoose, { HydratedDocument, Model, QueryWithHelpers, Types } from 'mongoose';
 import mongooseDelete from 'mongoose-delete';
+import { personalMessageDTO } from '../utils/dto';
+import { FetchedPersonalMessage } from '../utils/dto';
 
 export interface PersonalMessageDocument {
   fromUserId: Types.ObjectId;
   toUserId: Types.ObjectId;
-  responsedMessageId: Types.ObjectId;
+  responsedToMessageId: Types.ObjectId;
   date: Date;
   message: string;
+  responsedToMessage: PersonalMessageDocument | null;
 }
 
 interface PersonalMessageQueryHelpers {
@@ -36,7 +39,7 @@ export const personalMessageSchema = new Schema<
       type: Schema.Types.ObjectId,
       required: true,
     },
-    responsedMessageId: {
+    responsedToMessageId: {
       type: Schema.Types.ObjectId,
     },
     date: {
@@ -47,14 +50,15 @@ export const personalMessageSchema = new Schema<
       type: String,
       required: true,
     },
+    responsedToMessage: {
+      type: Types.ObjectId,
+      ref: 'PersonalMessage',
+      // get: function(this: PersonalMessageDocument | null) {
+      //   console.log(this);
+      //   return this ? this : undefined;
+      // } 
+    },
   },
-  // {
-  //   query: {
-  //     byDeleted(deleted: boolean) {
-  //       return this.find({ deleted });
-  //     },
-  //   },
-  // }
 );
 
 personalMessageSchema.query.byDeleted = function byDeleted(
