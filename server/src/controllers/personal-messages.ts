@@ -1,6 +1,8 @@
 import { Handler } from 'express';
 import PersonalMessage from '../models/personal-message';
 import { DeletedRequestQuery } from '../routes/personal-messages';
+import { personalMessageDTO } from '../utils/dto';
+import { FetchedPersonalMessage } from '../utils/dto';
 
 const getPersonalMessages: Handler = (req, res, next) => {
   let docsCount = 0;
@@ -38,7 +40,8 @@ const createPersonalMessage: Handler = (req, res, next) => {
   const personalMessage = new PersonalMessage({
     fromUserId: req.body.fromUserId,
     toUserId: req.body.toUserId,
-    responsedMessageId: req.body.responsedMessageId,
+    responsedToMessageId: '63e9609f73a7e2949b55550a',
+    responsedToMessage: '63e9609f73a7e2949b55550a',
     message: req.body.message,
   });
 
@@ -93,7 +96,11 @@ const updatePersonalMessage: Handler = (req, res, next) => {
       return message.save();
     })
     .then((message) => {
-      res.status(200).json({ messageInfo: 'Message updated!', message });
+      message
+        .populate('responsedToMessage')
+        .then((message) => {
+          res.status(200).json({ messageInfo: 'Message updated!', message: personalMessageDTO(message as FetchedPersonalMessage) });
+        })
     })
     .catch((err) => {
       if (!err.statusCode) {

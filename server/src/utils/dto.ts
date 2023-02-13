@@ -27,11 +27,14 @@ export const chatDTO = ({ _id, name, availability }: FetchedChat): DTOChat => ({
   availability,
 });
 
-export const personalMessageDTO = ({ _id, fromUserId, toUserId, responsedMessageId, date, message }: FetchedPersonalMessage): DTOPersonalMessage => ({
-  id: _id.toString(),
-  fromUserId: fromUserId.toString(),
-  toUserId: toUserId.toString(),
-  responseMessageId: responsedMessageId ? responsedMessageId.toString() : null,
-  date,
-  message,
-});
+export const personalMessageDTO = ({ _id, fromUserId, toUserId, responsedToMessageId, responsedToMessage, date, message }: FetchedPersonalMessage): DTOPersonalMessage => {
+  return {
+    id: _id.toString(),
+    fromUserId: fromUserId.toString(),
+    toUserId: toUserId.toString(),
+    responsedToMessageId: responsedToMessageId ? responsedToMessageId.toString() : null,
+    date,
+    message,
+    responsedToMessage: responsedToMessage ? personalMessageDTO(responsedToMessage as FetchedPersonalMessage) : null,
+  }
+};

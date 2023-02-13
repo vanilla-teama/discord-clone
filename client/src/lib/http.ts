@@ -94,6 +94,10 @@ class Http {
     return this.http.put<T, R>(url, data, config);
   }
 
+  patch<T = unknown, R = AxiosResponse<T>>(url: string, data?: T, config?: AxiosRequestConfig): Promise<R> {
+    return this.http.patch<T, R>(url, data, config);
+  }
+
   delete<T = unknown, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
     return this.http.delete<T, R>(url, config);
   }

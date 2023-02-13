@@ -1,7 +1,7 @@
 import Controller from '../lib/controller';
 import socket, { emitPersonalMessage } from '../lib/socket';
 import { IncomingPersonalMessage, appStore } from '../store/app-store';
-import { Chat } from '../types/entities';
+import { Chat, PersonalMessage } from '../types/entities';
 import ChatsMainContentView, { RenderedPersonalMessage } from '../views/chats-main-content-view';
 import ChatsScreen from './chats-screen';
 import MessageFastMenu from './message-fast-menu';
@@ -11,10 +11,12 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
     super(new ChatsMainContentView(ChatsScreen.chat));
     this.chat = ChatsScreen.chat;
     this.fastMenusMap = new Map();
+    this.editedMessage = null;
   }
 
   chat: Chat | null;
-  fastMenusMap: Map<HTMLElement, MessageFastMenu>;
+  fastMenusMap: Map<HTMLElement, { fastMenu: MessageFastMenu; message: RenderedPersonalMessage }>;
+  editedMessage: RenderedPersonalMessage | null;
 
   async init(): Promise<void> {
     if (!appStore.user) {
@@ -30,7 +32,9 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       appStore.bindPersonalMessageListChanged(this.onMessageListChange);
       this.onSocketPersonalMessage();
       this.view.bindMessageHover(this.showFastMenu);
-      this.view.bindMessageLeave(this.destroyFastMenu);
+      this.view.bindDestroyFastMenu(this.destroyFastMenu);
+      this.view.bindEditMessageFormSubmit(this.onEditMessageFormSubmit);
+      MessageFastMenu.bindShowEditForm(this.showEditForm);
     }
   }
 
@@ -53,8 +57,9 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       fromUserId: appStore.user.id,
       toUserId: this.chat.userId,
       date: Date.now(),
-      responseMessageId: null,
+      responsedToMessageId: null,
       message: messageText,
+      responsedToMessage: null,
     };
     await appStore.addPersonalMessage(message);
     emitPersonalMessage(message);
@@ -71,17 +76,37 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
     });
   }
 
-  showFastMenu = async ($root: HTMLElement): Promise<void> => {
-    const fastMenu = new MessageFastMenu($root);
+  showFastMenu = async (
+    $fastMenuContainer: HTMLElement,
+    $message: HTMLLIElement,
+    message: RenderedPersonalMessage
+  ): Promise<void> => {
+    const fastMenu = new MessageFastMenu($fastMenuContainer, $message, message);
     await fastMenu.init();
-    this.fastMenusMap.set($root, fastMenu);
+    this.fastMenusMap.set($fastMenuContainer, { fastMenu, message });
   };
 
-  destroyFastMenu = ($root: HTMLElement) => {
-    const fastMenu = this.fastMenusMap.get($root);
-    if (fastMenu) {
-      fastMenu.destroy();
+  destroyFastMenu = ($fastMenuContainer: HTMLElement) => {
+    const data = this.fastMenusMap.get($fastMenuContainer);
+    if (data) {
+      data.fastMenu.destroy();
     }
+  };
+
+  showEditForm = ($container: HTMLLIElement): void => {
+    this.view.displayEditMessageForm($container);
+  };
+
+  onEditMessageFormSubmit = async (formData: FormData, $message: HTMLLIElement): Promise<void> => {
+    const id = formData.get('id');
+    const message = formData.get('message');
+    if (!id || !message || typeof id !== 'string' || typeof message !== 'string') {
+      return;
+    }
+    appStore.bindPersonalMessageChanged((message: RenderedPersonalMessage) => {
+      this.view.editMessageContent($message, message);
+    });
+    await appStore.editPersonalMessage(id, message);
   };
 }
 

@@ -112,6 +112,7 @@ class AppStore {
 
   async fetchPersonalMessages(userOneId: string, userTwoId: string): Promise<void> {
     const response = await http.get<{ messages: PersonalMessage[] }>(`/chats/messages/${userOneId}/${userTwoId}`);
+    console.log('fetch chat messages', response);
     if (response) {
       this.personalMessages = response.data.messages || [];
     } else {
@@ -181,6 +182,23 @@ class AppStore {
     this.onPersonalMessageListChanged(this.getFormattedRenderedPersonalMessages());
   }
 
+  async editPersonalMessage(id: string, message: string): Promise<void> {
+    const response = await http
+      .patch<{ message: string }, { data: { message: PersonalMessage } }>(`/personal-messages/${id}`, { message })
+      .catch((error) => console.error(error));
+    if (response) {
+      const messageIdx = this.personalMessages.findIndex(({ id: itemId }) => itemId === id);
+      if (messageIdx) {
+        this.personalMessages = [
+          ...this.personalMessages.slice(0, messageIdx),
+          response.data.message,
+          ...this.personalMessages.slice(messageIdx + 1),
+        ];
+        this.onPersonalMessageChanged(this.getFormattedRenderedPersonalMessage(response.data.message));
+      }
+    }
+  }
+
   deletePersonalMessage(id: PersonalMessage['id']): void {
     this.personalMessages = this.personalMessages.filter(({ id: currId }) => currId !== id);
   }
@@ -217,6 +235,7 @@ class AppStore {
   };
   onChatListChanged = (chats: Chat[]): void => {};
   onChatUpdate = (chat: Chat): void => {};
+  onPersonalMessageChanged = (message: RenderedPersonalMessage): void => {};
 
   async bindServerListChanged(callback: (servers: Server[]) => void): Promise<void> {
     this.onServerListChanged = callback;
@@ -228,6 +247,10 @@ class AppStore {
 
   bindPersonalMessageListChanged = (callback: (messages: RenderedPersonalMessage[]) => void): void => {
     this.onPersonalMessageListChanged = callback;
+  };
+
+  bindPersonalMessageChanged = (callback: (message: RenderedPersonalMessage) => void) => {
+    this.onPersonalMessageChanged = callback;
   };
 
   bindChatLocallyUpdate = (
@@ -246,18 +269,37 @@ class AppStore {
   };
 
   getFormattedRenderedPersonalMessages(): RenderedPersonalMessage[] {
-    return this.personalMessages.map(({ id, fromUserId, date, message }) => {
-      const user = this.users.find((user) => user.id === fromUserId);
-      if (!user) {
-        throw Error('User not found');
-      }
-      return {
-        id,
-        username: user.name,
-        date: moment(date).calendar(),
-        message,
-      };
+    return this.personalMessages.map((message) => {
+      return this.getFormattedRenderedPersonalMessage(message);
     });
+  }
+
+  getFormattedRenderedPersonalMessage({
+    id,
+    fromUserId,
+    date,
+    message,
+    responsedToMessage,
+  }: PersonalMessage): RenderedPersonalMessage {
+    const user = this.users.find((user) => user.id === fromUserId);
+    const responsedUser = this.users.find((user) => user.id === responsedToMessage?.fromUserId);
+    return {
+      id,
+      userId: fromUserId,
+      username: user?.name || '',
+      date: moment(date).calendar(),
+      message,
+      responsedToMessage: responsedToMessage
+        ? {
+            id: responsedToMessage.id,
+            userId: responsedToMessage.fromUserId,
+            username: responsedUser?.name || '',
+            date: moment(responsedToMessage.date).calendar(),
+            message: responsedToMessage.message,
+            responsedToMessage: null,
+          }
+        : null,
+    };
   }
 
   private constructor() {

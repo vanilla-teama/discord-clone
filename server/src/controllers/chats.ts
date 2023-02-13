@@ -62,6 +62,7 @@ const getChatMessages: Handler = (req, res, next) => {
       { $and: [{ fromUserId: userTwoId }, { toUserId: userOneId }] }
     ],
   })
+    .populate('responsedToMessage')
     .then((messages) => {
       res.status(200).json({
         message: 'Fetched chat messages successfully.',

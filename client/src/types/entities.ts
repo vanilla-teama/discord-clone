@@ -26,9 +26,10 @@ export interface FetchedUser {
 export interface PersonalMessage extends MongoEntity {
   fromUserId: MongoObjectId;
   toUserId: MongoObjectId;
-  responseMessageId: MongoObjectId | null;
+  responsedToMessageId: MongoObjectId | null;
   date: Timestamp;
   message: string;
+  responsedToMessage: PersonalMessage | null;
 }
 
 export interface ChannelMessage extends MongoEntity {

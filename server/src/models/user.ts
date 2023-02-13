@@ -86,23 +86,6 @@ const UserSchema = new Schema<UserDocument>(
   }
 );
 
-// UserSchema.virtual('chats', {
-//   ref: 'User',
-//   localField: 'chats',
-//   foreignField: '_id',
-// })
-//   .get(function (this: UserDocument) {
-//     const chat: ChatDocument = {
-//       userId: this.id.toString(),
-//       userName: this.name,
-//       availability: this.availability,
-//     };
-//     return chat;
-//   })
-//   .set(function () {
-//     this.set(this);
-//   });
-
 UserSchema.pre('save', function save(next) {
   const user = this as UserDocument;
   if (!user.isModified('password')) {
