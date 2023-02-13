@@ -1,9 +1,11 @@
 import View from '../lib/view';
 import { $ } from '../utils/functions';
 import MainView from './main-view';
+import { Channel } from '../types/entities';
 
 class ServersAppBarView extends View {
   static readonly classNames = {};
+  $showInfoBar: HTMLButtonElement;
 
   constructor() {
     const $root = MainView.$appbar;
@@ -11,12 +13,44 @@ class ServersAppBarView extends View {
       ServersAppBarView.throwNoRootInTheDomError('App-bar');
     }
     super($root);
+    this.$showInfoBar = $('button', ['servers-app-bar__members-btn', 'tooltip']);
   }
   build(): void {
-    const $container = $('div', 'main');
-    $container.textContent = 'I AM APP-BAR!';
+    const channelsFake: Channel[] = [
+      {
+        id: 'efef',
+        channelId: '12',
+        channelName: 'RS',
+      },
+      {
+        id: 'efef',
+        channelId: '45',
+        channelName: 'SCSS',
+      },
+    ];
 
-    this.$container.append('I AM SERVERS APP-BAR!');
+    const $serversAppBar = $('div', 'servers-app-bar');
+    const $channelContainer = $('div', 'servers-app-bar__channel-container');
+    const $iconHash = $('div', 'servers-app-bar__hash-icon');
+    const $channelName = $('div', 'servers-app-bar__channel-name');
+    $channelName.textContent = `${channelsFake[0].channelName}`;
+
+    const $panelContainer = $('div', 'servers-app-bar__panel-container');
+    const $showInfoBar = this.$showInfoBar;
+    $showInfoBar.dataset.text = 'Show member list';
+
+    const $search = $('input', 'servers-app-bar__search');
+    $search.type = 'text';
+    $search.placeholder = 'Search';
+
+    const $helpBtn = $('button', ['servers-app-bar__help-btn', 'tooltip']);
+    $helpBtn.dataset.text = 'Help';
+
+    $panelContainer.append($showInfoBar, $search, $helpBtn);
+    $channelContainer.append($iconHash, $channelName);
+    $serversAppBar.append($channelContainer, $panelContainer);
+
+    this.$container.append($serversAppBar);
   }
 }
 
