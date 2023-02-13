@@ -1,84 +1,98 @@
 import Router, { RouteControllers, SettingsParams } from '../lib/router';
 import View from '../lib/view';
-import { Chat, User } from '../types/entities';
+import { Channel, Chat, User } from '../types/entities';
 import { $, replaceWith } from '../utils/functions';
 import PopupView, { PopupCoords } from './popup-view';
 import ScreenView from './screen-view';
 
 class ServersSideBarView extends View {
   static readonly classes = {
-    chatItem: 'chats-sidebar__item',
-    chatItemActive: 'chats-sidebar__item_active',
+    serverItem: 'servers-sidebar__item',
+    serverItemActive: 'servers-sidebar__item_active',
   };
 
   constructor() {
     const $root = ScreenView.$sideBar;
     if (!$root) {
-      ServersSideBarView.throwNoRootInTheDomError(`Chats-sidebar`);
+      ServersSideBarView.throwNoRootInTheDomError(`Servers-sidebar`);
     }
     super($root);
-    this.$chatList = $('ul', 'chats-sidebar__list');
+    this.$serverList = $('ul', 'servers-sidebar__list');
     this.$userBar = this.createUserBar();
-    this.chatListMap = new Map();
-    this.$showCreateChat = this.createShowCreateChatElement();
+    this.channelsListMap = new Map();
+    this.$showCreateChannel = this.createShowCreateChannel();
   }
 
-  $chatList: HTMLUListElement;
+  $serverList: HTMLUListElement;
   $userBar: HTMLDivElement;
-  chatListMap: Map<HTMLLIElement, { chat: Chat }>;
-  $showCreateChat: HTMLSpanElement;
+  channelsListMap: Map<HTMLLIElement, { channel: Channel }>;
+  $showCreateChannel: HTMLSpanElement;
 
   build(): void {
-    const $chatsContainer = $('div', 'chats-sidebar__container');
+    const $serversContainer = $('div', 'servers-sidebar__container');
 
-    const $directMessagesContainer = $('div', 'chats-sidebar__dm-container');
-    const $directMessagesTitle = $('div', 'chats-sidebar__dm-title');
-    $directMessagesTitle.textContent = 'Direct messages';
+    const $createContainer = $('div', 'servers-sidebar__create-container');
+    const $createTitle = $('div', 'servers-sidebar__create-title');
+    $createTitle.textContent = 'Create channel';
 
-    $directMessagesContainer.append($directMessagesTitle, this.$showCreateChat);
+    $createContainer.append($createTitle, this.$showCreateChannel);
 
-    $chatsContainer.append($directMessagesContainer, this.$chatList, this.$userBar);
-    this.$container.append('SERVERS!!!!!!!!!!!!!!!!!!!!!!!!!', $chatsContainer);
+    $serversContainer.append($createContainer, this.$serverList, this.$userBar);
+    this.$container.append($serversContainer);
   }
 
-  private createShowCreateChatElement(): HTMLSpanElement {
-    const $directMessagesAddBtn = $('span', 'chats-sidebar__dm-add');
-    $directMessagesAddBtn.dataset.name = 'Create DM';
+  private createShowCreateChannel(): HTMLSpanElement {
+    const $directMessagesAddBtn = $('span', 'servers-sidebar__create-add');
+    $directMessagesAddBtn.dataset.name = 'Create channel';
     return $directMessagesAddBtn;
   }
 
-  displayChats(chats: Chat[]): void {
-    this.$chatList.innerHTML = '';
-    chats.forEach((chat) => {
-      const $item = this.createChatItem(chat);
-      this.$chatList.append($item);
-      this.onAppendChatItem($item, chat);
+  displayChannels(channels: Channel[]): void {
+    //this.$serverList.innerHTML = '';
+
+    const channelsFake: Channel[] = [
+      { 
+        id: 'efef',
+        channelId: '12',
+        channelName: 'RS'
+      },
+      {
+        id: 'efef',
+        channelId: '45',
+        channelName: 'SCSS'
+      }
+    ]
+
+    channelsFake.forEach((channel) => {
+      const $item = this.createServerItem(channel);
+      this.$serverList.append($item);
+      this.onAppendChatItem($item, channel);
     });
   }
 
-  updateChat(chat: Chat): void {
-    const $newItem = this.createChatItem(chat);
-    for (const [
-      $item,
-      {
-        chat: { userId },
-      },
-    ] of this.chatListMap) {
-      if (userId === chat.userId) {
-        $item.replaceWith($newItem);
-        this.chatListMap.delete($item);
-        break;
-      }
-    }
-    this.onAppendChatItem($newItem, chat);
-  }
+  //updateChat(chat: Chat): void {
+  //  const $newItem = this.createChatItem(chat);
+  //  for (const [
+  //    $item,
+  //    {
+  //      chat: { userId },
+  //    },
+  //  ] of this.chatListMap) {
+  //    if (userId === chat.userId) {
+  //      $item.replaceWith($newItem);
+  //      this.chatListMap.delete($item);
+  //      break;
+  //    }
+  //  }
+  //  this.onAppendChatItem($newItem, chat);
+  //}
 
   displayUser(user: User | null): void {
     this.$userBar = replaceWith(this.$userBar, this.createUserBar(user || undefined));
   }
 
   bindShowCreateChat(handler: (coords: PopupCoords, $root: HTMLElement) => void): void {
-    this.$showCreateChat.onclick = (event) => {
+    this.$showCreateChannel.onclick = (event) => {
       const coords: PopupCoords = { top: event.pageY, left: event.pageX };
       handler(coords, PopupView.getContainer());
     };
@@ -86,12 +100,12 @@ class ServersSideBarView extends View {
 
   bindChatItemClick($item: HTMLLIElement) {
     $item.addEventListener('click', () => {
-      const data = this.chatListMap.get($item);
+      const data = this.channelsListMap.get($item);
       if (!data) {
         return;
       }
-      const chat = data.chat;
-      Router.push(RouteControllers.Chats, '', [chat.userId]);
+      const chat = data.channel;
+      Router.push(RouteControllers.Servers, '', [chat.channelId]);
     });
   }
 
@@ -117,33 +131,27 @@ class ServersSideBarView extends View {
     return $userBar;
   }
 
-  private createChatItem({ userName, availability }: Chat): HTMLLIElement {
-    const $item = $('li', ServersSideBarView.classes.chatItem);
-    const $itemBox = $('div', 'user-item__box');
-    const $itemAvatar = $('div', 'user-item__avatar');
-    const $itemIcon = $('div', 'user-item__icon');
-    const $itemStatus = $('div', ['user-item__status', `user-item__status_${availability}`]);
-    const $itemName = $('div', 'user-item__name');
-    const $itemClose = $('span', 'user-item__close');
-    $itemName.textContent = `${userName}`;
+  private createServerItem({ channelName }: Channel): HTMLLIElement {
+    const $item = $('li', ServersSideBarView.classes.serverItem);
+    const $itemIcon = $('div', 'servers-sidebar__hash-icon');
+    const $itemName = $('div', 'servers-sidebar__name');
+    $itemName.textContent = `${channelName}`;
 
-    $itemAvatar.append($itemIcon, $itemStatus);
-    $itemBox.append($itemAvatar, $itemName);
-    $item.append($itemBox, $itemClose);
+    $item.append($itemIcon, $itemName)
 
     this.bindChatItemClick($item);
     return $item;
   }
 
-  private onAppendChatItem($item: HTMLLIElement, chat: Chat): void {
-    this.chatListMap.set($item, { chat });
+  private onAppendChatItem($item: HTMLLIElement, channel: Channel): void {
+    this.channelsListMap.set($item, { channel });
   }
 
   toggleActiveStatus(userId: string | undefined) {
-    this.chatListMap.forEach((data, $item) => {
-      $item.classList.remove(ServersSideBarView.classes.chatItemActive);
-      if (data.chat.userId === userId) {
-        $item.classList.add(ServersSideBarView.classes.chatItemActive);
+    this.channelsListMap.forEach((data, $item) => {
+      $item.classList.remove(ServersSideBarView.classes.serverItemActive);
+      if (data.channel.channelId === userId) {
+        $item.classList.add(ServersSideBarView.classes.serverItemActive);
       }
     });
   }

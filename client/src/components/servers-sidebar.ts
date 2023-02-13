@@ -3,7 +3,7 @@ import Controller from '../lib/controller';
 import { RouteControllers } from '../lib/router';
 import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
-import { Availability, Chat, User } from '../types/entities';
+import { Availability, Channel, Chat, User } from '../types/entities';
 import { CustomEvents } from '../types/types';
 import { getTypedCustomEvent } from '../utils/functions';
 import { PopupCoords } from '../views/popup-view';
@@ -27,7 +27,7 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
     this.view.render();
     this.view.bindShowCreateChat(this.onShowCreateChat);
     this.onInit(appStore.user);
-    this.onChatListChanged(appStore.chats);
+    this.onChatListChanged(appStore.channels);
     this.bindRouteChanged();
     // ChatsScreen.bindChatUpdate('sidebar', this.onChatUpdate);
     this.bindSocketUserAvailabilityChangedServer();
@@ -37,12 +37,12 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
     this.view.displayUser(user);
   };
 
-  onChatListChanged = (chats: Chat[]): void => {
-    this.view.displayChats(chats);
+  onChatListChanged = (channels: Channel[]): void => {
+    this.view.displayChannels(channels);
   };
 
   onChatUpdate = (chat: Chat): void => {
-    this.view.updateChat(chat);
+    //this.view.updateChat(chat);
     this.toggleActiveStatus();
   };
 
@@ -61,7 +61,7 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
         detail: { controller, params },
       } = getTypedCustomEvent(CustomEvents.AFTERROUTERPUSH, event);
 
-      if (controller === RouteControllers.Chats && params.length > 0) {
+      if (controller === RouteControllers.Servers && params.length > 0) {
         this.view.toggleActiveStatus(params[0]);
       }
     });

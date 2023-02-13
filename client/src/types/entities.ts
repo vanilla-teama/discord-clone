@@ -47,6 +47,10 @@ export interface Chat extends MongoEntity {
   userName: string;
   availability: Availability;
 }
+export interface Channel extends MongoEntity {
+  channelId: MongoObjectId;
+  channelName: string;
+}
 
 export enum Availability {
   Online = 'online',
