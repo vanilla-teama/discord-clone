@@ -33,7 +33,7 @@ class ServersBarView extends View {
   }
 
   displayServers(servers: Server[]): void {
-    //this.$serverList.innerHTML = '';
+    this.$serverList.innerHTML = '';
 
     const serversFake: Server[] = [
       {
@@ -48,16 +48,16 @@ class ServersBarView extends View {
       },
     ];
 
-    serversFake.forEach((server) => {
+    // serversFake.forEach((server) => {
+    //   const $item = this.createServerItem(server);
+    //   this.$serverList.append($item);
+    //   //this.onAppendServerItem($item, server);
+    // });
+    servers.forEach((server) => {
       const $item = this.createServerItem(server);
       this.$serverList.append($item);
-      //this.onAppendServerItem($item, server);
+      this.onAppendServerItem($item, server);
     });
-    //servers.forEach((server) => {
-    //  const $item = this.createServerItem(server);
-    //  this.$serverList.append($item);
-    //  this.onAppendServerItem($item, server);
-    //});
 
     this.$serverList.append(this.$addServerButton);
     this.bindShowModal();
@@ -75,7 +75,7 @@ class ServersBarView extends View {
         // image: 'https://source.boringavatars.com',
       };
 
-      // handler(server);
+      handler(server);
     });
   }
 
@@ -108,7 +108,7 @@ class ServersBarView extends View {
     $itemName.textContent = `${name}`;
 
     if (image) {
-      $itemImg.src = upload.default;
+      $itemImg.src = `data:image/png;base64, ${image}`;
     }
     $item.append($itemImg, $itemName);
 
