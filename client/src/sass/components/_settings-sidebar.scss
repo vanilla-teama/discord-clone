@@ -24,3 +24,17 @@
   width: 100%;
   display: flex;
 }
+
+@include media-md-down {
+  .settings-bar__list {
+    width: 80%;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .settings {
+    flex-direction: column;
+  }
+  .settings-bar__list-item {
+    padding: 10px;
+  }
+}
