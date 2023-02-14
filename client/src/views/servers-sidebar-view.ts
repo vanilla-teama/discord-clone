@@ -7,8 +7,8 @@ import ScreenView from './screen-view';
 
 class ServersSideBarView extends View {
   static readonly classes = {
-    serverItem: 'servers-sidebar__item',
-    serverItemActive: 'servers-sidebar__item_active',
+    channelItem: 'servers-sidebar__item',
+    channelItemActive: 'servers-sidebar__item_active',
   };
 
   constructor() {
@@ -19,13 +19,13 @@ class ServersSideBarView extends View {
     super($root);
     this.$serverList = $('ul', 'servers-sidebar__list');
     this.$userBar = this.createUserBar();
-    this.channelsListMap = new Map();
+    ServersSideBarView.channelsListMap = new Map();
     this.$showCreateChannel = this.createShowCreateChannel();
   }
 
   $serverList: HTMLUListElement;
   $userBar: HTMLDivElement;
-  channelsListMap: Map<HTMLLIElement, { channel: Channel }>;
+  static channelsListMap: Map<HTMLLIElement, { channel: Channel }>;
   $showCreateChannel: HTMLSpanElement;
 
   build(): void {
@@ -48,64 +48,47 @@ class ServersSideBarView extends View {
   }
 
   displayChannels(channels: Channel[]): void {
-    //this.$serverList.innerHTML = '';
+    this.$serverList.innerHTML = '';
 
     const channelsFake: Channel[] = [
       {
         id: 'efef',
-        channelId: '12',
-        channelName: 'RS',
+        serverId: '12',
+        name: 'RS',
       },
       {
         id: 'efef',
-        channelId: '45',
-        channelName: 'SCSS',
+        serverId: '45',
+        name: 'SCSS',
       },
     ];
 
-    channelsFake.forEach((channel) => {
-      const $item = this.createServerItem(channel);
+    channels.forEach((channel) => {
+      const $item = this.createChannelItem(channel);
       this.$serverList.append($item);
-      this.onAppendChatItem($item, channel);
+      this.onAppendChannelItem($item, channel);
     });
   }
-
-  //updateChat(chat: Chat): void {
-  //  const $newItem = this.createChatItem(chat);
-  //  for (const [
-  //    $item,
-  //    {
-  //      chat: { userId },
-  //    },
-  //  ] of this.chatListMap) {
-  //    if (userId === chat.userId) {
-  //      $item.replaceWith($newItem);
-  //      this.chatListMap.delete($item);
-  //      break;
-  //    }
-  //  }
-  //  this.onAppendChatItem($newItem, chat);
-  //}
 
   displayUser(user: User | null): void {
     this.$userBar = replaceWith(this.$userBar, this.createUserBar(user || undefined));
   }
 
-  bindShowCreateChat(handler: (coords: PopupCoords, $root: HTMLElement) => void): void {
+  bindShowCreateServer(handler: (coords: PopupCoords, $root: HTMLElement) => void): void {
     this.$showCreateChannel.onclick = (event) => {
       const coords: PopupCoords = { top: event.pageY, left: event.pageX };
       handler(coords, PopupView.getContainer());
     };
   }
 
-  bindChatItemClick($item: HTMLLIElement) {
+  bindChannelItemClick($item: HTMLLIElement) {
     $item.addEventListener('click', () => {
-      const data = this.channelsListMap.get($item);
+      const data = ServersSideBarView.channelsListMap.get($item);
       if (!data) {
         return;
       }
-      const chat = data.channel;
-      Router.push(RouteControllers.Servers, '', [chat.channelId]);
+      const channel = data.channel;
+      Router.push(RouteControllers.Servers, '', [channel.serverId, channel.id]);
     });
   }
 
@@ -131,27 +114,28 @@ class ServersSideBarView extends View {
     return $userBar;
   }
 
-  private createServerItem({ channelName }: Channel): HTMLLIElement {
-    const $item = $('li', ServersSideBarView.classes.serverItem);
+  private createChannelItem({ name }: Channel): HTMLLIElement {
+    const $item = $('li', ServersSideBarView.classes.channelItem);
     const $itemIcon = $('div', 'servers-sidebar__hash-icon');
     const $itemName = $('div', 'servers-sidebar__name');
-    $itemName.textContent = `${channelName}`;
+    $itemName.textContent = `${name}`;
 
     $item.append($itemIcon, $itemName);
 
-    this.bindChatItemClick($item);
+    this.bindChannelItemClick($item);
     return $item;
   }
 
-  private onAppendChatItem($item: HTMLLIElement, channel: Channel): void {
-    this.channelsListMap.set($item, { channel });
+  private onAppendChannelItem($item: HTMLLIElement, channel: Channel): void {
+    ServersSideBarView.channelsListMap.set($item, { channel });
   }
 
-  toggleActiveStatus(userId: string | undefined) {
-    this.channelsListMap.forEach((data, $item) => {
-      $item.classList.remove(ServersSideBarView.classes.serverItemActive);
-      if (data.channel.channelId === userId) {
-        $item.classList.add(ServersSideBarView.classes.serverItemActive);
+  static toggleActiveStatus(channelId: string | undefined) {
+    console.log(channelId);
+    ServersSideBarView.channelsListMap.forEach((data, $item) => {
+      $item.classList.remove(ServersSideBarView.classes.channelItemActive);
+      if (data.channel.id === channelId) {
+        $item.classList.add(ServersSideBarView.classes.channelItemActive);
       }
     });
   }

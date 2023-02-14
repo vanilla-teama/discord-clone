@@ -33,6 +33,11 @@ export interface DTOServer extends DTOEntity {
   image: string;
 }
 
+export interface DTOChannel extends DTOEntity {
+  name: string;
+  serverId: string;
+}
+
 export interface DTOChat {
   userId: string;
   userName: string;

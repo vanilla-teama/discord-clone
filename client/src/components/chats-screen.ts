@@ -34,9 +34,9 @@ class ChatsScreen extends Controller<ChatsScreenView> {
       this.view.displayUser(appStore.user);
     }
 
-    new StartBarComponent().init();
-    new ChatsSideBarComponent().init();
-    new MainComponent().init();
+    await new StartBarComponent().init();
+    await new ChatsSideBarComponent().init();
+    await new MainComponent().init();
 
     this.maybeRedirectToFirstChat(appStore.chats);
     this.bindSocketUserAvailabilityChangedServer();

@@ -19,13 +19,13 @@ class ServersAppBarView extends View {
     const channelsFake: Channel[] = [
       {
         id: 'efef',
-        channelId: '12',
-        channelName: 'RS',
+        serverId: '12',
+        name: 'RS',
       },
       {
         id: 'efef',
-        channelId: '45',
-        channelName: 'SCSS',
+        serverId: '45',
+        name: 'SCSS',
       },
     ];
 
@@ -33,7 +33,7 @@ class ServersAppBarView extends View {
     const $channelContainer = $('div', 'servers-app-bar__channel-container');
     const $iconHash = $('div', 'servers-app-bar__hash-icon');
     const $channelName = $('div', 'servers-app-bar__channel-name');
-    $channelName.textContent = `${channelsFake[0].channelName}`;
+    $channelName.textContent = `${channelsFake[0].name}`;
 
     const $panelContainer = $('div', 'servers-app-bar__panel-container');
     const $showInfoBar = this.$showInfoBar;

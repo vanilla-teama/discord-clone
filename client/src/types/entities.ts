@@ -49,8 +49,8 @@ export interface Chat extends MongoEntity {
   availability: Availability;
 }
 export interface Channel extends MongoEntity {
-  channelId: MongoObjectId;
-  channelName: string;
+  serverId: MongoObjectId;
+  name: string;
 }
 
 export enum Availability {

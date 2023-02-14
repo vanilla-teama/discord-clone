@@ -23,6 +23,7 @@ const uploader = multer({
 
 router.get('/', serversController.getServers);
 router.get('/:id', serversController.getServer);
+router.get('/:id/channels', serversController.getChannels);
 router.post('/', uploader.single('image') , serversController.createServer);
 router.patch('/:id', serversController.updateServer);
 router.delete('/:id', serversController.deleteServer);

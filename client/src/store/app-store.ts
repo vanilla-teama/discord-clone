@@ -136,6 +136,22 @@ class AppStore {
     }
   }
 
+  async fetchChannels(serverId: string): Promise<void> {
+    const response = await http
+      .get<{ channels: Channel[] }>(`/servers/${serverId}/channels`)
+      .catch((error) => console.error(error));
+    if (response) {
+      this.channels = response.data.channels || [];
+    } else {
+      this.channels = [];
+    }
+    this.onChannelListChanged(this.channels);
+  }
+
+  resetChannels(): void {
+    this.channels = [];
+  }
+
   async checkAuth(): Promise<boolean> {
     const response = await http.get<{ user: User | null }>('/users/check-auth').catch((error) => console.error(error));
     if (response) {
@@ -245,12 +261,17 @@ class AppStore {
     'main-content': (chat: Chat) => {},
   };
   onChatListChanged = (chats: Chat[]): void => {};
+  onChannelListChanged = (channels: Channel[]): void => {};
   onChatUpdate = (chat: Chat): void => {};
   onPersonalMessageChanged = (message: RenderedPersonalMessage): void => {};
   onPersonalMessageDeleted = (): void => {};
 
   async bindServerListChanged(callback: (servers: Server[]) => void): Promise<void> {
     this.onServerListChanged = callback;
+  }
+
+  bindChannelListChanged(callback: (channels: Channel[]) => void): void {
+    this.onChannelListChanged = callback;
   }
 
   bindSigningIn(callback: (data: FormData) => void): void {
