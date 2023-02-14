@@ -25,6 +25,7 @@
   left: 11px;
 }
 .block-body-profile {
+  padding: 0px 5px;
   border-radius: 20px;
   margin: 35px 10px 10px 10px;
   max-width: 320px;
@@ -105,4 +106,30 @@
   border-radius: 20px;
   border: 3px solid #ffffff;
   float: right;
+}
+
+@include media-md-down {
+  .container-profile {
+    flex-direction: column;
+    margin: 0 auto;
+  }
+  .left-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .left-section:first-child {
+    margin-top: 5px;
+  }
+  .info-block {
+    margin: 0 auto;
+  }
+}
+@include media-sm-down {
+  .body-button-profile {
+    width: 220px;
+  }
+  .title-color {
+    margin-top: 0px;
+  }
 }

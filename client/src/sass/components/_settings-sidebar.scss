@@ -27,6 +27,7 @@
 
 @include media-lg-down {
   .settings-bar__list {
+    padding: 47px 6px 0px 20px;
     width: 80%;
     display: flex;
     flex-wrap: wrap;
