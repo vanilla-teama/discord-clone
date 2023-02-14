@@ -243,6 +243,18 @@ class AppStore {
     this.onServerListChanged(this.servers);
   }
 
+  async addChannel(channel: Pick<Channel, 'name' | 'serverId'>, serverId: string): Promise<Channel | null> {
+    const response = await http
+      .post<Pick<Channel, 'name' | 'serverId'>, { data: { channel: Channel } }>('/channels', channel)
+      .catch((error) => console.error(error));
+    if (response) {
+      const channel = response.data.channel;
+      await this.fetchChannels(serverId);
+      return channel;
+    }
+    return null;
+  }
+
   updateChatLocally(chatId: Chat['userId'], data: Partial<Pick<Chat, 'userName' | 'availability'>>) {
     let chat = this.chats.find(({ userId }) => userId === chatId);
     if (chat) {

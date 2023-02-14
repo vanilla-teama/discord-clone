@@ -74,10 +74,9 @@ class ServersSideBarView extends View {
     this.$userBar = replaceWith(this.$userBar, this.createUserBar(user || undefined));
   }
 
-  bindShowCreateServer(handler: (coords: PopupCoords, $root: HTMLElement) => void): void {
-    this.$showCreateChannel.onclick = (event) => {
-      const coords: PopupCoords = { top: event.pageY, left: event.pageX };
-      handler(coords, PopupView.getContainer());
+  bindShowCreateChannel(handler: () => void): void {
+    this.$showCreateChannel.onclick = () => {
+      handler();
     };
   }
 

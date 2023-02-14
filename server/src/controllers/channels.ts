@@ -1,5 +1,7 @@
 import { Handler } from 'express';
 import Channel from '../models/channel';
+import { channelDTO } from '../utils/dto';
+import { FetchedChannel } from '../utils/dto';
 const getChannels: Handler = (req, res, next) => {
   let docsCount = 0;
   Channel.find()
@@ -54,7 +56,7 @@ const createChannel: Handler = (req, res, next) => {
     .then(() => {
       res.status(201).json({
         message: 'Channel created successfully!',
-        channel,
+        channel: channelDTO(channel as FetchedChannel),
       });
     })
     .catch((err) => {

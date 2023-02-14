@@ -6,10 +6,13 @@ import { appStore } from '../store/app-store';
 import { Availability, Channel, Chat, User } from '../types/entities';
 import { CustomEvents } from '../types/types';
 import { getTypedCustomEvent } from '../utils/functions';
+import ModalView from '../views/modal-view';
 import { PopupCoords } from '../views/popup-view';
 import ServersSideBarView from '../views/servers-sidebar-view';
+import ChannelsCreateFormComponent from './channels-create-form';
 import ChatsCreateFormComponent from './chats-create-form';
 import MainComponent from './main';
+import ModalComponent from './modal';
 import PopupComponent from './popup';
 
 class ServersSideBarComponent extends Controller<ServersSideBarView> {
@@ -43,7 +46,7 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
     if (ServersSideBarComponent.channelId) {
       await ServersSideBarComponent.onUrlChannelIdChanged(ServersSideBarComponent.channelId);
     }
-    this.view.bindShowCreateServer(this.onShowCreateChannel);
+    this.view.bindShowCreateChannel(this.onShowCreateChannel);
     this.onInit(appStore.user);
     this.bindSocketUserAvailabilityChangedServer();
   }
@@ -56,8 +59,12 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
     this.view.displayChannels(channels);
   };
 
-  onShowCreateChannel = (coords: PopupCoords) => {
-    new PopupComponent(coords, ChatsCreateFormComponent).init();
+  onShowCreateChannel = async (): Promise<void> => {
+    if (!ServersSideBarComponent.serverId) {
+      return;
+    }
+    await new ModalComponent().init();
+    await new ChannelsCreateFormComponent(ServersSideBarComponent.serverId).init();
   };
 
   toggleActiveStatus() {
