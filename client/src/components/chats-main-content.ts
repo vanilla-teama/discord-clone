@@ -27,15 +27,18 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
 
     if (this.chat) {
       appStore.bindPersonalMessageListChanged(this.onMessageListChange);
-      // await this.onMessageListChange(appStore.getFormattedRenderedPersonalMessages());
       await this.fetchMessages();
       this.view.bindMessageEvent(this.handleSendMessage);
       this.onSocketPersonalMessage();
+      this.onSocketPersonalMessageUpdated();
+      this.onSocketPersonalMessageDeleted();
       this.view.bindMessageHover(this.showFastMenu);
       MessageFastMenu.bindDisplayEditMessageForm(this.displayEditMessageForm);
       MessageFastMenu.bindDisplayDeleteConfirmModal(this.displayDeleteConfirmDialog);
+      MessageFastMenu.bindDisplayReply(this.displayReply);
       this.view.bindFastMenuEditButtonClick(MessageFastMenu.onEditButtonClick);
       this.view.bindFastMenuDeleteButtonClick(MessageFastMenu.onDeleteButtonClick);
+      this.view.bindFastMenuReplyButtonClick(MessageFastMenu.onReplyButtonClick);
       this.view.bindDestroyFastMenu(this.destroyFastMenu);
       this.view.bindEditMessageFormSubmit(this.onEditMessageFormSubmit);
       this.view.bindDeleteMessageDialogSubmit(this.onDeleteMessageDialogSubmit);
@@ -55,7 +58,7 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
     this.view.displayMessages(messages);
   };
 
-  handleSendMessage = async (messageText: string): Promise<void> => {
+  handleSendMessage = async (messageText: string, responsedToMessageId: string | null): Promise<void> => {
     if (!appStore.user || !this.chat) {
       return;
     }
@@ -63,9 +66,8 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       fromUserId: appStore.user.id,
       toUserId: this.chat.userId,
       date: Date.now(),
-      responsedToMessageId: null,
+      responsedToMessageId,
       message: messageText,
-      responsedToMessage: null,
     };
     await appStore.addPersonalMessage(message);
     emitPersonalMessage(message);
@@ -74,6 +76,27 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
   onSocketPersonalMessage() {
     socket.removeAllListeners('personalMessage');
     socket.on('personalMessage', async ({ fromUserId, toUserId }) => {
+      if (!this.chat) {
+        return;
+      }
+      await this.fetchMessages();
+    });
+  }
+
+  onSocketPersonalMessageUpdated() {
+    socket.removeAllListeners('personalMessageUpdated');
+    socket.on('personalMessageUpdated', async ({ messageId }) => {
+      if (!this.chat) {
+        return;
+      }
+      console.log(messageId);
+      await this.fetchMessages();
+    });
+  }
+
+  onSocketPersonalMessageDeleted() {
+    socket.removeAllListeners('personalMessageDeleted');
+    socket.on('personalMessageDeleted', async ({ messageId }) => {
       if (!this.chat) {
         return;
       }
@@ -111,6 +134,7 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       this.view.editMessageContent($message, message);
     });
     await appStore.editPersonalMessage(id, message);
+    socket.emit('personalMessageUpdated', { messageId: id });
   };
 
   onDeleteMessageDialogSubmit = async (messageId: string, $message: HTMLLIElement): Promise<void> => {
@@ -118,6 +142,7 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       this.view.deleteMessage($message);
     });
     await appStore.deletePersonalMessage(messageId);
+    socket.emit('personalMessageDeleted', { messageId });
     ModalView.hide();
   };
 
@@ -129,6 +154,10 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
     await new ModalComponent().init();
     this.view.displayDeleteConfirmDialog(ModalView.getContainer(), event);
     ModalView.show();
+  };
+
+  displayReply = (event: MouseEvent): void => {
+    this.view.displayReply(event);
   };
 
   cancelDeleteConfirmDialog = () => {

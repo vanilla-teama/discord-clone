@@ -50,9 +50,17 @@ class MessageFastMenu extends Controller<MessageFastMenuView> {
     }
   };
 
+  static onReplyButtonClick = (event: MouseEvent): void => {
+    if (isElementOfCssClass(event.target, 'fast-menu__reply-btn')) {
+      MessageFastMenu.displayReply(event);
+    }
+  };
+
   static displayEditMessageForm = (event: MouseEvent): void => {};
 
   static displayDeleteConfirmModal = async (event: MouseEvent): Promise<void> => {};
+
+  static displayReply = (event: MouseEvent): void => {};
 
   static bindDisplayEditMessageForm = (handler: (event: MouseEvent) => void): void => {
     MessageFastMenu.displayEditMessageForm = handler;
@@ -60,6 +68,10 @@ class MessageFastMenu extends Controller<MessageFastMenuView> {
 
   static bindDisplayDeleteConfirmModal = (handler: (event: MouseEvent) => Promise<void>): void => {
     MessageFastMenu.displayDeleteConfirmModal = handler;
+  };
+
+  static bindDisplayReply = (handler: (event: MouseEvent) => void): void => {
+    MessageFastMenu.displayReply = handler;
   };
 }
 

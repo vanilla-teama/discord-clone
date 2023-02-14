@@ -19,29 +19,6 @@ export const bindSocketEvents = (
 
   socket.on('userLoggedIn', ({ userId }) => {
     socket.broadcast.emit('userChangedAvailability', { userId });
-    // User.findById(userId)
-    //   .then((user) => {
-    //     if (user) {
-    //       // We keep statuses like `Away` and `Do not disturb`
-    //       const currentAvailability = user.availability;
-    //       let newAvailability = currentAvailability;
-    //       if (currentAvailability !== Availability.Away && currentAvailability !== Availability.DoNotDisturb) {
-    //         newAvailability = Availability.Online;
-    //       }
-
-    //       if (newAvailability !== currentAvailability) {
-    //         user.save().then((result) => {
-    //           socket.broadcast.emit('userChangedAvailability', {
-    //             availability: user.availability,
-    //             userId: user.id.toString(),
-    //           });
-    //         });
-    //       }
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
   });
 
   socket.on('userLoggedOut', ({ userId }) => {
@@ -50,5 +27,15 @@ export const bindSocketEvents = (
 
   socket.on('personalMessage', (data) => {
     io.emit('personalMessage', data);
+  });
+
+  socket.on('personalMessageUpdated', (data) => {
+    console.log('personalMessageUpdated', data);
+    io.emit('personalMessageUpdated', data);
+  });
+
+  socket.on('personalMessageDeleted', (data) => {
+    console.log('personalMessageDeleted', data);
+    io.emit('personalMessageDeleted', data);
   });
 };

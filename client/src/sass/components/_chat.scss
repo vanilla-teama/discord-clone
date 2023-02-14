@@ -59,4 +59,12 @@
   &__message{
     margin: 0;
   }
+
+  &__replied-info {
+    cursor: pointer;
+  }
+
+  &_reply {
+    background-color: lightseagreen!important;
+  }
 }
