@@ -1,6 +1,6 @@
 import App from '../lib/app';
 import Controller from '../lib/controller';
-import { RouteControllers } from '../lib/router';
+import Router, { RouteControllers } from '../lib/router';
 import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
 import { Availability, Chat, User } from '../types/entities';
@@ -25,6 +25,7 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
     if (!appStore.user) {
       throw Error('User is not defined');
     }
+    this.view.bindOnFriendsButtonClick(this.navigateToFriends);
     this.view.render();
     this.view.bindShowCreateChat(this.onShowCreateChat);
     this.onInit(appStore.user);
@@ -81,6 +82,10 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
     userId: string;
   }): Promise<void> => {
     appStore.updateChatLocally(userId, { availability: availability });
+  };
+
+  navigateToFriends: EventListener = () => {
+    Router.push(RouteControllers.Friends);
   };
 }
 

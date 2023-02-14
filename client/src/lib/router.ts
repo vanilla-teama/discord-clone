@@ -10,6 +10,7 @@ export enum RouteControllers {
   Chats = 'chats',
   Servers = 'servers',
   Settings = 'settings',
+  Friends = 'friends',
 }
 
 export type RouteActions = {

@@ -29,7 +29,13 @@ class ChatsSideBarView extends View {
   $showCreateChat: HTMLSpanElement;
 
   build(): void {
+    const $topContainer = $('div', 'chats-sidebar__top-container');
     const $chatsContainer = $('div', 'chats-sidebar__container');
+
+    const $friendsButton = $('button', 'chats-sidebar__to-friends');
+    $friendsButton.textContent = 'Friends';
+
+    $topContainer.append($friendsButton);
 
     const $directMessagesContainer = $('div', 'chats-sidebar__dm-container');
     const $directMessagesTitle = $('div', 'chats-sidebar__dm-title');
@@ -38,7 +44,9 @@ class ChatsSideBarView extends View {
     $directMessagesContainer.append($directMessagesTitle, this.$showCreateChat);
 
     $chatsContainer.append($directMessagesContainer, this.$chatList, this.$userBar);
-    this.$container.append($chatsContainer);
+
+    $friendsButton.onclick = this.onFriendsButtonClick;
+    this.$container.append($topContainer, $chatsContainer);
   }
 
   private createShowCreateChatElement(): HTMLSpanElement {
@@ -147,6 +155,12 @@ class ChatsSideBarView extends View {
       }
     });
   }
+
+  onFriendsButtonClick: EventListener = () => {};
+
+  bindOnFriendsButtonClick = (handler: EventListener): void => {
+    this.onFriendsButtonClick = handler;
+  };
 }
 
 export default ChatsSideBarView;
