@@ -85,6 +85,28 @@ class AppStore {
     this._servers = servers;
   }
 
+  getServer(serverId: string): Server | null {
+    return this.servers.find(({ id }) => serverId === id) || null;
+  }
+
+  getChannel(channelId: string): Channel | null {
+    return this.channels.find(({ id }) => id === channelId) || null;
+  }
+
+  getChannelNameAndServerName(channelId: string): { serverName: string; channelName: string } | null {
+    const channel = this.getChannel(channelId);
+    if (channel) {
+      const server = this.getServer(channel.serverId);
+      if (server) {
+        return {
+          serverName: server.name,
+          channelName: channel.name,
+        };
+      }
+    }
+    return null;
+  }
+
   async fetchUsers(): Promise<void> {
     const response = await http.get<{ users: User[] | null }>('/users');
     if (response) {
@@ -134,6 +156,22 @@ class AppStore {
     } else {
       this.servers = [];
     }
+  }
+
+  async fetchChannels(serverId: string): Promise<void> {
+    const response = await http
+      .get<{ channels: Channel[] }>(`/servers/${serverId}/channels`)
+      .catch((error) => console.error(error));
+    if (response) {
+      this.channels = response.data.channels || [];
+    } else {
+      this.channels = [];
+    }
+    this.onChannelListChanged(this.channels);
+  }
+
+  resetChannels(): void {
+    this.channels = [];
   }
 
   async checkAuth(): Promise<boolean> {
@@ -227,6 +265,18 @@ class AppStore {
     this.onServerListChanged(this.servers);
   }
 
+  async addChannel(channel: Pick<Channel, 'name' | 'serverId'>, serverId: string): Promise<Channel | null> {
+    const response = await http
+      .post<Pick<Channel, 'name' | 'serverId'>, { data: { channel: Channel } }>('/channels', channel)
+      .catch((error) => console.error(error));
+    if (response) {
+      const channel = response.data.channel;
+      await this.fetchChannels(serverId);
+      return channel;
+    }
+    return null;
+  }
+
   updateChatLocally(chatId: Chat['userId'], data: Partial<Pick<Chat, 'userName' | 'availability'>>) {
     let chat = this.chats.find(({ userId }) => userId === chatId);
     if (chat) {
@@ -245,12 +295,17 @@ class AppStore {
     'main-content': (chat: Chat) => {},
   };
   onChatListChanged = (chats: Chat[]): void => {};
+  onChannelListChanged = (channels: Channel[]): void => {};
   onChatUpdate = (chat: Chat): void => {};
   onPersonalMessageChanged = (message: RenderedPersonalMessage): void => {};
   onPersonalMessageDeleted = (): void => {};
 
   async bindServerListChanged(callback: (servers: Server[]) => void): Promise<void> {
     this.onServerListChanged = callback;
+  }
+
+  bindChannelListChanged(callback: (channels: Channel[]) => void): void {
+    this.onChannelListChanged = callback;
   }
 
   bindSigningIn(callback: (data: FormData) => void): void {

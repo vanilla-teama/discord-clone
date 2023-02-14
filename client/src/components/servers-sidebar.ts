@@ -1,21 +1,29 @@
 import App from '../lib/app';
 import Controller from '../lib/controller';
-import { RouteControllers } from '../lib/router';
+import Router, { RouteControllers } from '../lib/router';
 import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
-import { Availability, Channel, Chat, User } from '../types/entities';
+import { Availability, Channel, User } from '../types/entities';
 import { CustomEvents } from '../types/types';
 import { getTypedCustomEvent } from '../utils/functions';
-import { PopupCoords } from '../views/popup-view';
 import ServersSideBarView from '../views/servers-sidebar-view';
-import ChatsCreateFormComponent from './chats-create-form';
-import PopupComponent from './popup';
+import ChannelsCreateFormComponent from './channels-create-form';
+import ChannelsInviteFormComponent from './channels-invite-form';
+import MainComponent from './main';
+import ModalComponent from './modal';
+import ServersScreen from './servers-screen';
 
 class ServersSideBarComponent extends Controller<ServersSideBarView> {
   // Keeps last instance of itself
   static instance: ServersSideBarComponent;
 
+  static serverId: string | null;
+
+  static channelId: string | null;
+
   constructor() {
+    ServersSideBarComponent.serverId = null;
+    ServersSideBarComponent.channelId = null;
     super(new ServersSideBarView());
     ServersSideBarComponent.instance = this;
   }
@@ -25,11 +33,20 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
       throw Error('User is not defined');
     }
     this.view.render();
-    this.view.bindShowCreateChat(this.onShowCreateChat);
+    appStore.bindChannelListChanged(this.onChannelListChanged);
+    ServersSideBarComponent.bindRouteChanged();
+    {
+      const serverId = new Router().getParams()[0];
+      if (serverId) {
+        await ServersSideBarComponent.onUrlServerIdChanged(serverId);
+      }
+    }
+    if (ServersSideBarComponent.channelId) {
+      await ServersSideBarComponent.onUrlChannelIdChanged(ServersSideBarComponent.channelId);
+    }
+    this.view.bindShowCreateChannel(this.onShowCreateChannel);
+    this.view.bindOnInvite(this.onInvite);
     this.onInit(appStore.user);
-    this.onChatListChanged(appStore.channels);
-    this.bindRouteChanged();
-    // ChatsScreen.bindChatUpdate('sidebar', this.onChatUpdate);
     this.bindSocketUserAvailabilityChangedServer();
   }
 
@@ -37,34 +54,71 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
     this.view.displayUser(user);
   };
 
-  onChatListChanged = (channels: Channel[]): void => {
+  onChannelListChanged = (channels: Channel[]): void => {
     this.view.displayChannels(channels);
   };
 
-  onChatUpdate = (chat: Chat): void => {
-    //this.view.updateChat(chat);
-    this.toggleActiveStatus();
+  onShowCreateChannel = async (): Promise<void> => {
+    if (!ServersSideBarComponent.serverId) {
+      return;
+    }
+    await new ModalComponent().init();
+    await new ChannelsCreateFormComponent(ServersSideBarComponent.serverId).init();
   };
 
-  onShowCreateChat = (coords: PopupCoords) => {
-    new PopupComponent(coords, ChatsCreateFormComponent).init();
+  onInvite = async (channel: Channel): Promise<void> => {
+    await new ModalComponent().init();
+    await new ChannelsInviteFormComponent(channel.id).init();
   };
 
   toggleActiveStatus() {
     const params = App.getRouter().getParams();
-    this.view.toggleActiveStatus(params[0]);
+    ServersSideBarView.toggleActiveStatus(params[0]);
   }
 
-  bindRouteChanged() {
-    document.addEventListener(CustomEvents.AFTERROUTERPUSH, (event) => {
-      const {
-        detail: { controller, params },
-      } = getTypedCustomEvent(CustomEvents.AFTERROUTERPUSH, event);
+  static bindRouteChanged() {
+    document.removeEventListener(CustomEvents.AFTERROUTERPUSH, ServersSideBarComponent.bindRouteChangedHandler);
+    document.addEventListener(CustomEvents.AFTERROUTERPUSH, ServersSideBarComponent.bindRouteChangedHandler);
+  }
 
-      if (controller === RouteControllers.Servers && params.length > 0) {
-        this.view.toggleActiveStatus(params[0]);
+  static bindRouteChangedHandler = async (event: Event): Promise<void> => {
+    const {
+      detail: { controller, params },
+    } = getTypedCustomEvent(CustomEvents.AFTERROUTERPUSH, event);
+
+    if (controller === RouteControllers.Servers) {
+      if (params.length === 1) {
+        await ServersSideBarComponent.onUrlServerIdChanged(params[0]);
+      } else if (params.length >= 2) {
+        await ServersSideBarComponent.onUrlChannelIdChanged(params[1]);
       }
-    });
+    }
+  };
+
+  static async onUrlServerIdChanged(serverId: string): Promise<void> {
+    appStore.resetChannels();
+    await appStore.fetchChannels(serverId);
+    ServersScreen.server = appStore.getServer(serverId);
+    ServersSideBarComponent.serverId = serverId;
+    ServersSideBarComponent.channelId = null;
+    if (appStore.channels[0]) {
+      Router.push(RouteControllers.Servers, '', [ServersSideBarComponent.serverId, appStore.channels[0].id]);
+      return;
+    }
+    // await new MainComponent().init();
+  }
+
+  static async onUrlChannelIdChanged(channelId: string): Promise<void> {
+    if (!ServersSideBarComponent.serverId) {
+      return;
+    }
+    if (ServersSideBarComponent.channelId === channelId) {
+      return;
+    }
+    ServersScreen.channel = appStore.getChannel(channelId);
+    ServersSideBarComponent.channelId = channelId;
+    ServersSideBarView.toggleActiveStatus(channelId);
+    await new MainComponent().init();
   }
 
   bindSocketUserAvailabilityChangedServer() {

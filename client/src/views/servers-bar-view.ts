@@ -63,22 +63,6 @@ class ServersBarView extends View {
     this.bindShowModal();
   }
 
-  bindAddServer(handler: (server: Partial<Server>) => void): void {
-    this.$serverList?.addEventListener('click', (event) => {
-      const $target = event.target;
-      if (!($target instanceof HTMLElement) || !$target.closest(`.${ServersBarView.classes.addingServerItem}`)) {
-        return;
-      }
-
-      const server: Partial<Server> = {
-        name: `New Server #${Math.ceil(Math.random() * 100)}`,
-        // image: 'https://source.boringavatars.com',
-      };
-
-      handler(server);
-    });
-  }
-
   toggleActiveStatus(serverId: string | undefined): void {
     this.serverListMap.forEach((data, $item) => {
       $item.classList.remove(ServersBarView.classes.listItemActive);
