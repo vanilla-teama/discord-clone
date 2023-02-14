@@ -14,6 +14,7 @@ import ChatsCreateFormComponent from './chats-create-form';
 import MainComponent from './main';
 import ModalComponent from './modal';
 import PopupComponent from './popup';
+import ServersScreen from './servers-screen';
 
 class ServersSideBarComponent extends Controller<ServersSideBarView> {
   // Keeps last instance of itself
@@ -94,6 +95,7 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
   static async onUrlServerIdChanged(serverId: string): Promise<void> {
     appStore.resetChannels();
     await appStore.fetchChannels(serverId);
+    ServersScreen.server = appStore.getServer(serverId);
     ServersSideBarComponent.serverId = serverId;
     ServersSideBarComponent.channelId = null;
     if (appStore.channels[0]) {
@@ -110,6 +112,7 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
     if (ServersSideBarComponent.channelId === channelId) {
       return;
     }
+    ServersScreen.channel = appStore.getChannel(channelId);
     ServersSideBarComponent.channelId = channelId;
     ServersSideBarView.toggleActiveStatus(channelId);
     await new MainComponent().init();

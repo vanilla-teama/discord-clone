@@ -5,7 +5,9 @@ import { Channel } from '../types/entities';
 
 class ServersAppBarView extends View {
   static readonly classNames = {};
+
   $showInfoBar: HTMLButtonElement;
+  $channelName: HTMLDivElement;
 
   constructor() {
     const $root = MainView.$appbar;
@@ -14,6 +16,7 @@ class ServersAppBarView extends View {
     }
     super($root);
     this.$showInfoBar = $('button', ['servers-app-bar__members-btn', 'tooltip']);
+    this.$channelName = $('div', 'servers-app-bar__channel-name');
   }
   build(): void {
     const channelsFake: Channel[] = [
@@ -32,8 +35,8 @@ class ServersAppBarView extends View {
     const $serversAppBar = $('div', 'servers-app-bar');
     const $channelContainer = $('div', 'servers-app-bar__channel-container');
     const $iconHash = $('div', 'servers-app-bar__hash-icon');
-    const $channelName = $('div', 'servers-app-bar__channel-name');
-    $channelName.textContent = `${channelsFake[0].name}`;
+    const $channelName = this.$channelName;
+    $channelName.textContent = `No channel`;
 
     const $panelContainer = $('div', 'servers-app-bar__panel-container');
     const $showInfoBar = this.$showInfoBar;
@@ -51,6 +54,10 @@ class ServersAppBarView extends View {
     $serversAppBar.append($channelContainer, $panelContainer);
 
     this.$container.append($serversAppBar);
+  }
+
+  displayChannelName(name: string): void {
+    this.$channelName.textContent = name;
   }
 }
 

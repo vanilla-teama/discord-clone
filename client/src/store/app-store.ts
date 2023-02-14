@@ -85,6 +85,14 @@ class AppStore {
     this._servers = servers;
   }
 
+  getServer(serverId: string): Server | null {
+    return this.servers.find(({ id }) => serverId === id) || null;
+  }
+
+  getChannel(channelId: string): Channel | null {
+    return this.channels.find(({ id }) => id === channelId) || null;
+  }
+
   async fetchUsers(): Promise<void> {
     const response = await http.get<{ users: User[] | null }>('/users');
     if (response) {

@@ -1,6 +1,7 @@
 import Controller from '../lib/controller';
 import Router, { RouteControllers } from '../lib/router';
 import AppStore from '../store/app-store';
+import { Channel, Server } from '../types/entities';
 import { CustomEvents } from '../types/types';
 import { getTypedCustomEvent } from '../utils/functions';
 import ServersScreenView from '../views/servers-screen-view';
@@ -13,6 +14,9 @@ class ServersScreen extends Controller<ServersScreenView> {
   constructor() {
     super(new ServersScreenView());
   }
+
+  static server: Server | null;
+  static channel: Channel | null;
 
   async init(): Promise<void> {
     const appStore = AppStore.Instance;
