@@ -1,8 +1,7 @@
 import Router, { RouteControllers, SettingsParams } from '../lib/router';
 import View from '../lib/view';
-import { Channel, Chat, User } from '../types/entities';
+import { Channel, User } from '../types/entities';
 import { $, replaceWith } from '../utils/functions';
-import PopupView, { PopupCoords } from './popup-view';
 import ScreenView from './screen-view';
 
 class ServersSideBarView extends View {
@@ -81,14 +80,24 @@ class ServersSideBarView extends View {
   }
 
   bindChannelItemClick($item: HTMLLIElement) {
-    $item.addEventListener('click', () => {
+    $item.onclick = () => {
       const data = ServersSideBarView.channelsListMap.get($item);
       if (!data) {
         return;
       }
       const channel = data.channel;
       Router.push(RouteControllers.Servers, '', [channel.serverId, channel.id]);
-    });
+    };
+  }
+
+  bindInviteClick($button: HTMLButtonElement, $item: HTMLLIElement): void {
+    $button.onclick = async () => {
+      const data = ServersSideBarView.channelsListMap.get($item);
+      if (!data) {
+        return;
+      }
+      await this.onInvite(data.channel);
+    };
   }
 
   private createUserBar(user?: User): HTMLDivElement {
@@ -117,11 +126,14 @@ class ServersSideBarView extends View {
     const $item = $('li', ServersSideBarView.classes.channelItem);
     const $itemIcon = $('div', 'servers-sidebar__hash-icon');
     const $itemName = $('div', 'servers-sidebar__name');
+    const $inviteButton = $('button', 'servers-sidebar__invite');
     $itemName.textContent = `${name}`;
+    $inviteButton.textContent = 'Invite';
 
-    $item.append($itemIcon, $itemName);
+    $item.append($itemIcon, $itemName, $inviteButton);
 
     this.bindChannelItemClick($item);
+    this.bindInviteClick($inviteButton, $item);
     return $item;
   }
 
@@ -138,6 +150,12 @@ class ServersSideBarView extends View {
       }
     });
   }
+
+  onInvite = async (channel: Channel): Promise<void> => {};
+
+  bindOnInvite = (handler: (channel: Channel) => Promise<void>): void => {
+    this.onInvite = handler;
+  };
 }
 
 export default ServersSideBarView;

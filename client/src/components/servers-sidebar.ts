@@ -3,17 +3,14 @@ import Controller from '../lib/controller';
 import Router, { RouteControllers } from '../lib/router';
 import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
-import { Availability, Channel, Chat, User } from '../types/entities';
+import { Availability, Channel, User } from '../types/entities';
 import { CustomEvents } from '../types/types';
 import { getTypedCustomEvent } from '../utils/functions';
-import ModalView from '../views/modal-view';
-import { PopupCoords } from '../views/popup-view';
 import ServersSideBarView from '../views/servers-sidebar-view';
 import ChannelsCreateFormComponent from './channels-create-form';
-import ChatsCreateFormComponent from './chats-create-form';
+import ChannelsInviteFormComponent from './channels-invite-form';
 import MainComponent from './main';
 import ModalComponent from './modal';
-import PopupComponent from './popup';
 import ServersScreen from './servers-screen';
 
 class ServersSideBarComponent extends Controller<ServersSideBarView> {
@@ -48,6 +45,7 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
       await ServersSideBarComponent.onUrlChannelIdChanged(ServersSideBarComponent.channelId);
     }
     this.view.bindShowCreateChannel(this.onShowCreateChannel);
+    this.view.bindOnInvite(this.onInvite);
     this.onInit(appStore.user);
     this.bindSocketUserAvailabilityChangedServer();
   }
@@ -66,6 +64,11 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
     }
     await new ModalComponent().init();
     await new ChannelsCreateFormComponent(ServersSideBarComponent.serverId).init();
+  };
+
+  onInvite = async (channel: Channel): Promise<void> => {
+    await new ModalComponent().init();
+    await new ChannelsInviteFormComponent(channel.id).init();
   };
 
   toggleActiveStatus() {
