@@ -174,6 +174,16 @@ class AppStore {
     this.channels = [];
   }
 
+  async searchUsers(value: string): Promise<User[]> {
+    const response = await http
+      .get<{ users: User[] }>(`/users/search?search=${value}`)
+      .catch((error) => console.error(error));
+    if (response) {
+      return response.data.users;
+    }
+    return [];
+  }
+
   async checkAuth(): Promise<boolean> {
     const response = await http.get<{ user: User | null }>('/users/check-auth').catch((error) => console.error(error));
     if (response) {
@@ -206,6 +216,18 @@ class AppStore {
       this.user = null;
     } else {
       console.error('Something really odd happened');
+    }
+  }
+
+  async updateUser(userId: string, data: Partial<User>): Promise<void> {
+    const response = await http
+      .patch<Partial<User>, { data: { user: User } }>(`/users/${userId}`, data)
+      .catch((err) => console.log(err));
+    if (response) {
+      const userIdx = this.users.findIndex(({ id }) => userId === id);
+      if (userIdx) {
+        this.users = [...this.users.slice(0, userIdx), response.data.user, ...this.users.slice(userIdx + 1)];
+      }
     }
   }
 

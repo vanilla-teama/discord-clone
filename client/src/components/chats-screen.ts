@@ -60,6 +60,9 @@ class ChatsScreen extends Controller<ChatsScreenView> {
 
     if (controller === RouteControllers.Chats && params.length > 0) {
       ChatsScreen.onUrlChatIdChanged(params[0]);
+    } else if (controller === RouteControllers.Friends) {
+      console.log('friends');
+      new MainComponent().init();
     }
   };
 

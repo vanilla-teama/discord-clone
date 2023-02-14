@@ -12,6 +12,7 @@ export interface UserDocument extends mongoose.Document {
   email: string;
   phone: string;
   friends: Types.ObjectId[];
+  invites: Types.ObjectId[];
   chats: UserDocument[];
   availability: Availability;
   profile: {
@@ -59,6 +60,7 @@ const UserSchema = new Schema<UserDocument>(
       type: String,
     },
     friends: [{ type: Types.ObjectId, ref: 'User' }],
+    invites: [Types.ObjectId],
     chats: [{ 
       type: Types.ObjectId, 
       ref: 'User', 

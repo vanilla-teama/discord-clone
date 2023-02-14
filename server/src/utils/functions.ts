@@ -15,7 +15,7 @@ export const requestErrorHandler =
     if (message) {
       err.message = message;
     }
-
+    console.error(err);
     next(err);
   };
 

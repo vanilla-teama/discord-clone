@@ -11,6 +11,7 @@ export interface DTOUser extends DTOEntity {
   phone: string;
   availability: Availability;
   chats: DTOChat[];
+  invites: string[];
 }
 
 export interface DTOPersonalMessage extends DTOEntity {

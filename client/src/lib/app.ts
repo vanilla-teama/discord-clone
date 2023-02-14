@@ -10,6 +10,7 @@ const routes = {
   [RouteControllers.Chats]: ChatsScreen,
   [RouteControllers.Servers]: ServersScreen,
   [RouteControllers.Settings]: SettingsScreen,
+  [RouteControllers.Friends]: ChatsScreen,
 } as const;
 
 export type AppControllerType = ChatsScreen | ServersScreen | StartScreen | SettingsScreen;

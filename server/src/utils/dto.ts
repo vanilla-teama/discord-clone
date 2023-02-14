@@ -12,7 +12,7 @@ export type FetchedPersonalMessage = HydratedDocument<PersonalMessageDocument>;
 
 export type FetchedChannel = HydratedDocument<ChannelDocument>;
 
-export const userDTO = ({ _id, email, name, password, phone, availability, chats }: FetchedUser): DTOUser => {
+export const userDTO = ({ _id, email, name, password, phone, availability, chats, invites }: FetchedUser): DTOUser => {
   return {
     id: _id.toString(),
     name,
@@ -21,6 +21,7 @@ export const userDTO = ({ _id, email, name, password, phone, availability, chats
     phone,
     availability,
     chats: chats as unknown as DTOChat[],
+    invites: (invites || []).map((id) => id.toString()),
   };
 };
 

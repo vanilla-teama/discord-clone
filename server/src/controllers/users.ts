@@ -7,7 +7,7 @@ import '../passport';
 import { FetchedUser, userDTO } from '../utils/dto';
 import { App } from '../app';
 import { TypedRequest } from 'express.types';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 import { requestErrorHandler } from '../utils/functions';
 
 const checkAuth = (req: Request, res: Response, next: NextFunction): void => {
@@ -204,6 +204,26 @@ const getUser: Handler = (req, res, next) => {
     });
 };
 
+const searchUsers: Handler = (req, res, next) => {
+  const search = req.query.search;
+
+  if (!search) {
+    res.status(200).json({ users: [] });
+    return;
+  }
+
+  const regexpOptions = { $regex: search, $options: 'i' };
+
+  User.find({ $or: [{ name: regexpOptions }, { email: regexpOptions }] })
+    .then((users) => {
+      res.status(200).json({
+        message: 'Users found',
+        users: users.map((u) => userDTO(u as FetchedUser)),
+      });
+    })
+    .catch((err) => requestErrorHandler(err, next));
+};
+
 const updateUser: Handler = (req, res, next) => {
   const userId = req.params.id;
 
@@ -218,6 +238,10 @@ const updateUser: Handler = (req, res, next) => {
         if (req.body[path]) {
           if (path === 'name' || path === 'email' || path === 'password' || path === 'phone') {
             user[path] = req.body[path];
+          } else if (path === 'invites') {
+            user.invites = [...new Set(user.invites.map((id) => id.toString()).concat(req.body.invites))].map((id) =>
+              new mongoose.Types.ObjectId(id)
+            );
           }
         }
       });
@@ -347,4 +371,5 @@ export default {
   register,
   checkAuth,
   logout,
+  searchUsers,
 };

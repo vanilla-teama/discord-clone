@@ -10,6 +10,7 @@ export const users: User[] = [
     phone: '+380991234567',
     availability: Availability.Offline,
     chats: null,
+    invites: [],
   },
   {
     id: '63dd3dd9938e35dad6409e12',
@@ -19,6 +20,7 @@ export const users: User[] = [
     phone: '+380992234567',
     availability: Availability.DoNotDisturb,
     chats: null,
+    invites: [],
   },
   {
     id: '63dd3de6938e35dad6409e14',
@@ -28,6 +30,7 @@ export const users: User[] = [
     phone: '+380993234567',
     availability: Availability.Online,
     chats: null,
+    invites: [],
   },
   {
     id: '63dede6beac45c545ad1e616',
@@ -37,6 +40,7 @@ export const users: User[] = [
     phone: '+380994234567',
     availability: Availability.Away,
     chats: [],
+    invites: [],
   },
 ];
 

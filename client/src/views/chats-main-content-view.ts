@@ -413,7 +413,9 @@ class ChatsMainContentView extends View {
     return items.message.id;
   }
 
-  onFastMenuEditButtonClick = (event: MouseEvent): void => {};
+  onFastMenuEditButtonClick = (event: MouseEvent): void => {
+    console.log('Not binded');
+  };
 
   onFastMenuDeleteButtonClick = (event: MouseEvent): void => {};
 

@@ -12,6 +12,7 @@ export interface User extends MongoEntity {
   phone: string;
   availability: Availability;
   chats: Chat[] | null;
+  invites: MongoObjectId[];
 }
 
 export interface FetchedUser {
