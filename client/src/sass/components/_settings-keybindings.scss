@@ -63,3 +63,20 @@
 .button-key:active::before {
   transform: translate3d(0, 0, -1em);
 }
+
+@include media-lg-down {
+  .list-key-bind {
+    width: 100%;
+  }
+  .settings__content {
+    padding-top: 60px;
+    margin-left: 5%;
+    width: 80%;
+  }
+  .title-key {
+    white-space: pre-wrap;
+  }
+  .conttainer-button-key {
+    display: flex;
+  }
+}

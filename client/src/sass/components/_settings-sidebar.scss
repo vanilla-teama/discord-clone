@@ -25,16 +25,20 @@
   display: flex;
 }
 
-@include media-md-down {
+@include media-lg-down {
   .settings-bar__list {
     width: 80%;
     display: flex;
     flex-wrap: wrap;
+    margin: 0 auto;
   }
   .settings {
     flex-direction: column;
   }
   .settings-bar__list-item {
     padding: 10px;
+  }
+  .settings__content {
+    width: 100%;
   }
 }
