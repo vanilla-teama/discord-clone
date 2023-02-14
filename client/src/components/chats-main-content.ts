@@ -30,6 +30,8 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       await this.fetchMessages();
       this.view.bindMessageEvent(this.handleSendMessage);
       this.onSocketPersonalMessage();
+      this.onSocketPersonalMessageUpdated();
+      this.onSocketPersonalMessageDeleted();
       this.view.bindMessageHover(this.showFastMenu);
       MessageFastMenu.bindDisplayEditMessageForm(this.displayEditMessageForm);
       MessageFastMenu.bindDisplayDeleteConfirmModal(this.displayDeleteConfirmDialog);
@@ -81,6 +83,27 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
     });
   }
 
+  onSocketPersonalMessageUpdated() {
+    socket.removeAllListeners('personalMessageUpdated');
+    socket.on('personalMessageUpdated', async ({ messageId }) => {
+      if (!this.chat) {
+        return;
+      }
+      console.log(messageId);
+      await this.fetchMessages();
+    });
+  }
+
+  onSocketPersonalMessageDeleted() {
+    socket.removeAllListeners('personalMessageDeleted');
+    socket.on('personalMessageDeleted', async ({ messageId }) => {
+      if (!this.chat) {
+        return;
+      }
+      await this.fetchMessages();
+    });
+  }
+
   showFastMenu = async (
     $fastMenuContainer: HTMLElement,
     $message: HTMLLIElement,
@@ -111,6 +134,7 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       this.view.editMessageContent($message, message);
     });
     await appStore.editPersonalMessage(id, message);
+    socket.emit('personalMessageUpdated', { messageId: id });
   };
 
   onDeleteMessageDialogSubmit = async (messageId: string, $message: HTMLLIElement): Promise<void> => {
@@ -118,6 +142,7 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       this.view.deleteMessage($message);
     });
     await appStore.deletePersonalMessage(messageId);
+    socket.emit('personalMessageDeleted', { messageId });
     ModalView.hide();
   };
 
