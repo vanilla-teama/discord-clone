@@ -5,7 +5,7 @@ import { Channel, Chat, ChatAvailabilitiesMap, PersonalMessage, Server, User } f
 import { AppOmit } from '../types/utils';
 import { RenderedPersonalMessage } from '../views/chats-main-content-view';
 
-export type IncomingPersonalMessage = AppOmit<PersonalMessage, 'id'>;
+export type IncomingPersonalMessage = AppOmit<PersonalMessage, 'id' | 'responsedToMessage'>;
 
 class AppStore {
   private static instance: AppStore;

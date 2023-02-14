@@ -27,15 +27,16 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
 
     if (this.chat) {
       appStore.bindPersonalMessageListChanged(this.onMessageListChange);
-      // await this.onMessageListChange(appStore.getFormattedRenderedPersonalMessages());
       await this.fetchMessages();
       this.view.bindMessageEvent(this.handleSendMessage);
       this.onSocketPersonalMessage();
       this.view.bindMessageHover(this.showFastMenu);
       MessageFastMenu.bindDisplayEditMessageForm(this.displayEditMessageForm);
       MessageFastMenu.bindDisplayDeleteConfirmModal(this.displayDeleteConfirmDialog);
+      MessageFastMenu.bindDisplayReply(this.displayReply);
       this.view.bindFastMenuEditButtonClick(MessageFastMenu.onEditButtonClick);
       this.view.bindFastMenuDeleteButtonClick(MessageFastMenu.onDeleteButtonClick);
+      this.view.bindFastMenuReplyButtonClick(MessageFastMenu.onReplyButtonClick);
       this.view.bindDestroyFastMenu(this.destroyFastMenu);
       this.view.bindEditMessageFormSubmit(this.onEditMessageFormSubmit);
       this.view.bindDeleteMessageDialogSubmit(this.onDeleteMessageDialogSubmit);
@@ -55,7 +56,7 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
     this.view.displayMessages(messages);
   };
 
-  handleSendMessage = async (messageText: string): Promise<void> => {
+  handleSendMessage = async (messageText: string, responsedToMessageId: string | null): Promise<void> => {
     if (!appStore.user || !this.chat) {
       return;
     }
@@ -63,9 +64,8 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       fromUserId: appStore.user.id,
       toUserId: this.chat.userId,
       date: Date.now(),
-      responsedToMessageId: null,
+      responsedToMessageId,
       message: messageText,
-      responsedToMessage: null,
     };
     await appStore.addPersonalMessage(message);
     emitPersonalMessage(message);
@@ -129,6 +129,10 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
     await new ModalComponent().init();
     this.view.displayDeleteConfirmDialog(ModalView.getContainer(), event);
     ModalView.show();
+  };
+
+  displayReply = (event: MouseEvent): void => {
+    this.view.displayReply(event);
   };
 
   cancelDeleteConfirmDialog = () => {

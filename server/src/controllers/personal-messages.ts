@@ -40,8 +40,8 @@ const createPersonalMessage: Handler = (req, res, next) => {
   const personalMessage = new PersonalMessage({
     fromUserId: req.body.fromUserId,
     toUserId: req.body.toUserId,
-    responsedToMessageId: '63e9609f73a7e2949b55550a',
-    responsedToMessage: '63e9609f73a7e2949b55550a',
+    responsedToMessageId: req.body.responsedToMessageId,
+    responsedToMessage: req.body.responsedToMessageId,
     message: req.body.message,
   });
 
