@@ -4,6 +4,7 @@ import moment from '../lib/moment';
 import { Channel, Chat, ChatAvailabilitiesMap, PersonalMessage, Server, User } from '../types/entities';
 import { AppOmit } from '../types/utils';
 import { RenderedPersonalMessage } from '../views/chats-main-content-view';
+import { personalMessages as fakePersonalMessages } from '../develop/data';
 
 export type IncomingPersonalMessage = AppOmit<PersonalMessage, 'id' | 'responsedToMessage'>;
 
@@ -441,6 +442,7 @@ class AppStore {
   };
 
   getFormattedRenderedPersonalMessages(): RenderedPersonalMessage[] {
+    return fakePersonalMessages;
     return this.personalMessages.map((message) => {
       return this.getFormattedRenderedPersonalMessage(message);
     });

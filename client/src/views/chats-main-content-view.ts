@@ -2,6 +2,7 @@ import View from '../lib/view';
 import { Chat, MongoObjectId, PersonalMessage } from '../types/entities';
 import { $, isClosestElementOfCssClass, isElementOfCssClass } from '../utils/functions';
 import MainView from './main-view';
+import { personalMessages as fakePersonalMessages } from '../develop/data';
 import * as userIcon from '../assets/icons/discord.svg';
 
 export type RenderedPersonalMessage = {
@@ -57,33 +58,6 @@ class ChatsMainContentView extends View {
     const $inputContainer = $('div', 'chat__input-container');
 
     if (this.chat) {
-      const messages: RenderedPersonalMessage[] = [
-        {
-          id: '01',
-          userId: '03',
-          username: 'Hlib Hodovaniuk',
-          date: '01/26/2023 9:44 AM',
-          message: 'Hello',
-          responsedToMessage: null,
-        },
-        {
-          id: '02',
-          userId: '03',
-          username: 'Alexander Chornyi',
-          date: '01/26/2023 9:45 AM',
-          message: 'Hi',
-          responsedToMessage: null,
-        },
-        {
-          id: '01',
-          userId: '03',
-          username: 'Hlib Hodovaniuk',
-          date: '01/26/2023 9:47 AM',
-          message: 'How do you do?',
-          responsedToMessage: null,
-        },
-      ];
-
       $inputContainer.append(this.$replyContainer, this.$chatInput);
       $container.append(this.$messageList, $inputContainer);
     } else {
