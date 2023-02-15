@@ -33,7 +33,7 @@ class ServersBarView extends View {
   }
 
   displayServers(servers: Server[]): void {
-    //this.$serverList.innerHTML = '';
+    this.$serverList.innerHTML = '';
 
     const serversFake: Server[] = [
       {
@@ -48,35 +48,19 @@ class ServersBarView extends View {
       },
     ];
 
-    serversFake.forEach((server) => {
+    // serversFake.forEach((server) => {
+    //   const $item = this.createServerItem(server);
+    //   this.$serverList.append($item);
+    //   //this.onAppendServerItem($item, server);
+    // });
+    servers.forEach((server) => {
       const $item = this.createServerItem(server);
       this.$serverList.append($item);
-      //this.onAppendServerItem($item, server);
+      this.onAppendServerItem($item, server);
     });
-    //servers.forEach((server) => {
-    //  const $item = this.createServerItem(server);
-    //  this.$serverList.append($item);
-    //  this.onAppendServerItem($item, server);
-    //});
 
     this.$serverList.append(this.$addServerButton);
     this.bindShowModal();
-  }
-
-  bindAddServer(handler: (server: Partial<Server>) => void): void {
-    this.$serverList?.addEventListener('click', (event) => {
-      const $target = event.target;
-      if (!($target instanceof HTMLElement) || !$target.closest(`.${ServersBarView.classes.addingServerItem}`)) {
-        return;
-      }
-
-      const server: Partial<Server> = {
-        name: `New Server #${Math.ceil(Math.random() * 100)}`,
-        // image: 'https://source.boringavatars.com',
-      };
-
-      // handler(server);
-    });
   }
 
   toggleActiveStatus(serverId: string | undefined): void {
@@ -108,7 +92,7 @@ class ServersBarView extends View {
     $itemName.textContent = `${name}`;
 
     if (image) {
-      $itemImg.src = upload.default;
+      $itemImg.src = `data:image/png;base64, ${image}`;
     }
     $item.append($itemImg, $itemName);
 

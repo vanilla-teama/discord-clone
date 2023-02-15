@@ -7,8 +7,9 @@ import '../passport';
 import { FetchedUser, userDTO } from '../utils/dto';
 import { App } from '../app';
 import { TypedRequest } from 'express.types';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 import { requestErrorHandler } from '../utils/functions';
+import { DTOUser } from 'dto';
 
 const checkAuth = (req: Request, res: Response, next: NextFunction): void => {
   if (req.user) {
@@ -204,10 +205,36 @@ const getUser: Handler = (req, res, next) => {
     });
 };
 
-const updateUser: Handler = (req, res, next) => {
-  const userId = req.params.id;
+const searchUsers: Handler = (req, res, next) => {
+  const search = req.query.search;
+
+  if (!search) {
+    res.status(200).json({ users: [] });
+    return;
+  }
+
+  const regexpOptions = { $regex: search, $options: 'i' };
+
+  User.find({ $or: [{ name: regexpOptions }, { email: regexpOptions }] })
+    .then((users) => {
+      res.status(200).json({
+        message: 'Users found',
+        users: users.map((u) => userDTO(u as FetchedUser)),
+      });
+    })
+    .catch((err) => requestErrorHandler(err, next));
+};
+
+const updateUser = (
+  req: TypedRequest<{ socketId: string; remove: (keyof DTOUser)[] | undefined }, DTOUser>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id: userId } = req.params;
+  const { remove } = req.query;
 
   User.findById(userId)
+    .populate('chats')
     .then((user) => {
       if (!user) {
         const error = new Error('Could not find user.');
@@ -215,9 +242,21 @@ const updateUser: Handler = (req, res, next) => {
         throw error;
       }
       Object.entries(User.schema.paths).map(([path, data]) => {
-        if (req.body[path]) {
+        if (path in req.body) {
           if (path === 'name' || path === 'email' || path === 'password' || path === 'phone') {
             user[path] = req.body[path];
+          } else if (path === 'invitesFrom' || path === 'invitesTo' || path === 'friends') {
+            if (remove && remove.includes(path)) {
+              const newValueOfStr = (user[path] || []).map((id) => id.toString()).filter((id) => !req.body[path].includes(id));
+              user[path] = [...new Set(newValueOfStr)].map(
+                (id) => new mongoose.Types.ObjectId(id)
+              );
+            } else {
+              const newValueOfStr = (user[path] || []).map((id) => id.toString()).concat(req.body[path]);
+              user[path] = [...new Set(newValueOfStr)].map(
+                (id) => new mongoose.Types.ObjectId(id)
+              );
+            }
           }
         }
       });
@@ -270,7 +309,42 @@ const getFriends: Handler = (req, res, next) => {
       }
       const exportedFriends = user.friends.map((f) => userDTO(f as unknown as FetchedUser));
       res.status(200).json({ messageInfo: 'Friends fetched.', friends: exportedFriends });
-    });
+    })
+    .catch((err) => requestErrorHandler(err, next));
+};
+
+const getInvitedToFriends: Handler = (req, res, next) => {
+  const userId = req.params.id;
+
+  User.findById(userId)
+    .populate('invitesTo')
+    .then((user) => {
+      if (!user) {
+        const error = new Error('Could not find user.');
+        // error.statusCode = 404;
+        throw error;
+      }
+      const invitedToFriends = (user.invitesTo || []).map((f) => userDTO(f as unknown as FetchedUser));
+      res.status(200).json({ message: 'Users invited to friends fetched.', invitedToFriends });
+    })
+    .catch((err) => requestErrorHandler(err, next));
+};
+
+const getInvitedFromFriends: Handler = (req, res, next) => {
+  const userId = req.params.id;
+
+  User.findById(userId)
+    .populate('invitesFrom')
+    .then((user) => {
+      if (!user) {
+        const error = new Error('Could not find user.');
+        // error.statusCode = 404;
+        throw error;
+      }
+      const invitedFromFriends = (user.invitesFrom || []).map((f) => userDTO(f as unknown as FetchedUser));
+      res.status(200).json({ message: 'Users invited to friends fetched.', invitedFromFriends });
+    })
+    .catch((err) => requestErrorHandler(err, next));
 };
 
 const updateFriends: Handler = async (req, res, next) => {
@@ -342,9 +416,12 @@ export default {
   updateUser,
   deleteUser,
   getFriends,
+  getInvitedToFriends,
+  getInvitedFromFriends,
   updateFriends,
   login,
   register,
   checkAuth,
   logout,
+  searchUsers,
 };

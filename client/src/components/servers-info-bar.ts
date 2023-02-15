@@ -1,6 +1,6 @@
 import Controller from '../lib/controller';
 import ChatsInfoBarView from '../views/chats-info-bar-view';
-import ServersInfoBarView from '../views/servers-info-bar';
+import ServersInfoBarView from '../views/servers-info-bar-view';
 
 class ServersInfoBarComponent extends Controller<ServersInfoBarView> {
   constructor() {

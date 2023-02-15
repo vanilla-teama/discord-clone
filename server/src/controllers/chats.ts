@@ -26,7 +26,6 @@ const getChat = (req: TypedRequest, res: Response, next: NextFunction): void => 
     // .populate('chats')
     .then((user) => {
       if (handleDocumentNotFound(user)) {
-        console.log('get chat', user);
         if (handleDocumentNotFound(user)) {
           res.status(200).json({ chat: chatDTO(user as FetchedChat) });
         }

@@ -10,6 +10,7 @@ class MessageFastMenuView extends View {
   $message: HTMLLIElement;
   $editButton: HTMLButtonElement;
   $replyButton: HTMLButtonElement;
+  $deleteButton: HTMLButtonElement;
   replyOrEdit: ReplyOrEdit;
 
   constructor($root: HTMLElement, $message: HTMLLIElement, message: RenderedPersonalMessage, replyOrEdit: ReplyOrEdit) {
@@ -20,27 +21,34 @@ class MessageFastMenuView extends View {
     this.message = message;
     this.$editButton = $('button', 'fast-menu__edit-btn');
     this.$replyButton = $('button', 'fast-menu__reply-btn');
+    this.$deleteButton = $('button', 'fast-menu__delete-btn');
     this.$message = $message;
     this.replyOrEdit = replyOrEdit;
   }
   async build(): Promise<void> {
     const $container = document.createDocumentFragment();
-    let $replyOrEditButton: HTMLButtonElement;
 
     if (this.replyOrEdit === 'edit') {
-      $replyOrEditButton = this.$editButton;
+      $container.append(this.$editButton, this.$deleteButton);
       this.$editButton.textContent = 'Edit';
+      this.$deleteButton.textContent = 'Delete';
     } else {
-      $replyOrEditButton = this.$replyButton;
+      $container.append(this.$replyButton);
       this.$replyButton.textContent = 'Reply';
     }
-    $container.append($replyOrEditButton);
 
     this.$container.append($container);
   }
 
   bindShowEditForm = (handler: ($message: HTMLLIElement) => void): void => {
+    console.log('MessageFastMenuView.bindShowEditForm', this.$editButton, this.$message);
     this.$editButton.onclick = () => {
+      handler(this.$message);
+    };
+  };
+
+  bindDeleteMessage = (handler: ($message: HTMLLIElement) => void): void => {
+    this.$deleteButton.onclick = () => {
       handler(this.$message);
     };
   };

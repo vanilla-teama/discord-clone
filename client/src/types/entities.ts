@@ -12,6 +12,9 @@ export interface User extends MongoEntity {
   phone: string;
   availability: Availability;
   chats: Chat[] | null;
+  friends: MongoObjectId[];
+  invitesFrom: MongoObjectId[];
+  invitesTo: MongoObjectId[];
 }
 
 export interface FetchedUser {
@@ -49,8 +52,8 @@ export interface Chat extends MongoEntity {
   availability: Availability;
 }
 export interface Channel extends MongoEntity {
-  channelId: MongoObjectId;
-  channelName: string;
+  serverId: MongoObjectId;
+  name: string;
 }
 
 export enum Availability {

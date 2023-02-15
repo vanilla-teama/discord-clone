@@ -1,0 +1,144 @@
+.info-bar {
+  min-height: 100%;
+  background-color: var(--background-color-gray);
+}
+
+.servers-info-bar {
+  padding: 20px 10px 10px 10px;
+  width: 240px;
+  height: 100%;
+
+  &__members-online,
+  &__members-offline {
+    margin-bottom: 10px;
+  }
+  &__list-online,
+  &__list-offline {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__icon-crown {
+    display: none;
+    background: url('/src/assets/icons/crown.svg') center no-repeat;
+    width: 15px;
+    height: 15px;
+    transition: all 0.3s ease 0s;
+    border-radius: 7px;
+    cursor: pointer;
+    &.tooltip::after {
+      top: -35px;
+    }
+  }
+  .tooltip::after {
+    top: -35px;
+  }
+  &__item {
+    list-style-type: none;
+    padding: 5px 5px 5px 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    width: calc(100% - 10px);
+    border-radius: 7px;
+    transition: all 0.3s ease 0s;
+
+    &:hover {
+      background-color: var(--background-color-gray-hover);
+      cursor: pointer;
+    }
+    &_active {
+      .servers-info-bar__icon-crown {
+        display: block;
+      }
+    }
+  }
+}
+
+.content-info {
+  margin: 80px auto 0 auto;
+  width: 270px;
+  background-color: var(--background-color-black);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  gap: 15px;
+
+  &__user-name {
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--text-secondary);
+  }
+  &__since-block {
+    padding: 15px 0;
+    border-top: 1px solid var(--background-color-gray);
+    border-bottom: 1px solid var(--background-color-gray);
+  }
+  &__since-title,
+  &__note-title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+  &__since-date {
+    font-size: 14px;
+  }
+  &__note-block {
+  }
+  &__note-title {
+  }
+  &__note-input {
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    height: 36px;
+    resize: none;
+    width: 100%;
+    font-family: inherit;
+  }
+}
+
+.mutual-server {
+  margin: 15px auto;
+  width: 270px;
+  background-color: var(--background-color-black);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  gap: 15px;
+  &__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+  &__title {
+  }
+  &__arrow {
+    background: url('/src/assets/icons/arrow.svg') center / cover no-repeat;
+    width: 5px;
+    height: 10px;
+    transition: all 0.3s ease 0s;
+
+    &_rotate {
+      transform: rotate(90deg);
+    }
+  }
+  &__list {
+    display: none;
+    &_visible {
+      display: block;
+    }
+  }
+  &__item {
+    list-style: none;
+  }
+}

@@ -1,6 +1,9 @@
 import { Handler } from 'express';
 import Server from '../models/server';
+import Channel from '../models/channel';
 import fs from 'fs';
+import { channelDTO } from '../utils/dto';
+import { FetchedChannel } from '../utils/dto';
 
 const getServers: Handler = (req, res, next) => {
   let docsCount = 0;
@@ -122,4 +125,28 @@ const deleteServer: Handler = (req, res, next) => {
     });
 };
 
-export default { getServers, createServer, getServer, updateServer, deleteServer };
+const getChannels: Handler = (req, res, next) => {
+  const serverId = req.params.id;
+  let docsCount = 0;
+  Channel.find({ serverId })
+    .countDocuments()
+    .then((count) => {
+      docsCount = count;
+      return Channel.find({ serverId });
+    })
+    .then((channels) => {
+      res.status(200).json({
+        message: 'Fetched channels successfully.',
+        count: docsCount,
+        channels: channels.map((channel) => channelDTO(channel as FetchedChannel)),
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+export default { getServers, createServer, getServer, updateServer, deleteServer, getChannels };
