@@ -16,12 +16,14 @@ const routes = {
 class MainContentComponent extends Controller<MainContentView> {
   constructor() {
     super(new MainContentView());
+    console.log('MainContentComponent constructed');
   }
 
   async init(): Promise<void> {
     const controller = new Router().getController();
+    console.log(controller);
     if (isKeyOf(controller, routes)) {
-      new routes[controller]().init();
+      await new routes[controller]().init();
     }
   }
 }

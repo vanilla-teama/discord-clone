@@ -7,11 +7,11 @@ import MainContentComponent from './main-content';
 class MainComponent extends Controller<MainView> {
   constructor() {
     super(new MainView());
+    console.log('MAinComponent constructed');
   }
 
   async init(): Promise<void> {
     this.view.render();
-
     await new AppBarComponent().init();
     await new MainContentComponent().init();
     await new InfoBarComponent().init();

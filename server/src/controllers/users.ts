@@ -228,6 +228,7 @@ const updateUser: Handler = (req, res, next) => {
   const userId = req.params.id;
 
   User.findById(userId)
+    .populate('chats')
     .then((user) => {
       if (!user) {
         const error = new Error('Could not find user.');
@@ -238,8 +239,8 @@ const updateUser: Handler = (req, res, next) => {
         if (req.body[path]) {
           if (path === 'name' || path === 'email' || path === 'password' || path === 'phone') {
             user[path] = req.body[path];
-          } else if (path === 'invites') {
-            user.invites = [...new Set(user.invites.map((id) => id.toString()).concat(req.body.invites))].map((id) =>
+          } else if (path === 'invitesFrom' || path === 'invitesTo') {
+            user[path] = [...new Set((user[path] || []).map((id) => id.toString()).concat(req.body[path]))].map((id) =>
               new mongoose.Types.ObjectId(id)
             );
           }
@@ -294,6 +295,22 @@ const getFriends: Handler = (req, res, next) => {
       }
       const exportedFriends = user.friends.map((f) => userDTO(f as unknown as FetchedUser));
       res.status(200).json({ messageInfo: 'Friends fetched.', friends: exportedFriends });
+    });
+};
+
+const getInvitedToFriends: Handler = (req, res, next) => {
+  const userId = req.params.id;
+
+  User.findById(userId)
+    .populate('invitesTo')
+    .then((user) => {
+      if (!user) {
+        const error = new Error('Could not find user.');
+        // error.statusCode = 404;
+        throw error;
+      }
+      const invitedToFriends = (user.invitesTo || []).map((f) => userDTO(f as unknown as FetchedUser));
+      res.status(200).json({ message: 'Users invited to friends fetched.', invitedToFriends });
     });
 };
 
@@ -366,6 +383,7 @@ export default {
   updateUser,
   deleteUser,
   getFriends,
+  getInvitedToFriends,
   updateFriends,
   login,
   register,

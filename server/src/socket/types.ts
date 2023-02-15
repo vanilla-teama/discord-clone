@@ -14,6 +14,7 @@ export interface ServerToClientEvents {
   personalMessage: (data: { fromUserId: string; toUserId: string }) => void;
   personalMessageUpdated: (data: { messageId: string }) => void;
   personalMessageDeleted: (data: { messageId: string }) => void;
+  userInvited: (data: { userId: string }) => void;
 }
 
 export interface ClientToServerEvents {
@@ -22,6 +23,7 @@ export interface ClientToServerEvents {
   personalMessage: (data: { fromUserId: string; toUserId: string }) => void;
   personalMessageUpdated: (data: { messageId: string }) => void;
   personalMessageDeleted: (data: { messageId: string }) => void;
+  userInvited: (data: { userId: string }) => void;
   run: () => void;
 }
 

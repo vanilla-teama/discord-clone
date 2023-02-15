@@ -20,19 +20,22 @@ class App {
 
   private static controller: AppControllerType | null;
 
+  private static controllerHistory: string[] = [];
+
   static getRouter(): Router {
     return App.router;
   }
 
   static async run(): Promise<void> {
-    App.beforeRun();
     App.router = new Router();
 
-    const controller = App.router.getController();
+    // const controller = App.router.getController();
+    const controller = new Router().getController();
 
     try {
       // Render content
       if (isKeyOf(controller, routes)) {
+        App.pushToControllerHistory(controller);
         const prevControllerObj = App.controller;
 
         if (!prevControllerObj || !(prevControllerObj instanceof routes[controller])) {
@@ -45,8 +48,14 @@ class App {
     }
   }
 
-  static beforeRun() {
-    ChatsScreen.bindRouteChanged();
+  static pushToControllerHistory(controller: string) {
+    const lastController = App.controllerHistory[App.controllerHistory.length - 1];
+    if (lastController !== controller) {
+      App.controllerHistory.push(controller);
+      if (App.controllerHistory.length > 2) {
+        App.controllerHistory.shift();
+      }
+    }
   }
 }
 

@@ -2,7 +2,7 @@ import Controller from '../lib/controller';
 import Router, { RouteControllers } from '../lib/router';
 import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
-import { Availability, Chat } from '../types/entities';
+import { Chat } from '../types/entities';
 import { CustomEvents } from '../types/types';
 import { getTypedCustomEvent } from '../utils/functions';
 import ChatsScreenView from '../views/chats-screen-view';
@@ -36,9 +36,17 @@ class ChatsScreen extends Controller<ChatsScreenView> {
 
     await new StartBarComponent().init();
     await new ChatsSideBarComponent().init();
-    await new MainComponent().init();
+    {
+      const router = new Router();
+      const controller = router.getController();
+      const params = router.getParams();
+      if (!ChatsScreen.chat && appStore.chats.length > 0 && controller === RouteControllers.Chats && !params[0]) {
+        Router.push(RouteControllers.Chats, '', [appStore.chats[0].userId]);
+      } else if (ChatsScreen.chat && !params[0]) {
+        Router.push(RouteControllers.Chats, '', [ChatsScreen.chat.userId]);
+      }
+    }
 
-    this.maybeRedirectToFirstChat(appStore.chats);
     this.bindSocketUserAvailabilityChangedServer();
     appStore.bindChatUpdate(ChatsScreen.onChatUpdate);
   }
@@ -48,37 +56,30 @@ class ChatsScreen extends Controller<ChatsScreenView> {
     document.addEventListener(CustomEvents.AFTERROUTERPUSH, ChatsScreen.routeChangeHandler);
   }
 
-  private static routeChangeHandler = (event: Event): void => {
+  private static routeChangeHandler = async (event: Event): Promise<void> => {
     const user = appStore.user;
     if (!user) {
       return;
     }
 
-    const {
-      detail: { controller, params },
-    } = getTypedCustomEvent(CustomEvents.AFTERROUTERPUSH, event);
+    const router = new Router();
+    const controller = router.getController();
+    const params = router.getParams();
 
     if (controller === RouteControllers.Chats && params.length > 0) {
       ChatsScreen.onUrlChatIdChanged(params[0]);
     } else if (controller === RouteControllers.Friends) {
-      console.log('friends');
-      new MainComponent().init();
+      await new MainComponent().init();
     }
   };
 
-  private maybeRedirectToFirstChat(chats: Chat[] | null | undefined): void {
-    if (!chats || chats.length === 0) {
+  private static async onUrlChatIdChanged(chatId: Chat['userId']): Promise<void> {
+    if (ChatsScreen.chat?.id === chatId) {
       return;
     }
-    Router.push(RouteControllers.Chats, '', [chats[0].userId]);
-  }
-
-  private static onUrlChatIdChanged(chatId: Chat['userId']) {
     ChatsScreen.chat = appStore.chats.find((chat) => chat.userId === chatId) || null;
     if (ChatsScreen.chat) {
-      // new StartBarComponent().init();
-      // new ChatsSideBarComponent().init();
-      new MainComponent().init();
+      await new MainComponent().init();
     }
   }
 
