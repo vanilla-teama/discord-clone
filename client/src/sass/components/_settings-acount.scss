@@ -67,3 +67,16 @@
   border: 2px solid red;
   border-radius: 10px;
 }
+
+@include media-lg-down {
+  .nick-name-container-acoun {
+    padding: 60px 10px 10px 5px;
+    gap: 10px;
+  }
+}
+
+@include media-sm-down {
+  .nick-name-container-acoun {
+    flex-direction: column;
+  }
+}

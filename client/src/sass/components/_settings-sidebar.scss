@@ -24,3 +24,28 @@
   width: 100%;
   display: flex;
 }
+.container-close-btn {
+  padding: 30px;
+}
+@include media-lg-down {
+  .settings-bar__list {
+    padding: 47px 6px 0px 20px;
+    width: 80%;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 auto;
+  }
+  .settings {
+    flex-direction: column;
+    padding: 10px;
+  }
+  .settings-bar__list-item {
+    padding: 10px;
+  }
+  .settings__content {
+    width: 100%;
+  }
+  .btn-close-settings {
+    margin-top: 20px;
+  }
+}

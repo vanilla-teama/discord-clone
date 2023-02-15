@@ -5,6 +5,7 @@ class SettingsScreenView extends View {
   static readonly classNames = {
     btnClose: 'btn-close-settings',
     imgBtn: 'img-close-settings',
+    containerBtn: 'container-close-btn',
   };
 
   static $sidebar: HTMLDivElement | null;
@@ -21,13 +22,15 @@ class SettingsScreenView extends View {
   }
   build(): void {
     const $btnClose = this.$closeButton;
+    const $containerBtn = $('div', SettingsScreenView.classNames.containerBtn);
     const $imgBtn = Object.assign($('img', SettingsScreenView.classNames.imgBtn), { src: close.default });
     $btnClose.append($imgBtn);
+    $containerBtn.append($btnClose);
     const $container = $('div', 'settings');
     SettingsScreenView.$sidebar = $('div', 'settings__sidebar');
     SettingsScreenView.$content = $('div', 'settings__content');
 
-    $container.append(SettingsScreenView.$sidebar, SettingsScreenView.$content, $btnClose);
+    $container.append(SettingsScreenView.$sidebar, SettingsScreenView.$content, $containerBtn);
     this.$container.append($container);
   }
 
