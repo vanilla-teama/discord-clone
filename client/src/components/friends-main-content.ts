@@ -11,14 +11,16 @@ class FriendsMainContentComponent extends Controller<FriendsMainContentView> {
   }
 
   async init(): Promise<void> {
-    await appStore.fetchFriends();
-    await appStore.fetchInvitedToFriends();
+    await this.fetchAllFriends();
     this.view.bindOnSearch(this.onSearch);
     this.view.bindOnInvite(this.onInvite);
     this.view.bindOnSendMessage(this.onSendMessage);
+    this.view.bindOnAcceptInvitation(this.onAcceptInvitation);
+    this.view.bindOnCancelInvitation(this.onCancelInvitation);
+    this.view.bindOnDeleteFriend(this.onDeleteFriend);
     this.view.render();
     this.bindSocketEvents();
-    this.displayFriends();
+    this.displayAllFriends();
   }
 
   static showFriendsContent = (): void => {
@@ -30,15 +32,40 @@ class FriendsMainContentComponent extends Controller<FriendsMainContentView> {
   };
 
   bindSocketEvents() {
-    socket.removeListener('userInvited', FriendsMainContentComponent.onSocketUserInvited);
+    socket.removeListener('userInvitedToFriends', FriendsMainContentComponent.onSocketUserInvitedToFriends);
     socket.on(
-      'userInvited',
-      (FriendsMainContentComponent.onSocketUserInvited = async ({ userId }) => {
-        if (appStore.user?.id === userId) {
-          return;
-        }
+      'userInvitedToFriends',
+      (FriendsMainContentComponent.onSocketUserInvitedToFriends = async ({ userId }) => {
         await appStore.fetchInvitedToFriends();
-        this.displayFriends();
+        await appStore.fetchInvitedFromFriends();
+        this.displayAllFriends();
+      })
+    );
+
+    socket.removeListener('userAddedToFriends', FriendsMainContentComponent.onSocketUserAddedToFriends);
+    socket.on(
+      'userAddedToFriends',
+      (FriendsMainContentComponent.onSocketUserAddedToFriends = async ({ userId, friendId }) => {
+        await this.fetchAllFriends();
+        this.displayAllFriends();
+      })
+    );
+
+    socket.removeListener('friendInvitationCanceled', FriendsMainContentComponent.onSocketFriendInvitationCanceled);
+    socket.on(
+      'friendInvitationCanceled',
+      (FriendsMainContentComponent.onSocketFriendInvitationCanceled = async ({ userId, friendId }) => {
+        await this.fetchAllFriends();
+        this.displayAllFriends();
+      })
+    );
+
+    socket.removeListener('friendDeleted', FriendsMainContentComponent.onSocketFriendDeleted);
+    socket.on(
+      'friendDeleted',
+      (FriendsMainContentComponent.onSocketFriendDeleted = async ({ userId, friendId }) => {
+        await this.fetchAllFriends();
+        this.displayAllFriends();
       })
     );
   }
@@ -60,14 +87,57 @@ class FriendsMainContentComponent extends Controller<FriendsMainContentView> {
       await appStore.updateUser(appStore.user.id, { invitesTo: [userId] }),
       await appStore.updateUser(userId, { invitesFrom: [appStore.user.id] }),
     ]);
-    socket.emit('userInvited', { userId });
+    socket.emit('userInvitedToFriends', { userId });
     await appStore.fetchInvitedToFriends();
-    this.displayFriends();
+    this.displayAllFriends();
   };
 
-  displayFriends() {
-    this.view.displayFriends(appStore.invitedToFriends, appStore.friends);
-  }
+  onAcceptInvitation = async (newFriendId: string): Promise<void> => {
+    if (!appStore.user) {
+      return;
+    }
+    await Promise.all([
+      await appStore.updateUser(
+        appStore.user.id,
+        { invitesFrom: [newFriendId], friends: [newFriendId] },
+        { remove: ['invitesFrom'] }
+      ),
+      await appStore.updateUser(
+        newFriendId,
+        { invitesTo: [appStore.user.id], friends: [appStore.user.id] },
+        { remove: ['invitesTo'] }
+      ),
+    ]);
+    socket.emit('userAddedToFriends', { userId: appStore.user.id, friendId: newFriendId });
+    await this.fetchAllFriends();
+    this.displayAllFriends();
+  };
+
+  onCancelInvitation = async (friendId: string): Promise<void> => {
+    if (!appStore.user) {
+      return;
+    }
+    await Promise.all([
+      await appStore.updateUser(appStore.user.id, { invitesTo: [friendId] }, { remove: ['invitesTo'] }),
+      await appStore.updateUser(friendId, { invitesFrom: [appStore.user.id] }, { remove: ['invitesFrom'] }),
+    ]);
+    socket.emit('friendInvitationCanceled', { userId: appStore.user.id, friendId: friendId });
+    await this.fetchAllFriends();
+    this.displayAllFriends();
+  };
+
+  onDeleteFriend = async (friendId: string): Promise<void> => {
+    if (!appStore.user) {
+      return;
+    }
+    await Promise.all([
+      await appStore.updateUser(appStore.user.id, { friends: [friendId] }, { remove: ['friends'] }),
+      await appStore.updateUser(friendId, { friends: [appStore.user.id] }, { remove: ['friends'] }),
+    ]);
+    socket.emit('friendDeleted', { userId: appStore.user.id, friendId: friendId });
+    await this.fetchAllFriends();
+    this.displayAllFriends();
+  };
 
   onSendMessage = async (userId: string): Promise<void> => {
     if (!appStore.user) {
@@ -80,7 +150,25 @@ class FriendsMainContentComponent extends Controller<FriendsMainContentView> {
     Router.push(RouteControllers.Chats, '', [userId]);
   };
 
-  static onSocketUserInvited: ServerToClientEvents['userInvited'] = () => {};
+  async fetchAllFriends() {
+    await Promise.all([
+      await appStore.fetchFriends(),
+      await appStore.fetchInvitedToFriends(),
+      await appStore.fetchInvitedFromFriends(),
+    ]);
+  }
+
+  displayAllFriends() {
+    this.view.displayFriends(appStore.invitedToFriends, appStore.invitedFromFriends, appStore.friends);
+  }
+
+  static onSocketUserInvitedToFriends: ServerToClientEvents['userInvitedToFriends'] = () => {};
+
+  static onSocketUserAddedToFriends: ServerToClientEvents['userAddedToFriends'] = () => {};
+
+  static onSocketFriendInvitationCanceled: ServerToClientEvents['friendInvitationCanceled'] = () => {};
+
+  static onSocketFriendDeleted: ServerToClientEvents['friendDeleted'] = () => {};
 }
 
 export default FriendsMainContentComponent;

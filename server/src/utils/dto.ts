@@ -22,15 +22,17 @@ export const userDTO = ({
   chats,
   invitesFrom,
   invitesTo,
+  friends,
 }: FetchedUser): DTOUser => {
   return {
     id: _id.toString(),
     name,
     email,
-    // password,
+    password: '',
     phone,
     availability,
     chats: chats as unknown as DTOChat[],
+    friends: (friends || []).map((id) => id.toString()),
     invitesFrom: (invitesFrom || []).map((id) => id.toString()),
     invitesTo: (invitesTo || []).map((id) => id.toString()),
   };

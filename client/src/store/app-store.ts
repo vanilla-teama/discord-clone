@@ -18,6 +18,8 @@ class AppStore {
 
   private _invitedToFriends: User[] = [];
 
+  private _invitedFromFriends: User[] = [];
+
   private _channels: Channel[] = [];
 
   private _chats: Chat[] = [];
@@ -63,6 +65,14 @@ class AppStore {
 
   private set invitedToFriends(friends: User[]) {
     this._invitedToFriends = friends;
+  }
+
+  get invitedFromFriends(): User[] {
+    return this._invitedFromFriends;
+  }
+
+  private set invitedFromFriends(friends: User[]) {
+    this._invitedFromFriends = friends;
   }
 
   get chats(): Chat[] {
@@ -171,6 +181,19 @@ class AppStore {
     }
   }
 
+  async fetchInvitedFromFriends(): Promise<void> {
+    if (!this.user) {
+      return;
+    }
+    const response = await http
+      .get<{ invitedFromFriends: User[] }>(`/users/${this.user.id}/invited-from-friends`)
+      .catch((err) => console.error(err));
+    if (response) {
+      console.log(response);
+      this.invitedFromFriends = response.data.invitedFromFriends;
+    }
+  }
+
   async fetchChats(userId: User['id']): Promise<void> {
     const response = await http.get<{ chats: Chat[] }>(`/chats/users/${userId}`);
     if (response) {
@@ -272,9 +295,9 @@ class AppStore {
     }
   }
 
-  async updateUser(userId: string, data: Partial<User>): Promise<void> {
+  async updateUser(userId: string, data: Partial<User>, params?: { remove: (keyof User)[] }): Promise<void> {
     const response = await http
-      .patch<Partial<User>, { data: { user: User } }>(`/users/${userId}`, data)
+      .patch<Partial<User>, { data: { user: User } }>(`/users/${userId}`, data, { params })
       .catch((err) => console.log(err));
     if (response) {
       const userIdx = this.users.findIndex(({ id }) => userId === id);

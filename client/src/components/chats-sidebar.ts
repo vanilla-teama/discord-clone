@@ -79,14 +79,47 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
     socket.removeListener('userChangedAvailability', ChatsSideBarComponent.onSocketUserAvailabilityChangedServer);
     socket.on('userChangedAvailability', ChatsSideBarComponent.onSocketUserAvailabilityChangedServer);
 
-    socket.removeListener('userInvited', ChatsSideBarComponent.onSocketUserInvited);
+    socket.removeListener('userInvitedToFriends', ChatsSideBarComponent.onSocketUserInvitedToFriends);
     socket.on(
-      'userInvited',
-      (ChatsSideBarComponent.onSocketUserInvited = async ({ userId }) => {
+      'userInvitedToFriends',
+      (ChatsSideBarComponent.onSocketUserInvitedToFriends = async ({ userId }) => {
         if (!appStore.user) {
           return;
         }
-        if (appStore.user.id !== userId) {
+        await appStore.fetchCurrentUser();
+        this.view.displayFriendsBlockStatus(appStore.user.invitesFrom.length);
+      })
+    );
+
+    socket.removeListener('userAddedToFriends', ChatsSideBarComponent.onSocketUserAddedToFriends);
+    socket.on(
+      'userAddedToFriends',
+      (ChatsSideBarComponent.onSocketUserAddedToFriends = async ({ userId, friendId }) => {
+        if (!appStore.user) {
+          return;
+        }
+        await appStore.fetchCurrentUser();
+        this.view.displayFriendsBlockStatus(appStore.user.invitesFrom.length);
+      })
+    );
+
+    socket.removeListener('friendInvitationCanceled', ChatsSideBarComponent.onSocketFriendInvitationCanceled);
+    socket.on(
+      'friendInvitationCanceled',
+      (ChatsSideBarComponent.onSocketFriendInvitationCanceled = async ({ userId, friendId }) => {
+        if (!appStore.user) {
+          return;
+        }
+        await appStore.fetchCurrentUser();
+        this.view.displayFriendsBlockStatus(appStore.user.invitesFrom.length);
+      })
+    );
+
+    socket.removeListener('friendInvitationCanceled', ChatsSideBarComponent.onSocketFriendDeleted);
+    socket.on(
+      'friendInvitationCanceled',
+      (ChatsSideBarComponent.onSocketFriendDeleted = async ({ userId, friendId }) => {
+        if (!appStore.user) {
           return;
         }
         await appStore.fetchCurrentUser();
@@ -109,7 +142,13 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
     Router.push(RouteControllers.Friends);
   };
 
-  static onSocketUserInvited: ServerToClientEvents['userInvited'] = () => {};
+  static onSocketUserInvitedToFriends: ServerToClientEvents['userInvitedToFriends'] = () => {};
+
+  static onSocketUserAddedToFriends: ServerToClientEvents['userAddedToFriends'] = () => {};
+
+  static onSocketFriendInvitationCanceled: ServerToClientEvents['friendInvitationCanceled'] = () => {};
+
+  static onSocketFriendDeleted: ServerToClientEvents['friendDeleted'] = () => {};
 
   static onRouteChanged: EventListener = () => {};
 }

@@ -37,8 +37,19 @@ export const bindSocketEvents = (
     io.emit('personalMessageDeleted', data);
   });
 
-  socket.on('userInvited', (data) => {
-    console.log('socket user invited');
-    socket.broadcast.emit('userInvited', data);
-  })
+  socket.on('userInvitedToFriends', (data) => {
+    io.emit('userInvitedToFriends', data);
+  });
+
+  socket.on('userAddedToFriends', (data) => {
+    io.emit('userAddedToFriends', data);
+  });
+
+  socket.on('friendInvitationCanceled', (data) => {
+    io.emit('friendInvitationCanceled', data);
+  });
+
+  socket.on('friendDeleted', (data) => {
+    io.emit('friendDeleted', data);
+  });
 };

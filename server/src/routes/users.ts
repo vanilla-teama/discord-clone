@@ -13,6 +13,7 @@ router.post('/', userController.createUser);
 router.get('/:id', userController.getUser);
 router.get('/:id/friends', userController.getFriends);
 router.get('/:id/invited-to-friends', userController.getInvitedToFriends);
+router.get('/:id/invited-from-friends', userController.getInvitedFromFriends);
 router.patch('/:id', userController.updateUser);
 router.delete('/:id', userController.deleteUser);
 

@@ -52,28 +52,61 @@ class FriendsMainContentView extends View {
     });
   }
 
-  displayFriends(invited: User[], friends: User[]): void {
+  displayFriends(invitedTo: User[], invitedFrom: User[], friends: User[]): void {
     this.$friendList.innerHTML = '';
-    invited.forEach((user) => {
-      this.$friendList.append(this.createFriendItem(user, true));
-    });
     friends.forEach((user) => {
       this.$friendList.append(this.createFriendItem(user));
     });
+    invitedTo.forEach((user) => {
+      this.$friendList.append(this.createFriendItem(user, 'invitedTo'));
+    });
+    invitedFrom.forEach((user) => {
+      this.$friendList.append(this.createFriendItem(user, 'invitedFrom'));
+    });
   }
 
-  createFriendItem(user: User, invited = false): HTMLLIElement {
+  createFriendItem(user: User, status: 'invitedTo' | 'invitedFrom' | 'friend' = 'friend'): HTMLLIElement {
     const $item = $('li', 'friends__friend-list-item');
     const $messageButton = $('button', 'friends__friend-list-item-message-btn');
-    const $deleteButton = $('button', 'friends__friend-list-item-delete-btn');
+    const $deleteFriendButton = $('button', 'friends__friend-list-item-delete-friend-btn');
+    const $acceptInvitationButton = $('button', 'friends__friend-list-item-accept-invitation-btn');
+    const $cancelInvitationButton = $('button', 'friends__friend-list-item-cancel-invite-btn');
 
     $messageButton.textContent = 'message';
-    $deleteButton.textContent = 'delete';
+    $deleteFriendButton.textContent = 'delete';
+    $acceptInvitationButton.textContent = 'accept';
+    $cancelInvitationButton.textContent = 'cancel';
 
-    $item.append(user.name, ' | ', invited ? 'invited' : '', ' | ', $messageButton, $deleteButton);
+    $item.append(
+      user.name,
+      ' | ',
+      status === 'invitedTo' ? 'invited' : status === 'invitedFrom' ? 'requested' : '',
+      ' | ',
+      $messageButton
+    );
+
+    if (status === 'invitedFrom') {
+      $item.append($acceptInvitationButton);
+    } else if (status === 'invitedTo') {
+      $item.append($cancelInvitationButton);
+    } else if (status === 'friend') {
+      $item.append($deleteFriendButton);
+    }
 
     $messageButton.onclick = () => {
       this.onSendMessage(user.id);
+    };
+
+    $acceptInvitationButton.onclick = () => {
+      this.onAcceptInvitation(user.id);
+    };
+
+    $cancelInvitationButton.onclick = () => {
+      this.onCancelInvitation(user.id);
+    };
+
+    $deleteFriendButton.onclick = () => {
+      this.onDeleteFriend(user.id);
     };
 
     return $item;
@@ -115,6 +148,12 @@ class FriendsMainContentView extends View {
 
   onSendMessage = async (userId: string): Promise<void> => {};
 
+  onAcceptInvitation = async (userId: string): Promise<void> => {};
+
+  onCancelInvitation = async (userId: string): Promise<void> => {};
+
+  onDeleteFriend = async (userId: string): Promise<void> => {};
+
   bindOnSearch = (handler: (value: string) => Promise<void>): void => {
     this.onSearch = handler;
   };
@@ -125,6 +164,18 @@ class FriendsMainContentView extends View {
 
   bindOnSendMessage = (handler: (userId: string) => Promise<void>) => {
     this.onSendMessage = handler;
+  };
+
+  bindOnAcceptInvitation = (handler: (userId: string) => Promise<void>) => {
+    this.onAcceptInvitation = handler;
+  };
+
+  bindOnCancelInvitation = (handler: (userId: string) => Promise<void>) => {
+    this.onCancelInvitation = handler;
+  };
+
+  bindOnDeleteFriend = (handler: (userId: string) => Promise<void>) => {
+    this.onDeleteFriend = handler;
   };
 }
 
