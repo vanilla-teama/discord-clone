@@ -21,6 +21,7 @@ class ChatsBarView extends View {
     this.$item = $('li', ChatsBarView.classes.listItem);
   }
   async build(): Promise<void> {
+    const $topContainer = $('div', 'chats-bar__top-container');
     const $list = $('ul', ChatsBarView.classes.list);
     this.$item = $('li', ChatsBarView.classes.listItem);
     const $itemImg = $('img', 'chats-bar__img');
@@ -33,7 +34,8 @@ class ChatsBarView extends View {
     };
     this.$item.append($itemImg, $itemName);
     $list.append(this.$item);
-    this.$container.append($list);
+
+    this.$container.append($topContainer, $list);
   }
 
   toggleActiveStatus(isActive: boolean) {

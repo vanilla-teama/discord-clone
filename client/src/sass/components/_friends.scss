@@ -1,0 +1,18 @@
+.friends {
+}
+
+.friends__friends {
+  display: none;
+
+  &_show {
+    display: flex;
+  }
+}
+
+.friends__add-friend {
+  display: none;
+
+  &_show {
+    display: flex;
+  }
+}

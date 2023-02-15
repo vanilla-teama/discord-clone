@@ -14,6 +14,12 @@ class AppStore {
 
   private _users: User[] = [];
 
+  private _friends: User[] = [];
+
+  private _invitedToFriends: User[] = [];
+
+  private _invitedFromFriends: User[] = [];
+
   private _channels: Channel[] = [];
 
   private _chats: Chat[] = [];
@@ -43,6 +49,30 @@ class AppStore {
 
   private set users(users: User[]) {
     this._users = users;
+  }
+
+  get friends(): User[] {
+    return this._friends;
+  }
+
+  private set friends(friends: User[]) {
+    this._friends = friends;
+  }
+
+  get invitedToFriends(): User[] {
+    return this._invitedToFriends;
+  }
+
+  private set invitedToFriends(friends: User[]) {
+    this._invitedToFriends = friends;
+  }
+
+  get invitedFromFriends(): User[] {
+    return this._invitedFromFriends;
+  }
+
+  private set invitedFromFriends(friends: User[]) {
+    this._invitedFromFriends = friends;
   }
 
   get chats(): Chat[] {
@@ -107,12 +137,60 @@ class AppStore {
     return null;
   }
 
+  async fetchCurrentUser(): Promise<void> {
+    if (!this.user) {
+      return;
+    }
+    const response = await http.get<{ user: User }>(`/users/${this.user.id}`).catch((err) => console.error(err));
+    if (response) {
+      this.user = response.data.user;
+    }
+  }
+
   async fetchUsers(): Promise<void> {
     const response = await http.get<{ users: User[] | null }>('/users');
     if (response) {
       this.users = response.data.users || [];
     } else {
       this.users = users;
+    }
+  }
+
+  async fetchFriends(): Promise<void> {
+    if (!this.user) {
+      return;
+    }
+    const response = await http
+      .get<{ friends: User[] }>(`/users/${this.user.id}/friends`)
+      .catch((err) => console.error(err));
+    if (response) {
+      this.friends = response.data.friends;
+    }
+  }
+
+  async fetchInvitedToFriends(): Promise<void> {
+    if (!this.user) {
+      return;
+    }
+    const response = await http
+      .get<{ invitedToFriends: User[] }>(`/users/${this.user.id}/invited-to-friends`)
+      .catch((err) => console.error(err));
+    if (response) {
+      console.log(response);
+      this.invitedToFriends = response.data.invitedToFriends;
+    }
+  }
+
+  async fetchInvitedFromFriends(): Promise<void> {
+    if (!this.user) {
+      return;
+    }
+    const response = await http
+      .get<{ invitedFromFriends: User[] }>(`/users/${this.user.id}/invited-from-friends`)
+      .catch((err) => console.error(err));
+    if (response) {
+      console.log(response);
+      this.invitedFromFriends = response.data.invitedFromFriends;
     }
   }
 
@@ -145,7 +223,6 @@ class AppStore {
     } else {
       this.personalMessages = [];
     }
-    console.log('fetch personal messagfes', response?.data?.messages);
     this.onPersonalMessageListChanged(this.getFormattedRenderedPersonalMessages());
   }
 
@@ -174,6 +251,16 @@ class AppStore {
     this.channels = [];
   }
 
+  async searchUsers(value: string): Promise<User[]> {
+    const response = await http
+      .get<{ users: User[] }>(`/users/search?search=${value}`)
+      .catch((error) => console.error(error));
+    if (response) {
+      return response.data.users;
+    }
+    return [];
+  }
+
   async checkAuth(): Promise<boolean> {
     const response = await http.get<{ user: User | null }>('/users/check-auth').catch((error) => console.error(error));
     if (response) {
@@ -188,7 +275,6 @@ class AppStore {
       .post<{ email: string; password: string }, { data: { user: User } }>('/users/login', { email, password })
       .catch((error) => console.error(error));
     if (response) {
-      console.log(response);
       this.user = response.data.user;
     } else {
       this.user = users.find((user) => email === user.email) || users[0];
@@ -209,12 +295,27 @@ class AppStore {
     }
   }
 
-  async createChat(friendIDs: string[]): Promise<void> {
+  async updateUser(userId: string, data: Partial<User>, params?: { remove: (keyof User)[] }): Promise<void> {
+    const response = await http
+      .patch<Partial<User>, { data: { user: User } }>(`/users/${userId}`, data, { params })
+      .catch((err) => console.log(err));
+    if (response) {
+      const userIdx = this.users.findIndex(({ id }) => userId === id);
+      if (userIdx) {
+        this.users = [...this.users.slice(0, userIdx), response.data.user, ...this.users.slice(userIdx + 1)];
+      }
+      if (userId === this.user?.id) {
+        this.user = response.data.user;
+      }
+    }
+  }
+
+  async createChat(userIDs: string[]): Promise<void> {
     if (!this.user) {
       return;
     }
     const response = await http
-      .post(`/chats/users/${this.user.id}`, { userId: friendIDs[0] })
+      .post(`/chats/users/${this.user.id}`, { userId: userIDs[0] })
       .catch((err) => console.error(err));
     if (response) {
       await this.fetchChats(this.user.id);

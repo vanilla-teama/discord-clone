@@ -38,6 +38,7 @@ class ChatsMainContentView extends View {
 
   constructor(chat: Chat | null) {
     const $root = MainView.$mainContent;
+    console.log($root);
     if (!$root) {
       ChatsMainContentView.throwNoRootInTheDomError('Main-content');
     }
@@ -88,7 +89,7 @@ class ChatsMainContentView extends View {
     } else {
       $container.append('CHATS NOT FOUND!');
     }
-
+    console.log($container);
     this.$container.append($container);
   }
 
@@ -413,7 +414,9 @@ class ChatsMainContentView extends View {
     return items.message.id;
   }
 
-  onFastMenuEditButtonClick = (event: MouseEvent): void => {};
+  onFastMenuEditButtonClick = (event: MouseEvent): void => {
+    console.log('Not binded');
+  };
 
   onFastMenuDeleteButtonClick = (event: MouseEvent): void => {};
 

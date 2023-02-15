@@ -6,11 +6,14 @@ interface DTOEntity {
 
 export interface DTOUser extends DTOEntity {
   name: string;
-  // password: string;
+  password: string;
   email: string;
   phone: string;
   availability: Availability;
   chats: DTOChat[];
+  friends: string[];
+  invitesFrom: string[];
+  invitesTo: string[];
 }
 
 export interface DTOPersonalMessage extends DTOEntity {

@@ -13,6 +13,7 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
     super(new ChatsMainContentView(ChatsScreen.chat));
     this.chat = ChatsScreen.chat;
     this.fastMenusMap = new Map();
+    console.log('ChatsMainComponent constructed');
   }
 
   chat: Chat | null;
@@ -24,6 +25,8 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
     }
 
     this.view.render();
+
+    console.log(this.chat);
 
     if (this.chat) {
       appStore.bindPersonalMessageListChanged(this.onMessageListChange);
@@ -48,6 +51,7 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
   }
 
   private async fetchMessages(): Promise<void> {
+    console.log('fetch!!!!!!!!!!!!!!!!');
     if (!appStore.user || !this.chat) {
       return;
     }
