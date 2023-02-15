@@ -24,7 +24,9 @@
   width: 100%;
   display: flex;
 }
-
+.container-close-btn {
+  padding: 30px;
+}
 @include media-lg-down {
   .settings-bar__list {
     padding: 47px 6px 0px 20px;
@@ -42,5 +44,8 @@
   }
   .settings__content {
     width: 100%;
+  }
+  .btn-close-settings {
+    margin-top: 20px;
   }
 }
