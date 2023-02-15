@@ -48,11 +48,11 @@ class ServersBarView extends View {
       },
     ];
 
-    // serversFake.forEach((server) => {
-    //   const $item = this.createServerItem(server);
-    //   this.$serverList.append($item);
-    //   //this.onAppendServerItem($item, server);
-    // });
+    //serversFake.forEach((server) => {
+    //  const $item = this.createServerItem(server);
+    //  this.$serverList.append($item);
+    //  //this.onAppendServerItem($item, server);
+    //});
     servers.forEach((server) => {
       const $item = this.createServerItem(server);
       this.$serverList.append($item);

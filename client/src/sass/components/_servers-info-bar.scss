@@ -5,12 +5,17 @@
 
 .servers-info-bar {
   padding: 20px 10px 10px 10px;
-  width: 240px;
+  width: 320px;
   height: 100%;
 
   &__members-online,
   &__members-offline {
+    font-size: 14px;
     margin-bottom: 10px;
+  }
+  &__members-text {
+    color: var(--text-primary);
+    opacity: 0.5;  
   }
   &__list-online,
   &__list-offline {
