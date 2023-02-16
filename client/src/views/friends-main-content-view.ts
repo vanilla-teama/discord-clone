@@ -132,6 +132,11 @@ class FriendsMainContentView extends View {
     return $item;
   }
 
+  resetSearchInputAndFoundList() {
+    this.$foundUserList.innerHTML = '';
+    this.$searchInput.value = '';
+  }
+
   static showFriendsContent(): void {
     FriendsMainContentView.$addFriendContent.classList.remove('friends__add-friend_show');
     FriendsMainContentView.$friendsContent.classList.add('friends__friends_show');
