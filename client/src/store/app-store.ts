@@ -454,7 +454,6 @@ class AppStore {
   };
 
   getFormattedRenderedPersonalMessages(): RenderedPersonalMessage[] {
-    return fakePersonalMessages;
     return this.personalMessages.map((message) => {
       return this.getFormattedRenderedPersonalMessage(message);
     });
