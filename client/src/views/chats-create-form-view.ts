@@ -18,13 +18,8 @@ class ChatsCreateFormView extends View {
     this.$form = this.createForm();
   }
   build(): void {
-    this.bindAfterRender(this.afterRender);
     this.$container.append(this.$form);
   }
-
-  afterRender = (): void => {
-    // ModalView.show();
-  };
 
   private createForm(): HTMLFormElement {
     const $form = $('form', 'form-create-chat');
@@ -61,6 +56,15 @@ class ChatsCreateFormView extends View {
     $label.append($checkbox, $itemBox, $customCheckbox);
     $item.append($label);
 
+    $checkbox.onchange = () => {
+      [...($checkbox.closest('form')?.elements || [])].forEach(($elem) => {
+        console.log($elem);
+        if ($elem instanceof HTMLInputElement && $elem !== $checkbox) {
+          $elem.checked = false;
+        }
+      });
+    };
+
     return $item;
   }
 
@@ -75,7 +79,7 @@ class ChatsCreateFormView extends View {
       event.preventDefault();
       const formData = new FormData(this.$form);
       await handler(formData);
-      // PopupView.hide();
+      PopupView.hide();
     });
   }
 }

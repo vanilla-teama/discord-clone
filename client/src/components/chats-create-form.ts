@@ -15,7 +15,7 @@ class ChatsCreateFormComponent extends Controller<ChatsCreateFormView> {
 
   async init(): Promise<void> {
     this.view.render();
-    this.onFriendListChanged(appStore.users);
+    this.onFriendListChanged(appStore.friends);
     this.view.bindFormSubmit(this.handleAddChat);
     appStore.bindChatListChanged(this.onChatListChanged);
   }

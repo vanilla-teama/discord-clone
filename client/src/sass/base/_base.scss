@@ -170,6 +170,14 @@ ul {
   }
 }
 
+.form-create-chat {
+  .user-item__status {
+    // I hide this element as we don't have time to implement status updates 
+    // for any additional elements this far
+    display: none;
+  }
+}
+
 
 .tooltip {
   position: relative;
