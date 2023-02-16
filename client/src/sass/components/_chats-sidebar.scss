@@ -9,12 +9,13 @@
   background-color: var(--background-color-gray);
   
   &__container {
+    padding-top: 15px;
     display: flex;
     flex-direction: column;
     min-height: 100%;
   }
   &__dm-container {
-    padding: 18px 5px 4px 18px;
+    padding: 10px 5px 4px 18px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -37,6 +38,7 @@
     opacity: 0.5;
     transition: all 0.3s ease 0s;
     border-radius: 7px;
+   
     cursor: pointer;
         
     &:hover{
@@ -71,69 +73,51 @@
       }
     }
   }
+  &__friends-container {
+    margin: 0 5px;
+    display: flex;
+    padding: 5px 8px;
+    border-radius: 8px;
+    align-items: center;
+    opacity: 0.5;
+    &:hover{
+      background-color: var(--background-color-gray-hover);
+      opacity: 1;
+      cursor: pointer;
+    }
+  }
+  &__to-friends{
+    border: none;
+    background-color: transparent;
+    color: var(--text-primary);
+    font-family: 'Roboto', sans-serif;
+    color: var(--text-primary);
+    font-size: 16px;
+    cursor: pointer;
+  }
+  &__friends-icon {
+    background: url('/src/assets/icons/friends.svg') center no-repeat;
+    width: 15px;
+    height: 15px;
+    opacity: 0.5;
+    transition: all 0.3s ease 0s;
+    padding: 10px;
+    border-radius: 7px;
 
-  //&__item-box {
-  //  display: flex;
-  //  gap: 10px;
-  //  align-items: center;
-  //}
-
-  //&__close {
-  //  background: url('/src/assets/icons/close.svg') center no-repeat;
-  //  width: 15px;
-  //  height: 15px;
-  //  opacity: 0.5;
-  //  z-index: 10;
-  //  transition: all 0.3s ease 0s;
-
-  //  &:hover {
-  //    opacity: 1;
-  //  }
-  //}
-
-  //&__avatar {
-  //  position: relative;
-  //}
-  //&__icon,
-  //&__user-icon {
-  //  background: url('/src/assets/icons/discord.svg') center no-repeat;
-  //  width: 32px;
-  //  height: 32px;
-  //}
-  //&__status {
-  //  height: 10px;
-  //  width: 10px;
-  //  bottom: 10px;
-  //  left: 20px;
-  //  background-color: var(--text-primary);
-  //  border-radius: 50px;
-  //  border: 3px solid var(--background-color-light-gray);
-  //  position: relative;
-  //  &::before {
-  //    content: '';
-  //    position: absolute;
-  //    height: 5px;
-  //    width: 5px;
-  //    background-color: var(--background-color-light-gray);
-  //    left: 50%;
-  //    top: 50%;
-  //    transform: translate(-50%, -50%);
-  //    border-radius: 50px;
-  //  }
-
-  //  &_online{
-  //    background-color: var(--background-color-green);
-  //    &::before {
-  //      display: none;
-  //    }
-  //  }
-  //}
-
-  //&__name {
-  //  opacity: 0.5;
-  //  color: var(--text-gray);
-  //  transition: all 0.3s ease 0s;
-  //}
+  
+  }
+  &__invites {
+    margin-left: auto;
+    height: 25px;
+    width: 25px;
+    background-color: var(--text-gray);
+    border-radius: 50%;
+    opacity: 0.5;
+    color: var(--background-color-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
   &__user-bar {
     display: flex;
