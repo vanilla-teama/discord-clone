@@ -6,8 +6,10 @@ import { ServerToClientEvents } from '../types/socket';
 import FriendsMainContentView from '../views/friends-main-content-view';
 
 class FriendsMainContentComponent extends Controller<FriendsMainContentView> {
+  static instance: FriendsMainContentComponent;
   constructor() {
     super(new FriendsMainContentView());
+    FriendsMainContentComponent.instance = this;
   }
 
   async init(): Promise<void> {
@@ -28,6 +30,7 @@ class FriendsMainContentComponent extends Controller<FriendsMainContentView> {
   };
 
   static showAddFriendContent = (): void => {
+    FriendsMainContentComponent.instance.resetAddFriendContent();
     FriendsMainContentView.showAddFriendContent();
   };
 
@@ -75,7 +78,13 @@ class FriendsMainContentComponent extends Controller<FriendsMainContentView> {
       return;
     }
     const userId = appStore.user.id;
-    const users = ((await appStore.searchUsers(value)) || []).filter(({ id }) => userId !== id);
+    const users = ((await appStore.searchUsers(value)) || []).filter(
+      ({ id }) =>
+        userId !== id &&
+        ![appStore.friends, appStore.invitedFromFriends, appStore.invitedToFriends].flat().some(({ id: friendId }) => {
+          return friendId === id;
+        })
+    );
     this.view.displayFoundUsers(users, appStore.user);
   };
 
@@ -160,6 +169,10 @@ class FriendsMainContentComponent extends Controller<FriendsMainContentView> {
 
   displayAllFriends() {
     this.view.displayFriends(appStore.invitedToFriends, appStore.invitedFromFriends, appStore.friends);
+  }
+
+  resetAddFriendContent() {
+    this.view.resetSearchInputAndFoundList();
   }
 
   static onSocketUserInvitedToFriends: ServerToClientEvents['userInvitedToFriends'] = () => {};
