@@ -43,13 +43,13 @@ $infobar-width: 340px;
 }
 
 .app-bar {
-
 }
 
 .main-container {
   display: flex;
   height: 100%;
-
+  padding-left: 240px;
+  transition: 0.2s all linear;
   animation-duration: 200ms;
   animation-timing-function: ease-in;
   animation-fill-mode: forwards;
@@ -83,8 +83,8 @@ $infobar-width: 340px;
   animation-timing-function: ease-in;
   animation-fill-mode: forwards;
 }
-  
-.info-bar{
+
+.info-bar {
   flex: 0 0 $infobar-width;
   position: fixed;
   right: -$infobar-width;

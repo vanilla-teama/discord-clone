@@ -2,12 +2,28 @@
   min-height: 100%;
   width: 240px;
   background-color: var(--background-color-gray);
+  position: fixed;
+  left: 70px;
+  top: 55px;
+  transition: 0.2s all linear;
+  animation-duration: 500ms;
+  animation-timing-function: ease-in;
+}
+
+.sidebar._disable {
+  left: -173px;
+  transition: 0.2s all linear;
+}
+
+.main-container._disable {
+  padding-left: 0px;
+  transition: 0.2s all linear;
 }
 
 .chats-sidebar {
   min-height: 100%;
   background-color: var(--background-color-gray);
-  
+
   &__container {
     display: flex;
     flex-direction: column;
@@ -26,7 +42,7 @@
     opacity: 0.5;
     transition: all 0.3s ease 0s;
 
-    &:hover{
+    &:hover {
       opacity: 1;
     }
   }
@@ -38,8 +54,8 @@
     transition: all 0.3s ease 0s;
     border-radius: 7px;
     cursor: pointer;
-        
-    &:hover{
+
+    &:hover {
       opacity: 1;
     }
   }
@@ -55,7 +71,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-   
+
     width: 100%;
     border-radius: 7px;
     transition: all 0.3s ease 0s;
@@ -168,7 +184,7 @@
     padding: 10px;
     border-radius: 7px;
 
-    &:hover{
+    &:hover {
       opacity: 1;
       background-color: var(--background-color-gray-hover);
       cursor: pointer;
