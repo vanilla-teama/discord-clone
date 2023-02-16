@@ -1,7 +1,7 @@
 import Router, { RouteControllers, SettingsParams } from '../lib/router';
 import View from '../lib/view';
 import { Chat, User } from '../types/entities';
-import { $, replaceWith } from '../utils/functions';
+import { $, isElementOfCssClass, replaceWith } from '../utils/functions';
 import PopupView, { PopupCoords } from './popup-view';
 import ScreenView from './screen-view';
 
@@ -95,14 +95,27 @@ class ChatsSideBarView extends View {
   }
 
   bindChatItemClick($item: HTMLLIElement) {
-    $item.addEventListener('click', () => {
+    $item.onclick = (event) => {
+      if (isElementOfCssClass(event.target, 'user-item__close')) {
+        return;
+      }
       const data = this.chatListMap.get($item);
       if (!data) {
         return;
       }
       const chat = data.chat;
       Router.push(RouteControllers.Chats, '', [chat.userId]);
-    });
+    };
+  }
+
+  bindCloseButtonClick($button: HTMLSpanElement, $chatItem: HTMLLIElement) {
+    $button.onclick = async () => {
+      const data = this.chatListMap.get($chatItem);
+      if (!data) {
+        return;
+      }
+      await this.onChatDelete(data.chat.userId);
+    };
   }
 
   private createUserBar(user?: User): HTMLDivElement {
@@ -142,6 +155,7 @@ class ChatsSideBarView extends View {
     $item.append($itemBox, $itemClose);
 
     this.bindChatItemClick($item);
+    this.bindCloseButtonClick($itemClose, $item);
     return $item;
   }
 
@@ -164,8 +178,14 @@ class ChatsSideBarView extends View {
 
   onFriendsButtonClick: EventListener = () => {};
 
+  onChatDelete = async (chatId: string): Promise<void> => {};
+
   bindOnFriendsButtonClick = (handler: EventListener): void => {
     this.onFriendsButtonClick = handler;
+  };
+
+  bindOnChatDelete = (handler: (chatId: string) => Promise<void>): void => {
+    this.onChatDelete = handler;
   };
 }
 
