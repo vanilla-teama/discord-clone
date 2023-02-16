@@ -107,10 +107,10 @@ class ChatsMainContentView extends View {
     const $userIcon = $('img', 'personal-message__icon');
     $userIcon.src = userIcon.default;
 
+    const $userBlock = $('div', 'personal-message__user-block');
     const $messageBlock = $('div', 'personal-message__massages-block');
     const $info = $('div', 'personal-message__info');
     const $userName = $('span', 'personal-message__name');
-    const $spaceFake = $('span', 'personal-message__space');
     const $messageDate = $('span', 'personal-message__date');
     const $message = $('p', 'personal-message__message');
     const $fastMenu = $('div', 'chat__fast-menu');
@@ -118,14 +118,15 @@ class ChatsMainContentView extends View {
     const $menu = $('div', 'chat__menu');
 
     $userName.textContent = `${username}`;
-    $spaceFake.textContent = 'x';
     $messageDate.textContent = `${date}`;
     $message.textContent = message;
 
     $userIconBlock.append($userIcon);
-    $info.append($userName, $spaceFake, $messageDate);
+    $info.append($userName, $messageDate);
     $messageBlock.append($info, $message);
-    $item.append($userIconBlock, $messageBlock, $editFormContainer, $fastMenu, $menu);
+    $userBlock.append($userIconBlock, $messageBlock);
+    $item.append($userBlock, $editFormContainer, $menu, $fastMenu);
+    //$item.append($userIconBlock, $messageBlock, $editFormContainer, $fastMenu, $menu);
 
     if (responsedToMessage) {
       const $repliedInfo = $('p', 'personal-message__replied-info');
@@ -281,7 +282,7 @@ class ChatsMainContentView extends View {
   }
 
   displayDeleteConfirmDialog($container: HTMLElement, event: MouseEvent): void {
-    console.log(this.messagesMap);
+    //console.log(this.messagesMap);
     if (!isClosestElementOfCssClass(event.target, 'personal-message')) {
       return;
     }
@@ -293,26 +294,34 @@ class ChatsMainContentView extends View {
     if (!items) {
       return;
     }
-    const $cancelButton = $('button');
-    const $confirmButton = $('button');
+    const $deleteContainer = $('div', 'chat__delete-container');
+    const $deleteContent = $('div', 'chat__delete-content');
+    const $deleteTitle = $('div', 'chat__delete-title');
+    const $deleteQuestion = $('div', 'chat__delete-question');
+    const $info = $('div', ['chat__delete-info', 'personal-message__info']);
+    const $userName = $('span', 'personal-message__name');
+    const $messageDate = $('span', 'personal-message__date');
+    const $messageItem = $('p', ['chat__delete-message-item', 'personal-message__message']);
+
+    $deleteTitle.textContent = `Delete message.`;
+    $deleteQuestion.textContent = `Are you sure you want to delete this?`;
+    $userName.textContent = `${items.message.username}`;
+    $messageDate.textContent = `${items.message.date}`;
+    $messageItem.textContent = items.message.message;
+
+    const $deleteButtons = $('div', 'chat__delete-buttons');
+    const $cancelButton = $('button', 'chat__delete-btn-cancel');
+    const $confirmButton = $('button', 'chat__delete-btn-delete');
 
     $cancelButton.textContent = 'Cancel';
     $confirmButton.textContent = 'Delete';
 
-    $container.append(
-      'Delete message.',
-      $('br'),
-      'Are you sure you want to delete this?',
-      $('br'),
-      items.message.username,
-      ' | ',
-      items.message.date,
-      $('br'),
-      items.message.message,
-      $('br'),
-      $cancelButton,
-      $confirmButton
-    );
+    $info.append($userName, $messageDate, $messageItem);
+    $deleteContent.append($deleteTitle, $deleteQuestion, $info);
+    $deleteButtons.append($cancelButton, $confirmButton);
+    $deleteContainer.append($deleteContent, $deleteButtons);
+
+    $container.append($deleteContainer);
 
     $cancelButton.onclick = () => {
       this.cancelDeleteConfirmDialog();
@@ -353,13 +362,16 @@ class ChatsMainContentView extends View {
 
   createReplyNotification($message: HTMLLIElement, username: string): HTMLDivElement {
     const $notification = $('div', 'chat__reply-notification');
-    const $notifMessage = $('p', 'chat__reply-notification-message');
+    const $notifMessageContainer = $('div', 'chat__reply-notification-message-container');
+    const $notifMessageText = $('span', 'chat__reply-notification-message-text');
+    const $notifMessageUser = $('span', 'chat__reply-notification-message-user');
+    //$notifMessage.innerHTML = `Replying to <strong>${username}</strong>`;
+    $notifMessageText.textContent = 'Replying to';
+    $notifMessageUser.textContent = username;
     const $destroyButton = $('button', 'chat__reply-notification-message-destroy');
-    $notifMessage.innerHTML = `Replying to <strong>${username}</strong>`;
-    $notifMessage.append($destroyButton);
-    $notification.append($notifMessage);
 
-    $destroyButton.textContent = 'Cancel';
+    $notifMessageContainer.append($notifMessageText, $notifMessageUser);
+    $notification.append($notifMessageContainer, $destroyButton);
 
     $destroyButton.onclick = () => {
       this.destroyReply($message);

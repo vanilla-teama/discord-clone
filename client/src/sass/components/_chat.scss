@@ -1,23 +1,51 @@
 .chat {
   padding-top: 15px;
-  height: calc(100% - 15px);
+  height: calc(100% - 55px);
   display: flex;
   flex-direction: column;
   background-color: var(--background-color-light-gray);
 
-  &__messages-list{
+  &__messages-list {
     flex: 1 1 auto;
     overflow: auto;
     display: flex;
     flex-direction: column;
-    gap: 18px;
-    margin: 0 16px;
+    gap: 10px;
+
+    &::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    &::-webkit-scrollbar-track {
+      background-color: var(--background-color-light-gray-scroll);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--background-color-gray);
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: var(--background-color-gray);
+    }
+
+    &::-webkit-scrollbar-thumb:active {
+      background-color: var(--background-color-gray);
+      border-radius: 10px;
+    }
+
+    .personal-message_edit {
+      padding-bottom: 38px;
+    }
   }
-  &__messages-item{}
-  &__input-container{
+
+  &__messages-list-item {
+    position: relative;
+  }
+  &__input-container {
     padding: 0 16px;
   }
-  &__input{
+  &__input {
     width: calc(100% - 40px);
     height: 40px;
     margin-bottom: 20px;
@@ -25,46 +53,242 @@
     border: none;
     outline: none;
     color: var(--text-primary);
-    border-radius: 12px;
+    border-radius: 0px 0px 8px 8px;
     padding: 0 20px;
+  }
+  &__reply-container {
+  }
+  &__reply-notification {
+    font-size: 14px;
+    background-color: var(--background-color-gray);
+    padding: 15px 10px;
+    border-radius: 8px 8px 0px 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__reply-notification-message-container {
+    display: flex;
+    gap: 10px;
+  }
+  &__reply-notification-message-text {
+  }
+  &__reply-notification-message-user {
+    font-weight: 600;
+  }
+  &__reply-notification-message-destroy {
+    background: url('/src/assets/icons/close.svg') center no-repeat;
+    border: none;
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
+    margin-right: 10px;
+    opacity: 0.5;
+    transition: all 0.3s ease 0s;
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &__delete-container {
+    display: flex;
+    flex-direction: column;
+    width: 440px;
+    background-color: var(--background-color-gray-hover);
+  }
+  &__delete-content {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 440px;
+    //height: 320px;
+    background-color: var(--background-color-gray-hover);
+  }
+  &__delete-title {
+    padding-left: 16px;
+    padding-top: 16px;
+    color: var(--text-secondary);
+    font-weight: 700px;
+    font-size: 18px;
+  }
+  &__delete-question {
+    padding-left: 16px;
+  }
+  &__delete-info {
+    padding: 16px;
+    margin: 0 10px;
+    border: 2px solid var(--background-color-gray);
+    border-radius: 4px;
+  }
+  &__delete-message-item {
+    padding-top: 10px;
+  }
+  &__delete-buttons {
+    padding: 10px;
+    gap: 20px;
+    background-color: var(--background-color-gray);
+    align-self: flex-end;
+    width: calc(100% - 20px);
+    text-align: right;
+  }
+  &__delete-btn-cancel {
+    border: none;
+    color: var(--text-secondary);
+    background-color: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  &__delete-btn-delete {
+    background-color: var(--background-color-red);
+    border: none;
+    padding: 10px 20px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+    margin-left: 20px;
+    &:hover {
+      background-color: var(--background-color-red-dark);
+    }
   }
 }
 
-.personal-message{
+.personal-message {
+  padding: 10px 16px;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 20px;
+  transition: all 0.3s ease 0s;
 
-  &:hover {
-    background-color: var(--background-color-gray-hover);
+  &:hover,
+  &:focus,
+  &:active {
+    //opacity: 0.5;
+    background-color: var(--background-color-gray);
   }
-  &__icon{
+
+  &__user-block {
+    display: flex;
+    gap: 10px;
+  }
+  &__icon {
     width: 40px;
     height: 40px;
     border-radius: 50%;
   }
-  &__info{
+  &__info {
     margin-bottom: 5px;
   }
-  &__name{
+  &__name {
+    margin-right: 10px;
     color: var(--text-secondary);
   }
   &__space {
     color: transparent;
   }
-  &__date{
+  &__date {
     font-size: 12px;
     color: var(--text-gray);
     opacity: 0.5;
   }
-  &__message{
+  &__message {
     margin: 0;
   }
 
   &__replied-info {
     cursor: pointer;
+    margin: 0;
+    padding: 5px 0;
   }
 
   &_reply {
-    background-color: lightseagreen!important;
+    .personal-message__icon-block {
+      align-self: flex-end;
+      position: relative;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      width: 33px;
+      height: 13px;
+      top: 20px;
+      left: 30px;
+      background: url('/src/assets/icons/line.svg') center no-repeat;
+    }
+    background-color: var(--background-color-orange-light) !important;
+    border-left: var(--background-color-orange) 3px solid;
+  }
+
+  &__edit-form {
+  }
+  &__edit-form-container {
+  }
+  &__edit-form-input {
+    width: calc(100% - 95px);
+    margin-bottom: 20px;
+    background-color: var(--background-color-gray-hover);
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    border-radius: 8px;
+    padding: 10px 10px;
+    position: absolute;
+    top: 35px;
+    left: 65px;
+  }
+  &__edit-form-controls {
+    font-size: 12px;
+    position: absolute;
+    top: 70px;
+    left: 65px;
+  }
+  &__edit-form-cancel,
+  &__edit-form-save {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+  }
+
+  &__fast-menu {
+    margin-right: auto;
+  }
+}
+.chat__fast-menu {
+  gap: 10px;
+}
+.fast-menu {
+  &__edit-btn,
+  &__delete-btn,
+  &__reply-btn {
+    margin-bottom: 10px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: all 0.3s ease 0s;
+    margin-left: 15px;
+    &.tooltip::after {
+      top: -35px;
+    }
+    &:hover {
+      opacity: 1;
+    }
+  }
+  &__edit-btn {
+    padding: 10px;
+    background: url('/src/assets/icons/pensil.svg') center no-repeat;
+  }
+  &__reply-btn {
+    margin-right: 10px;
+    background: url('/src/assets/icons/reply.svg') center no-repeat;
+  }
+  &__delete-btn {
+    margin-right: 10px;
+    background: url('/src/assets/icons/trash.svg') center no-repeat;
   }
 }
