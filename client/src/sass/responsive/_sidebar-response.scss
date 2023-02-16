@@ -1,0 +1,9 @@
+@include media-sm-down {
+  .sidebar {
+    z-index: 80;
+    left: 63px;
+  }
+  .main-container {
+    padding-left: 0px;
+  }
+}

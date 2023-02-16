@@ -2,7 +2,7 @@
   min-height: 100%;
   width: 240px;
   background-color: var(--background-color-gray);
-  position: fixed;
+  position: absolute;
   left: 70px;
   top: 55px;
   transition: 0.2s all linear;
@@ -11,7 +11,7 @@
 }
 
 .sidebar._disable {
-  left: -173px;
+  left: -190px;
   transition: 0.2s all linear;
 }
 

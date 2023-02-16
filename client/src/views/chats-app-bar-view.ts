@@ -21,7 +21,7 @@ class ChatsAppBarView extends View {
     this.chat = chat;
     this.$userStatus = $('div', ['chats-app-bar__user-status', 'tooltip']);
     this.$showInfoBar = $('button', ['chats-app-bar__profile-btn', 'tooltip']);
-    this.$showSideBar = $('button', ['chats-app-bar__profile-btn', 'tooltip']);
+    this.$showSideBar = $('button', ['chats-app-bar__profile-btn']);
   }
   build(): void {
     if (this.chat) {
