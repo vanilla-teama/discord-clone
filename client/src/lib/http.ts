@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
-import { API_URL } from '../constants';
+import { API_URL, PROD_API_URL } from '../constants';
 import socket from './socket';
 
 enum ErrorStatusCode {
@@ -14,6 +14,7 @@ const headers: Readonly<Record<string, string | boolean>> = {
   'Content-Type': 'application/json; charset=utf-8',
   'Access-Control-Allow-Credentials': true,
   'X-Requested-With': 'XMLHttpRequest',
+  'Access-Control-Allow-Origin': '*',
 };
 
 // We can use the following function to inject the JWT token through an interceptor
@@ -42,7 +43,7 @@ class Http {
 
   initHttp() {
     const http = axios.create({
-      baseURL: API_URL,
+      baseURL: PROD_API_URL,
       headers,
       withCredentials: true,
     });
