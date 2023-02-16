@@ -15,6 +15,7 @@ class ChatsCreateFormComponent extends Controller<ChatsCreateFormView> {
 
   async init(): Promise<void> {
     this.view.render();
+    this.view.bindOnNavigateToFriends(this.onNavigateToFriends);
     this.onFriendListChanged(appStore.friends);
     this.view.bindFormSubmit(this.handleAddChat);
     appStore.bindChatListChanged(this.onChatListChanged);
@@ -49,6 +50,10 @@ class ChatsCreateFormComponent extends Controller<ChatsCreateFormView> {
       }
     });
     return friendIDs;
+  };
+
+  onNavigateToFriends = () => {
+    Router.push(RouteControllers.Friends, '', ['addfriend']);
   };
 }
 
