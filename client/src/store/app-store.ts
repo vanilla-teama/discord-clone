@@ -324,6 +324,18 @@ class AppStore {
     this.onChatListChanged(this.chats);
   }
 
+  async deleteChat(userId: string): Promise<void> {
+    if (!this.user) {
+      return;
+    }
+    const response = await http.delete(`/chats/users/${this.user.id}/${userId}`).catch((err) => console.error(err));
+    if (response) {
+      this.chats = this.chats.filter(({ userId: chatUserId }) => chatUserId !== userId);
+      console.log(this.chats);
+      this.onChatListChanged(this.chats);
+    }
+  }
+
   async addPersonalMessage(message: IncomingPersonalMessage): Promise<void> {
     await http.post('/personal-messages', message).catch((error) => console.error(error));
     this.onPersonalMessageListChanged(this.getFormattedRenderedPersonalMessages());
@@ -442,7 +454,6 @@ class AppStore {
   };
 
   getFormattedRenderedPersonalMessages(): RenderedPersonalMessage[] {
-    return fakePersonalMessages;
     return this.personalMessages.map((message) => {
       return this.getFormattedRenderedPersonalMessage(message);
     });

@@ -18,13 +18,8 @@ class ChatsCreateFormView extends View {
     this.$form = this.createForm();
   }
   build(): void {
-    this.bindAfterRender(this.afterRender);
     this.$container.append(this.$form);
   }
-
-  afterRender = (): void => {
-    // ModalView.show();
-  };
 
   private createForm(): HTMLFormElement {
     const $form = $('form', 'form-create-chat');
@@ -61,13 +56,40 @@ class ChatsCreateFormView extends View {
     $label.append($checkbox, $itemBox, $customCheckbox);
     $item.append($label);
 
+    $checkbox.onchange = () => {
+      [...($checkbox.closest('form')?.elements || [])].forEach(($elem) => {
+        console.log($elem);
+        if ($elem instanceof HTMLInputElement && $elem !== $checkbox) {
+          $elem.checked = false;
+        }
+      });
+    };
+
     return $item;
   }
 
+  createNoFriendsMessage() {
+    const $message = $('p', 'form-create-chat__no-friends');
+    const $friendsButton = $('button', 'form-create-chat__to-friends-btn');
+    $message.innerHTML = 'Your loneliness impresses.<br/> But you can go and find folks ';
+    $message.append($friendsButton);
+
+    $friendsButton.textContent = 'here';
+
+    $friendsButton.onclick = this.onNavigateToFriends;
+
+    return $message;
+  }
+
   displayFriends(friends: User[]): void {
-    friends.forEach((friend) => {
-      this.$friendList.append(this.createFriendListItem(friend));
-    });
+    this.$friendList.innerHTML = '';
+    if (friends.length > 0) {
+      friends.forEach((friend) => {
+        this.$friendList.append(this.createFriendListItem(friend));
+      });
+    } else {
+      this.$friendList.append(this.createNoFriendsMessage());
+    }
   }
 
   bindFormSubmit(handler: (data: FormData) => Promise<void>): void {
@@ -75,9 +97,15 @@ class ChatsCreateFormView extends View {
       event.preventDefault();
       const formData = new FormData(this.$form);
       await handler(formData);
-      // PopupView.hide();
+      PopupView.hide();
     });
   }
+
+  onNavigateToFriends = (): void => {};
+
+  bindOnNavigateToFriends = (handler: () => void): void => {
+    this.onNavigateToFriends = handler;
+  };
 }
 
 export default ChatsCreateFormView;

@@ -26,8 +26,6 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
 
     this.view.render();
 
-    console.log(this.chat);
-
     if (this.chat) {
       appStore.bindPersonalMessageListChanged(this.onMessageListChange);
       await this.fetchMessages();
@@ -51,7 +49,6 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
   }
 
   private async fetchMessages(): Promise<void> {
-    console.log('fetch!!!!!!!!!!!!!!!!');
     if (!appStore.user || !this.chat) {
       return;
     }
@@ -115,7 +112,6 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
   ): Promise<void> => {
     const fastMenu = new MessageFastMenu($fastMenuContainer, $message, message);
     await fastMenu.init();
-    // this.fastMenusMap.set($fastMenuContainer, { fastMenu, message });
   };
 
   destroyFastMenu = () => {

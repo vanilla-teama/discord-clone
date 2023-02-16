@@ -8,6 +8,6 @@ router.post('/users/:userId', chatsController.createChat);
 router.get('/users/:userId', chatsController.getChats);
 router.get('/messages/:userOneId/:userTwoId', chatsController.getChatMessages);
 router.get('/users/:userOneId/:userTwoId', chatsController.getChat);
-router.delete('/users/:fromUserId/:toUserId', chatsController.deleteChat);
+router.delete('/users/:userOneId/:userTwoId', chatsController.deleteChat);
 
 export default router;

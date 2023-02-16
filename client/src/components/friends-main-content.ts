@@ -21,8 +21,19 @@ class FriendsMainContentComponent extends Controller<FriendsMainContentView> {
     this.view.bindOnCancelInvitation(this.onCancelInvitation);
     this.view.bindOnDeleteFriend(this.onDeleteFriend);
     this.view.render();
+    this.showContent();
     this.bindSocketEvents();
     this.displayAllFriends();
+  }
+
+  showContent() {
+    const router = new Router();
+    const params = router.getParams();
+    if (params[0] === 'addfriend') {
+      FriendsMainContentComponent.showAddFriendContent();
+    } else {
+      FriendsMainContentComponent.showFriendsContent();
+    }
   }
 
   static showFriendsContent = (): void => {

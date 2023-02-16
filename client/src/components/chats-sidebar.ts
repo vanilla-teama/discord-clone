@@ -29,12 +29,14 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
     this.view.bindOnFriendsButtonClick(this.navigateToFriends);
     this.view.render();
     this.view.bindShowCreateChat(this.onShowCreateChat);
+    this.view.bindOnChatDelete(this.onChatDelete);
     this.onInit(appStore.user);
     this.onChatListChanged(appStore.chats);
     this.bindRouteChanged();
     ChatsScreen.bindChatUpdate('sidebar', this.onChatUpdate);
     this.bindSocketEvents();
     this.view.displayFriendsBlockStatus(appStore.user.invitesFrom.length);
+    appStore.bindChatListChanged(this.onChatListChanged);
   }
 
   onInit = (user: User | null): void => {
@@ -48,6 +50,15 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
   onChatUpdate = (chat: Chat): void => {
     this.view.updateChat(chat);
     this.toggleActiveStatus();
+  };
+
+  onChatDelete = async (userId: string): Promise<void> => {
+    await appStore.deleteChat(userId);
+    if (appStore.chats.length) {
+      Router.push(RouteControllers.Chats, '', [appStore.chats[0].userId]);
+    } else {
+      Router.push(RouteControllers.Chats);
+    }
   };
 
   onShowCreateChat = (coords: PopupCoords) => {

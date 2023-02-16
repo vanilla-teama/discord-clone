@@ -24,9 +24,7 @@ class ChatsScreen extends Controller<ChatsScreenView> {
     if (!appStore.user) {
       throw Error('User is not defined');
     }
-    await appStore.fetchUsers();
-    await appStore.fetchServers();
-    await appStore.fetchChats(appStore.user.id);
+    await this.fetchData();
     // Render Layout
     await new Screen().init();
 
@@ -49,6 +47,18 @@ class ChatsScreen extends Controller<ChatsScreenView> {
 
     this.bindSocketUserAvailabilityChangedServer();
     appStore.bindChatUpdate(ChatsScreen.onChatUpdate);
+  }
+
+  async fetchData() {
+    if (!appStore.user) {
+      return;
+    }
+    await Promise.all([
+      await appStore.fetchUsers(),
+      await appStore.fetchServers(),
+      await appStore.fetchChats(appStore.user.id),
+      await appStore.fetchFriends(),
+    ]);
   }
 
   static bindRouteChanged() {
