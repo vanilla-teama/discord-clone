@@ -1,5 +1,5 @@
 import View from '../lib/view';
-import { User } from '../types/entities';
+import { Availability, User } from '../types/entities';
 import { $ } from '../utils/functions';
 import MainView from './main-view';
 
@@ -31,10 +31,15 @@ class FriendsMainContentView extends View {
     FriendsMainContentView.$friendsContent = $friendsContent;
     FriendsMainContentView.$addFriendContent = $addFriendContent;
 
+    const $addFriendContainer = $('div', 'friends__add-friend-container');
+    const $addFriendTitle = $('div', 'friends__add-friend-title');
+
     const $searchInput = this.$searchInput;
     $searchInput.placeholder = 'Search by e-mail or name';
+    $addFriendTitle.textContent = 'ADD FRIENDS';
 
     $addFriendContent.append($searchInput, this.$foundUserList);
+    //console.log(this.$foundUserList);
     $friendsContent.append(this.$friendList);
     $container.append($friendsContent, $addFriendContent);
 
@@ -46,52 +51,223 @@ class FriendsMainContentView extends View {
   }
 
   displayFoundUsers(users: User[], currentUser: User): void {
-    this.$foundUserList.innerHTML = '';
-    users.forEach((user) => {
-      this.$foundUserList.append(this.createFoundUserListItem(user, currentUser));
+    //this.$foundUserList.innerHTML = '';
+
+    const usersFake: User[] = [
+      {
+        id: '1',
+        name: 'Hlib Hodovaniuk',
+        email: 'email1@gmail.com',
+        password: '1111',
+        phone: '+380991234567',
+        availability: Availability.Offline,
+        chats: null,
+        friends: ['2', '3'],
+        invitesFrom: ['2', '3'],
+        invitesTo: ['2', '3'],
+      },
+      {
+        id: '2',
+        name: 'Oleksandr Kiroi',
+        email: 'email1@gmail.com',
+        password: '1111',
+        phone: '+380991234567',
+        availability: Availability.Online,
+        chats: null,
+        friends: ['2', '3'],
+        invitesFrom: ['2', '3'],
+        invitesTo: ['2', '3'],
+      },
+    ];
+
+    const currentUserFake: User = {
+      id: '1',
+      name: 'Hlib Hodovaniuk',
+      email: 'email1@gmail.com',
+      password: '1111',
+      phone: '+380991234567',
+      availability: Availability.Offline,
+      chats: null,
+      friends: ['2', '3'],
+      invitesFrom: ['2', '3'],
+      invitesTo: ['2', '3'],
+    };
+
+    usersFake.forEach((user) => {
+      //console.log(user);
+      this.$foundUserList.append(this.createFoundUserListItem(user, currentUserFake));
     });
+
+    //users.forEach((user) => {
+    //  this.$foundUserList.append(this.createFoundUserListItem(user, currentUser));
+    //});
   }
 
   displayFriends(invitedTo: User[], invitedFrom: User[], friends: User[]): void {
-    this.$friendList.innerHTML = '';
-    friends.forEach((user) => {
+    const friendsFake: User[] = [
+      {
+        id: '1',
+        name: 'Hlib Hodovaniuk',
+        email: 'email1@gmail.com',
+        password: '1111',
+        phone: '+380991234567',
+        availability: Availability.Offline,
+        chats: null,
+        friends: ['2', '3'],
+        invitesFrom: ['2', '3'],
+        invitesTo: ['2', '3'],
+      },
+      {
+        id: '2',
+        name: 'Oleksandr Kiroi',
+        email: 'email1@gmail.com',
+        password: '1111',
+        phone: '+380991234567',
+        availability: Availability.Online,
+        chats: null,
+        friends: ['2', '3'],
+        invitesFrom: ['2', '3'],
+        invitesTo: ['2', '3'],
+      },
+    ];
+    const invitedToFake: User[] = [
+      {
+        id: '1',
+        name: 'Hlib Hodovaniuk',
+        email: 'email1@gmail.com',
+        password: '1111',
+        phone: '+380991234567',
+        availability: Availability.Offline,
+        chats: null,
+        friends: ['2', '3'],
+        invitesFrom: ['2', '3'],
+        invitesTo: ['2', '3'],
+      },
+      {
+        id: '2',
+        name: 'Oleksandr Kiroi',
+        email: 'email1@gmail.com',
+        password: '1111',
+        phone: '+380991234567',
+        availability: Availability.Online,
+        chats: null,
+        friends: ['2', '3'],
+        invitesFrom: ['2', '3'],
+        invitesTo: ['2', '3'],
+      },
+    ];
+    const invitedFromFake: User[] = [
+      {
+        id: '1',
+        name: 'Hlib Hodovaniuk',
+        email: 'email1@gmail.com',
+        password: '1111',
+        phone: '+380991234567',
+        availability: Availability.Offline,
+        chats: null,
+        friends: ['2', '3'],
+        invitesFrom: ['2', '3'],
+        invitesTo: ['2', '3'],
+      },
+      {
+        id: '2',
+        name: 'Oleksandr Kiroi',
+        email: 'email1@gmail.com',
+        password: '1111',
+        phone: '+380991234567',
+        availability: Availability.Online,
+        chats: null,
+        friends: ['2', '3'],
+        invitesFrom: ['2', '3'],
+        invitesTo: ['2', '3'],
+      },
+    ];
+
+    //this.$friendList.innerHTML = '';
+    friendsFake.forEach((user) => {
       this.$friendList.append(this.createFriendItem(user));
     });
-    invitedTo.forEach((user) => {
+    invitedToFake.forEach((user) => {
       this.$friendList.append(this.createFriendItem(user, 'invitedTo'));
     });
-    invitedFrom.forEach((user) => {
+    invitedFromFake.forEach((user) => {
       this.$friendList.append(this.createFriendItem(user, 'invitedFrom'));
     });
+
+    //friends.forEach((user) => {
+    //  this.$friendList.append(this.createFriendItem(user));
+    //});
+    //invitedTo.forEach((user) => {
+    //  this.$friendList.append(this.createFriendItem(user, 'invitedTo'));
+    //});
+    //invitedFrom.forEach((user) => {
+    //  this.$friendList.append(this.createFriendItem(user, 'invitedFrom'));
+    //});
   }
 
   createFriendItem(user: User, status: 'invitedTo' | 'invitedFrom' | 'friend' = 'friend'): HTMLLIElement {
     const $item = $('li', 'friends__friend-list-item');
-    const $messageButton = $('button', 'friends__friend-list-item-message-btn');
-    const $deleteFriendButton = $('button', 'friends__friend-list-item-delete-friend-btn');
-    const $acceptInvitationButton = $('button', 'friends__friend-list-item-accept-invitation-btn');
-    const $cancelInvitationButton = $('button', 'friends__friend-list-item-cancel-invite-btn');
 
-    $messageButton.textContent = 'message';
-    $deleteFriendButton.textContent = 'delete';
+    const $itemBox = $('div', 'user-item__box');
+    const $itemAvatar = $('div', 'user-item__avatar');
+    const $itemIcon = $('div', 'user-item__icon');
+    const $itemStatus = $('div', ['user-item__status', `user-item__status_${user.availability}`]);
+    const $itemName = $('div', 'user-item__name');
+    $itemName.textContent = `${user.name}`;
+
+    const $buttonsBlock = $('div', 'friends__buttons-block');
+    const $massageButtonContainer = $('div', 'friends__message-btn-container');
+    const $messageButton = $('button', 'friends__message-btn');
+    const $deleteButtonContainer = $('div', 'friends__delete-friend-btn-container');
+    const $deleteFriendButton = $('button', 'friends__delete-friend-btn');
+    const $acceptInvitationButton = $('button', 'friends__accept-invitation-btn');
+    const $cancelInvitationButton = $('button', 'friends__cancel-invite-btn');
+
+    const $status = $('div', 'friends__status');
+    const $btnContainer = $('div', 'friends__btn-accept-cancel-container');
+
+    //$messageButton.textContent = 'message';
+    //$deleteFriendButton.textContent = 'delete';
     $acceptInvitationButton.textContent = 'accept';
     $cancelInvitationButton.textContent = 'cancel';
 
-    $item.append(
-      user.name,
-      ' | ',
-      status === 'invitedTo' ? 'invited' : status === 'invitedFrom' ? 'requested' : '',
-      ' | ',
-      $messageButton
-    );
+    $status.append(status === 'invitedTo' ? 'invited' : status === 'invitedFrom' ? 'requested' : '');
+    //$status.append(
+    //  user.name,
+    //  ' | ',
+    //  status === 'invitedTo' ? 'invited' : status === 'invitedFrom' ? 'requested' : '',
+    //  ' | ',
+    //  $messageButton
+    //);
 
     if (status === 'invitedFrom') {
-      $item.append($acceptInvitationButton);
+      $btnContainer.append($acceptInvitationButton);
     } else if (status === 'invitedTo') {
-      $item.append($cancelInvitationButton);
-    } else if (status === 'friend') {
-      $item.append($deleteFriendButton);
+      $btnContainer.append($cancelInvitationButton);
     }
+    // else if (status === 'friend') {
+    //  $item.append($deleteFriendButton);
+    //}
+
+    //if (status === 'invitedFrom') {
+    //  $item.append($acceptInvitationButton);
+    //} else if (status === 'invitedTo') {
+    //  $item.append($cancelInvitationButton);
+    //}
+    // else if (status === 'friend') {
+    //  $item.append($deleteFriendButton);
+    //}
+
+    $itemAvatar.append($itemIcon, $itemStatus);
+    if (status !== 'friend') {
+      $itemBox.append($itemAvatar, $itemName, $status, $btnContainer);
+    } else {
+      $itemBox.append($itemAvatar, $itemName);
+    }
+    $massageButtonContainer.append($messageButton);
+    $deleteButtonContainer.append($deleteFriendButton)
+    $buttonsBlock.append($massageButtonContainer, $deleteButtonContainer);
+    $item.append($itemBox, $buttonsBlock);
 
     $messageButton.onclick = () => {
       this.onSendMessage(user.id);
@@ -113,6 +289,7 @@ class FriendsMainContentView extends View {
   }
 
   createFoundUserListItem(user: User, currentUser: User): HTMLLIElement {
+
     const $item = $('li', 'friends__found-user-list-item');
     const $inviteButton = $('button', 'friends__invite-user');
 
