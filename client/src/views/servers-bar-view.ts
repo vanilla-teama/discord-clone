@@ -97,7 +97,7 @@ class ServersBarView extends View {
     $item.append($itemImg, $itemName);
 
     $item.onclick = () => {
-      Router.push(RouteControllers.Servers, undefined, [id]);
+      this.onServerItemClick(id);
     };
     return $item;
   }
@@ -115,6 +115,12 @@ class ServersBarView extends View {
   private onAppendServerItem($item: HTMLLIElement, server: Server): void {
     this.serverListMap.set($item, { server });
   }
+
+  onServerItemClick = (serverId: string): void => {};
+
+  bindOnServerItemClick = (handler: (serverId: string) => void): void => {
+    this.onServerItemClick = handler;
+  };
 }
 
 export default ServersBarView;

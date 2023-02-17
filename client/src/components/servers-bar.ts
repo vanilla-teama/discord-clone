@@ -1,6 +1,6 @@
 import App from '../lib/app';
 import Controller from '../lib/controller';
-import { RouteControllers } from '../lib/router';
+import Router, { RouteControllers } from '../lib/router';
 import { appStore } from '../store/app-store';
 import { Server } from '../types/entities';
 import { CustomEvents } from '../types/types';
@@ -17,6 +17,7 @@ class ServersBarComponent extends Controller<ServersBarView> {
   async init(): Promise<void> {
     this.view.render();
     this.view.bindShowServerForm(this.showServerForm);
+    this.view.bindOnServerItemClick(this.onServerItemClick);
     this.onServerListChanged(appStore.servers);
     appStore.bindServerListChanged(this.onServerListChanged);
     this.bindRouteChanged();
@@ -52,6 +53,10 @@ class ServersBarComponent extends Controller<ServersBarView> {
       }
     });
   }
+
+  onServerItemClick = (serverId: string): void => {
+    Router.push(RouteControllers.Servers, '', [serverId]);
+  };
 }
 
 export default ServersBarComponent;

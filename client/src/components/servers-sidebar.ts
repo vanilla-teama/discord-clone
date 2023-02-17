@@ -46,6 +46,7 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
     }
     this.view.bindShowCreateChannel(this.onShowCreateChannel);
     this.view.bindOnInvite(this.onInvite);
+    this.view.bindOnChannelItemClick(this.onChannelItemClick);
     this.onInit(appStore.user);
     this.bindSocketUserAvailabilityChangedServer();
   }
@@ -134,6 +135,10 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
     userId: string;
   }): Promise<void> => {
     appStore.updateChatLocally(userId, { availability: availability });
+  };
+
+  onChannelItemClick = (serverId: string, channelId: string) => {
+    Router.push(RouteControllers.Servers, '', [serverId, channelId]);
   };
 }
 
