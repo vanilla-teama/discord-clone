@@ -1,8 +1,8 @@
-import { users } from '../develop/data';
 import Controller from '../lib/controller';
 import Router, { RouteControllers } from '../lib/router';
-import socket, { createSocketEvent } from '../lib/socket';
+import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
+import { LoginError } from '../types/http-errors';
 import { Dispatch } from '../types/types';
 import SignInView from '../views/sign-in-view';
 import { StartScreenComponentState } from './start-screen';
@@ -28,14 +28,16 @@ class SignInComponent extends Controller<SignInView> {
     const email = formData.get('email');
     const password = formData.get('password');
     if (email && password && typeof email === 'string' && typeof password === 'string') {
-      await appStore.logIn(email, password);
-      this.onAfterLogginAttempt();
+      await appStore.logIn(email, password, this.onUnauthorized);
+      console.log(appStore.user);
+      if (appStore.user) {
+        this.onAfterLogginAttempt();
+      }
     }
   };
 
   onAfterLogginAttempt() {
     if (appStore.user) {
-      // const socketEvent = createSocketEvent('userLoggedIn', { userId: appStore.user.id });
       socket.emit('userLoggedIn', { userId: appStore.user.id });
       Router.push(RouteControllers.Chats);
     }
@@ -46,6 +48,10 @@ class SignInComponent extends Controller<SignInView> {
       Router.push(RouteControllers.Chats);
     }
   }
+
+  onUnauthorized = async (error: LoginError): Promise<void> => {
+    this.view.displayError(error.data.message);
+  };
 }
 
 export default SignInComponent;

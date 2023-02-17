@@ -39,7 +39,6 @@ const login = async (req: TypedRequest, res: Response, next: NextFunction): Prom
   passport.authenticate('local', (err: Error, user: UserDocument, info: IVerifyOptions) => {
     if (err) {
       return next(err);
-      return;
     }
     if (!user) {
       res.status(401).json({ message: info.message });
@@ -71,6 +70,9 @@ const login = async (req: TypedRequest, res: Response, next: NextFunction): Prom
 };
 
 const logout = (req: TypedRequest, res: Response, next: NextFunction): void => {
+  if (!req.user) {
+    res.send(200).end();
+  }
   const { id } = req.user as HydratedDocument<UserDocument>;
   req.logout((err) => {
     if (err) {
@@ -112,7 +114,6 @@ const register = async (req: Request, res: Response, next: NextFunction): Promis
     email: req.body.email,
     password: req.body.password,
     name: req.body.name,
-    phone: req.body.phone,
   });
 
   User.findOne({ email: req.body.email }, (err: NativeError, existingUser: UserDocument) => {
@@ -131,7 +132,7 @@ const register = async (req: Request, res: Response, next: NextFunction): Promis
         if (err) {
           return next(err);
         }
-        res.status(200).end();
+        res.status(200).json({ user: userDTO(user) });
       });
     });
   });

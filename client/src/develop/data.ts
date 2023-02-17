@@ -4,7 +4,7 @@ import { RenderedPersonalMessage } from '../views/chats-main-content-view';
 
 export const users: User[] = [
   {
-    id: '63dd3d9da1340145e9b74055',
+    id: '63eec17d4064de726f4584da',
     name: 'Hlib Hodovaniuk',
     password: '1111333',
     email: 'gleb.godovanyuk@gmail.com',

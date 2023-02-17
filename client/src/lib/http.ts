@@ -1,13 +1,27 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import { API_URL } from '../constants';
 import socket from './socket';
+import { IExpressError } from '../types/http-errors';
 
-enum ErrorStatusCode {
+export enum ErrorStatusCode {
   Unauthorized = 401,
   Forbidden = 403,
+  NotFound = 404,
   TooManyRequests = 429,
   InternalServerError = 500,
 }
+
+export const isExpressError = <T = unknown>(error: IExpressError<T> | Error): error is IExpressError<T> => {
+  return 'data' in error;
+};
+
+export const handleError = <T>(error: IExpressError<T> | Error, callback: (error: IExpressError<T>) => void) => {
+  if (isExpressError<T>(error)) {
+    callback(error);
+  } else {
+    console.error(error);
+  }
+};
 
 const headers: Readonly<Record<string, string | boolean>> = {
   Accept: 'application/json',
@@ -51,7 +65,7 @@ class Http {
 
     http.interceptors.request.use((config) => {
       if (config.url !== '/test' && !this.connected) {
-        throw Error('NO CONNECTION!');
+        // throw Error('NO CONNECTION!');
       }
       return config;
     });

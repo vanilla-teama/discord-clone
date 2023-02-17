@@ -14,6 +14,8 @@ const getChats: Handler = (req, res, next) => {
     .then((user) => {
       if (handleDocumentNotFound(user)) {
         res.status(200).json({ chats: (user.chats || []).map((c) => chatDTO(c as FetchedChat))})
+      } else {
+        res.status(200).json({ chats: []});
       }
     })
 };
