@@ -1,15 +1,14 @@
 import { chats, users } from '../develop/data';
-import { ErrorStatusCode, handleError, http, isExpressError } from '../lib/http';
+import { ErrorStatusCode, http, isExpressError } from '../lib/http';
 import moment from '../lib/moment';
-import { Channel, Chat, ChatAvailabilitiesMap, PersonalMessage, Server, User } from '../types/entities';
+import { Channel, ChannelMessage, Chat, ChatAvailabilitiesMap, PersonalMessage, Server, User } from '../types/entities';
+import { LoginError, RegisterError, RegisterErrorData } from '../types/http-errors';
 import { AppOmit } from '../types/utils';
 import { RenderedPersonalMessage } from '../views/chats-main-content-view';
-import { personalMessages as fakePersonalMessages } from '../develop/data';
-import { AxiosError } from 'axios';
-import axios from 'axios';
-import { LoginError, RegisterError, RegisterErrorData } from '../types/http-errors';
+import { RenderedChannelMessage } from '../views/servers-main-content-view';
 
 export type IncomingPersonalMessage = AppOmit<PersonalMessage, 'id' | 'responsedToMessage'>;
+export type IncomingChannelMessage = AppOmit<ChannelMessage, 'id' | 'responsedToMessage'>;
 
 class AppStore {
   private static instance: AppStore;
@@ -30,8 +29,9 @@ class AppStore {
 
   private _chatStatuses: ChatAvailabilitiesMap = new Map();
 
-  // Personal messages with the opponent selected in the Chats bar and shown in the Main
   private _personalMessages: PersonalMessage[] = [];
+
+  private _channelMessages: ChannelMessage[] = [];
 
   private _servers: Server[] = [];
 
@@ -109,6 +109,14 @@ class AppStore {
 
   private set personalMessages(messages: PersonalMessage[]) {
     this._personalMessages = messages;
+  }
+
+  get channelMessages(): ChannelMessage[] {
+    return this._channelMessages;
+  }
+
+  private set channelMessages(messages: ChannelMessage[]) {
+    this._channelMessages = messages;
   }
 
   get servers(): Server[] {
@@ -228,6 +236,17 @@ class AppStore {
       this.personalMessages = [];
     }
     this.onPersonalMessageListChanged(this.getFormattedRenderedPersonalMessages());
+  }
+
+  async fetchChannelMessages(channelId: string): Promise<void> {
+    const response = await http.get<{ messages: ChannelMessage[] }>(`/channels/${channelId}/messages`);
+    console.log(response);
+    if (response) {
+      this.channelMessages = response.data.messages || [];
+    } else {
+      this.channelMessages = [];
+    }
+    this.onChannelMessageListChanged(this.getFormattedRenderedChannelMessages());
   }
 
   async fetchServers(): Promise<void> {
@@ -393,6 +412,12 @@ class AppStore {
     }
   }
 
+  async addChannelMessage(message: IncomingChannelMessage): Promise<void> {
+    const response = await http.post('/channels/messages', message).catch((error) => console.error(error));
+    // this.fetchChannelMessages(message.channelId);
+    // this.onChannelMessageListChanged(this.getFormattedRenderedChannelMessages());
+  }
+
   async addServer(server: Partial<Server<'formData'>>): Promise<void> {
     await http
       .post('/servers', server, {
@@ -429,6 +454,7 @@ class AppStore {
   onServerListChanged = (servers: Server[]): void => {};
   onSigningIn = (data: FormData): void => {};
   onPersonalMessageListChanged = (messages: RenderedPersonalMessage[]): void => {};
+  onChannelMessageListChanged = (messages: RenderedChannelMessage[]): void => {};
   onChatLocallyUpdate: Record<'appbar' | 'sidebar' | 'main-content' | 'infobar', (chat: Chat) => void> = {
     appbar: (chat: Chat) => {},
     sidebar: (chat: Chat) => {},
@@ -463,6 +489,10 @@ class AppStore {
 
   bindPersonalMessageDeleted = (callback: () => void): void => {
     this.onPersonalMessageDeleted = callback;
+  };
+
+  bindChannelMessageListChanged = (callback: (messages: RenderedChannelMessage[]) => void): void => {
+    this.onChannelMessageListChanged = callback;
   };
 
   bindChatLocallyUpdate = (
@@ -505,6 +535,42 @@ class AppStore {
         ? {
             id: responsedToMessage.id,
             userId: responsedToMessage.fromUserId,
+            username: responsedUser?.name || '',
+            date: moment(responsedToMessage.date).calendar(),
+            message: responsedToMessage.message,
+            responsedToMessage: null,
+          }
+        : null,
+    };
+  }
+
+  getFormattedRenderedChannelMessages(): RenderedPersonalMessage[] {
+    return this.channelMessages.map((message) => {
+      return this.getFormattedRenderedChannelMessage(message);
+    });
+  }
+
+  getFormattedRenderedChannelMessage({
+    id,
+    userId,
+    channelId,
+    date,
+    message,
+    responsedToMessage,
+  }: ChannelMessage): RenderedChannelMessage {
+    const user = this.users.find((user) => user.id === userId);
+    // const channel = this.channels.find((channel) => channel.id === channelId);
+    const responsedUser = this.users.find((user) => user.id === responsedToMessage?.userId);
+    return {
+      id,
+      userId,
+      username: user?.name || '',
+      date: moment(date).calendar(),
+      message,
+      responsedToMessage: responsedToMessage
+        ? {
+            id: responsedToMessage.id,
+            userId: responsedToMessage.userId,
             username: responsedUser?.name || '',
             date: moment(responsedToMessage.date).calendar(),
             message: responsedToMessage.message,

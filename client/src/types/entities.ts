@@ -38,9 +38,12 @@ export interface PersonalMessage extends MongoEntity {
 }
 
 export interface ChannelMessage extends MongoEntity {
-  responseMessageId: MongoObjectId;
+  userId: MongoObjectId;
+  channelId: MongoObjectId;
+  responsedToMessageId: MongoObjectId | null;
   date: Timestamp;
   message: string;
+  responsedToMessage: ChannelMessage | null;
 }
 
 export interface Server<S extends 'data' | 'formData' = 'data'> extends MongoEntity {
