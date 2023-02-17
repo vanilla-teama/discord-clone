@@ -14,6 +14,7 @@ export interface DTOUser extends DTOEntity {
   friends: string[];
   invitesFrom: string[];
   invitesTo: string[];
+  createdAt: Date;
 }
 
 export interface DTOPersonalMessage extends DTOEntity {
@@ -45,4 +46,5 @@ export interface DTOChat {
   userId: string;
   userName: string;
   availability: string;
+  createdAt: Date;
 }

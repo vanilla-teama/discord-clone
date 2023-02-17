@@ -14,6 +14,7 @@ export const users: User[] = [
     friends: [],
     invitesTo: [],
     invitesFrom: [],
+    createdAt: '',
   },
   {
     id: '63dd3dd9938e35dad6409e12',
@@ -26,6 +27,7 @@ export const users: User[] = [
     friends: [],
     invitesTo: [],
     invitesFrom: [],
+    createdAt: '',
   },
   {
     id: '63dd3de6938e35dad6409e14',
@@ -38,6 +40,7 @@ export const users: User[] = [
     friends: [],
     invitesTo: [],
     invitesFrom: [],
+    createdAt: '',
   },
   {
     id: '63dede6beac45c545ad1e616',
@@ -50,6 +53,7 @@ export const users: User[] = [
     friends: [],
     invitesTo: [],
     invitesFrom: [],
+    createdAt: '',
   },
 ];
 
@@ -198,17 +202,20 @@ export const chats: Chat[] = [
     userId: '63dd3d9da1340145e9b74055',
     userName: 'Hlib Hodovaniuk',
     availability: Availability.Away,
+    createdAt: '',
   },
   {
     id: '63dd3d9da1340145e9b74055',
     userId: '63dd3dd9938e35dad6409e12',
     userName: 'Alexander Chornyi',
     availability: Availability.Away,
+    createdAt: '',
   },
   {
     id: '63dd3de6938e35dad6409e14',
     userId: '63dd3de6938e35dad6409e14',
     userName: 'Alexander Kiroi',
     availability: Availability.Away,
+    createdAt: '',
   },
 ];

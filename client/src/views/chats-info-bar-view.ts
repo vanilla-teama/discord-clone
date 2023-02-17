@@ -1,3 +1,4 @@
+import moment from '../lib/moment';
 import View from '../lib/view';
 import { Availability, Chat } from '../types/entities';
 import { $ } from '../utils/functions';
@@ -37,7 +38,7 @@ class ChatsInfoBarView extends View {
       const $sinceTitle = $('div', 'content-info__since-title');
       $sinceTitle.textContent = 'Discord Member Since';
       const $sinceDate = $('div', 'content-info__since-date');
-      $sinceDate.textContent = 'May 30, 2022';
+      $sinceDate.textContent = moment(this.chat.createdAt).format('MMMM D, YYYY').toUpperCase();
       const $noteBlock = $('div', 'content-info__note-block');
       const $noteTitle = $('div', 'content-info__note-title');
       $noteTitle.textContent = 'Note';

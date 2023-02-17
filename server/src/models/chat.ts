@@ -5,6 +5,7 @@ export interface ChatDocument {
   userId: Types.ObjectId;
   userName: string;
   availability: Availability;
+  created_at: Date;
 }
 
 
