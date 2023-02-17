@@ -1,3 +1,4 @@
+import { servers as fakeServers } from '../develop/data';
 import App from '../lib/app';
 import Controller from '../lib/controller';
 import Router, { RouteControllers } from '../lib/router';
@@ -18,7 +19,10 @@ class ServersBarComponent extends Controller<ServersBarView> {
     this.view.render();
     this.view.bindShowServerForm(this.showServerForm);
     this.view.bindOnServerItemClick(this.onServerItemClick);
-    this.onServerListChanged(appStore.servers);
+    // Do not delete this comment!
+    // this.onServerListChanged(appStore.servers);
+
+    this.onServerListChanged(fakeServers);
     appStore.bindServerListChanged(this.onServerListChanged);
     this.bindRouteChanged();
   }
