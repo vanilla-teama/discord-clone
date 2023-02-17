@@ -1,4 +1,5 @@
 import Controller from '../lib/controller';
+import Router, { RouteControllers } from '../lib/router';
 import { appStore } from '../store/app-store';
 import { Dispatch } from '../types/types';
 import SignUpView from '../views/sign-up-view';
@@ -31,7 +32,19 @@ class SignUpComponent extends Controller<SignUpView> {
       typeof password === 'string' &&
       typeof name === 'string'
     ) {
-      await appStore.register(email, password, name);
+      await appStore.register(
+        { email, password, name },
+        () => {
+          Router.push(RouteControllers.Chats);
+        },
+        (error) => {
+          if ('errors' in error.data) {
+            this.view.displayError(error.data.errors.map(({ msg }) => msg));
+          } else if ('message' in error.data) {
+            this.view.displayError([error.data.message]);
+          }
+        }
+      );
     }
   };
 }
