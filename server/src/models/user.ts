@@ -23,6 +23,7 @@ export interface UserDocument extends mongoose.Document {
   };
   comparePassword: comparePasswordFunction;
   tokens: AuthToken[];
+  createdAt: Date;
 }
 
 export interface AuthToken {
