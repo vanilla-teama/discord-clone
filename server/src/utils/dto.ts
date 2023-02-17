@@ -24,6 +24,7 @@ export const userDTO = ({
   invitesTo,
   friends,
   createdAt,
+  invitesToChannels,
 }: FetchedUser): DTOUser => {
   return {
     id: _id.toString(),
@@ -36,6 +37,7 @@ export const userDTO = ({
     friends: (friends || []).map((id) => id.toString()),
     invitesFrom: (invitesFrom || []).map((id) => id.toString()),
     invitesTo: (invitesTo || []).map((id) => id.toString()),
+    invitesToChannels: (invitesToChannels || []).map((id) => id.toString()),
     createdAt,
   };
 };

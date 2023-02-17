@@ -1,8 +1,7 @@
 import Controller from '../lib/controller';
-import Router, { RouteControllers } from '../lib/router';
 import { appStore } from '../store/app-store';
-import { Channel } from '../types/entities';
 import ChannelsInviteFormView from '../views/channels-invite-form-view';
+import ModalView from '../views/modal-view';
 
 class ChannelsInviteFormComponent extends Controller<ChannelsInviteFormView> {
   channelId: string;
@@ -13,6 +12,7 @@ class ChannelsInviteFormComponent extends Controller<ChannelsInviteFormView> {
   }
 
   async init(): Promise<void> {
+    this.view.bindOnInvite(this.onInvite);
     this.view.render();
     {
       const data = appStore.getChannelNameAndServerName(this.channelId);
@@ -20,30 +20,15 @@ class ChannelsInviteFormComponent extends Controller<ChannelsInviteFormView> {
         this.view.displayTitle(data.serverName, data.channelName);
       }
     }
-    this.view.bindFormSubmit(this.handleAddChannel);
+    this.view.displayFriendList(appStore.friends);
   }
 
-  handleAddChannel = async (formData: FormData): Promise<void> => {
-    const channel = this.extractChannel(formData);
-    if (channel) {
-      const createdChannel = await appStore.addChannel(channel, channel.serverId);
-      if (createdChannel) {
-        Router.push(RouteControllers.Servers, '', [this.channelId, createdChannel.id]);
-      }
+  onInvite = async (userId: string, onSuccess: () => void): Promise<void> => {
+    const data = appStore.getChannelNameAndServerName(this.channelId);
+    if (data) {
+      await appStore.updateUser(userId, { invitesToChannels: [this.channelId] });
+      onSuccess();
     }
-  };
-
-  private extractChannel = (formData: FormData): Pick<Channel, 'name' | 'serverId'> | null => {
-    const name = formData.get('name');
-
-    if (typeof name === 'string' && name.trim()) {
-      return {
-        name: name.trim(),
-        serverId: this.channelId,
-      };
-    }
-
-    return null;
   };
 }
 

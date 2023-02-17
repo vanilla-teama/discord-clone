@@ -11,7 +11,7 @@ const getServers: Handler = (req, res, next) => {
     .countDocuments()
     .then((count) => {
       docsCount = count;
-      return Server.find();
+      return Server.find().populate('owner');
     })
     .then((servers) => {
       res.status(200).json({
@@ -50,8 +50,7 @@ const getServer: Handler = (req, res, next) => {
 };
 
 const createServer: Handler = (req, res, next) => {
-  console.log('incoming file', req.file);
-  console.log('body', req.body);
+  console.log(req.body);
   let imageBuffer: Buffer | null = null;
   if (req.file) {
     const image = fs.readFileSync(req.file.path);
@@ -61,6 +60,7 @@ const createServer: Handler = (req, res, next) => {
   const server = new Server({
     name: req.body.name,
     image: imageBuffer,
+    owner: req.body.owner,
   });
 
   server

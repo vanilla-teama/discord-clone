@@ -14,6 +14,7 @@ export const users: User[] = [
     friends: [],
     invitesTo: [],
     invitesFrom: [],
+    invitesToChannels: [],
     createdAt: '',
   },
   {
@@ -27,6 +28,7 @@ export const users: User[] = [
     friends: [],
     invitesTo: [],
     invitesFrom: [],
+    invitesToChannels: [],
     createdAt: '',
   },
   {
@@ -40,6 +42,7 @@ export const users: User[] = [
     friends: [],
     invitesTo: [],
     invitesFrom: [],
+    invitesToChannels: [],
     createdAt: '',
   },
   {
@@ -53,6 +56,7 @@ export const users: User[] = [
     friends: [],
     invitesTo: [],
     invitesFrom: [],
+    invitesToChannels: [],
     createdAt: '',
   },
 ];

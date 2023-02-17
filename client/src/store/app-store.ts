@@ -232,6 +232,7 @@ class AppStore {
 
   async fetchServers(): Promise<void> {
     const response = await http.get<{ servers: Server[] }>(`/servers`);
+    console.log(response);
     if (response) {
       this.servers = response.data.servers || [];
     } else {

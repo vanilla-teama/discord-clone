@@ -15,6 +15,7 @@ export interface User extends MongoEntity {
   friends: MongoObjectId[];
   invitesFrom: MongoObjectId[];
   invitesTo: MongoObjectId[];
+  invitesToChannels: MongoObjectId[];
   createdAt: string;
 }
 
@@ -45,6 +46,7 @@ export interface ChannelMessage extends MongoEntity {
 export interface Server<S extends 'data' | 'formData' = 'data'> extends MongoEntity {
   name: string;
   image: S extends 'formData' ? File : string | null;
+  owner: S extends 'formData' ? string : Pick<User, 'name'>;
 }
 
 export interface Chat extends MongoEntity {

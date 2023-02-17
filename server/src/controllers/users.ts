@@ -246,7 +246,7 @@ const updateUser = (
         if (path in req.body) {
           if (path === 'name' || path === 'email' || path === 'password' || path === 'phone') {
             user[path] = req.body[path];
-          } else if (path === 'invitesFrom' || path === 'invitesTo' || path === 'friends') {
+          } else if (path === 'invitesFrom' || path === 'invitesTo' || path === 'invitesToChannels' || path === 'friends') {
             if (remove && remove.includes(path)) {
               const newValueOfStr = (user[path] || []).map((id) => id.toString()).filter((id) => !req.body[path].includes(id));
               user[path] = [...new Set(newValueOfStr)].map(
