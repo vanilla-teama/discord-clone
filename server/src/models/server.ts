@@ -1,5 +1,12 @@
-import mongoose, { Types } from "mongoose";
+import mongoose, { HydratedDocument, Types } from "mongoose";
+import { FetchedUser } from "../utils/dto";
 const Schema = mongoose.Schema;
+
+export interface ServerDocument extends mongoose.Document {
+  name: string;
+  image: string;
+  owner: Types.ObjectId;
+}
 
 const serverSchema = new Schema({
   name: {
@@ -12,6 +19,10 @@ const serverSchema = new Schema({
       return image ? image.toString('base64') : null;
     }
   },
+  owner: {
+    type: Types.ObjectId,
+    ref: 'User',
+  }
 }, {
   toJSON: { getters: true },
   toObject: { getters: true },

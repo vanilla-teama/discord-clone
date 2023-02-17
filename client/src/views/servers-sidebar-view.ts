@@ -1,7 +1,7 @@
 import Router, { RouteControllers, SettingsParams } from '../lib/router';
 import View from '../lib/view';
 import { Channel, User } from '../types/entities';
-import { $, replaceWith } from '../utils/functions';
+import { $, isElementOfCssClass, replaceWith } from '../utils/functions';
 import ScreenView from './screen-view';
 
 class ServersSideBarView extends View {
@@ -80,13 +80,16 @@ class ServersSideBarView extends View {
   }
 
   bindChannelItemClick($item: HTMLLIElement) {
-    $item.onclick = () => {
+    $item.onclick = (event) => {
+      if (isElementOfCssClass(event.target, 'servers-sidebar__invite')) {
+        return;
+      }
       const data = ServersSideBarView.channelsListMap.get($item);
       if (!data) {
         return;
       }
       const channel = data.channel;
-      Router.push(RouteControllers.Servers, '', [channel.serverId, channel.id]);
+      this.onChannelItemClick(channel.serverId, channel.id);
     };
   }
 
@@ -151,7 +154,13 @@ class ServersSideBarView extends View {
     });
   }
 
+  onChannelItemClick = (serverId: string, channelId: string): void => {};
+
   onInvite = async (channel: Channel): Promise<void> => {};
+
+  bindOnChannelItemClick = (handler: (serverId: string, channelId: string) => void): void => {
+    this.onChannelItemClick = handler;
+  };
 
   bindOnInvite = (handler: (channel: Channel) => Promise<void>): void => {
     this.onInvite = handler;

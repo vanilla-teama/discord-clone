@@ -14,6 +14,7 @@ export interface DTOUser extends DTOEntity {
   friends: string[];
   invitesFrom: string[];
   invitesTo: string[];
+  invitesToChannels: string[],
   createdAt: Date;
 }
 
@@ -27,9 +28,12 @@ export interface DTOPersonalMessage extends DTOEntity {
 }
 
 export interface DTOChannelMessage extends DTOEntity {
-  responseMessageId: string;
+  userId: string;
+  channelId: string;
+  responsedToMessageId: string | null;
   date: Date;
   message: string;
+  responsedToMessage: DTOChannelMessage | null;
 }
 
 export interface DTOServer extends DTOEntity {

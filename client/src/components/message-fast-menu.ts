@@ -4,6 +4,7 @@ import { PersonalMessage } from '../types/entities';
 import { isElementOfCssClass } from '../utils/functions';
 import { RenderedPersonalMessage } from '../views/chats-main-content-view';
 import MessageFastMenuView, { ReplyOrEdit } from '../views/message-fast-menu-view';
+import { RenderedChannelMessage } from '../views/servers-main-content-view';
 
 class MessageFastMenu extends Controller<MessageFastMenuView> {
   private static _instance: MessageFastMenu;
@@ -16,7 +17,7 @@ class MessageFastMenu extends Controller<MessageFastMenuView> {
     if (MessageFastMenu.instance) {
       MessageFastMenu.instance.destroy();
     }
-    const getReplyOrEdit = (message: RenderedPersonalMessage): ReplyOrEdit => {
+    const getReplyOrEdit = (message: RenderedPersonalMessage | RenderedChannelMessage): ReplyOrEdit => {
       if (!appStore.user) {
         return 'edit';
       }
@@ -39,6 +40,7 @@ class MessageFastMenu extends Controller<MessageFastMenuView> {
   }
 
   static onEditButtonClick = (event: MouseEvent): void => {
+    console.log('fast menu edit');
     if (isElementOfCssClass(event.target, 'fast-menu__edit-btn')) {
       MessageFastMenu.displayEditMessageForm(event);
     }

@@ -1,14 +1,17 @@
 import { HydratedDocument } from 'mongoose';
 import { UserDocument } from '../models/user';
-import { DTOChat, DTOUser, DTOPersonalMessage, DTOChannel } from '../types/dto';
+import { DTOChat, DTOUser, DTOPersonalMessage, DTOChannelMessage, DTOChannel } from '../types/dto';
 import { PersonalMessageDocument } from '../models/personal-message';
 import { ChannelDocument } from '../models/channel';
+import { ChannelMessageDocument } from '../models/channel-message';
 
 export type FetchedUser = HydratedDocument<UserDocument, {}, { chats: DTOChat[] }>;
 
 export type FetchedChat = HydratedDocument<Pick<UserDocument, 'name' | 'availability' | 'createdAt'>>;
 
 export type FetchedPersonalMessage = HydratedDocument<PersonalMessageDocument>;
+
+export type FetchedChannelMessage = HydratedDocument<ChannelMessageDocument>;
 
 export type FetchedChannel = HydratedDocument<ChannelDocument>;
 
@@ -24,6 +27,7 @@ export const userDTO = ({
   invitesTo,
   friends,
   createdAt,
+  invitesToChannels,
 }: FetchedUser): DTOUser => {
   return {
     id: _id.toString(),
@@ -36,6 +40,7 @@ export const userDTO = ({
     friends: (friends || []).map((id) => id.toString()),
     invitesFrom: (invitesFrom || []).map((id) => id.toString()),
     invitesTo: (invitesTo || []).map((id) => id.toString()),
+    invitesToChannels: (invitesToChannels || []).map((id) => id.toString()),
     createdAt,
   };
 };
@@ -64,6 +69,26 @@ export const personalMessageDTO = ({
     date,
     message,
     responsedToMessage: responsedToMessage ? personalMessageDTO(responsedToMessage as FetchedPersonalMessage) : null,
+  };
+};
+
+export const channelMessageDTO = ({
+  _id,
+  userId,
+  channelId,
+  responsedToMessageId,
+  responsedToMessage,
+  date,
+  message,
+}: FetchedChannelMessage): DTOChannelMessage => {
+  return {
+    id: _id.toString(),
+    userId: userId.toString(),
+    channelId: channelId.toString(),
+    responsedToMessageId: responsedToMessageId ? responsedToMessageId.toString() : null,
+    date,
+    message,
+    responsedToMessage: responsedToMessage ? channelMessageDTO(responsedToMessage as FetchedChannelMessage) : null,
   };
 };
 

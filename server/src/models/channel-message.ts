@@ -1,26 +1,67 @@
-import mongoose from "mongoose";
+import mongoose, { HydratedDocument, Model, QueryWithHelpers, Types } from 'mongoose';
+import mongooseDelete from 'mongoose-delete';
+
+export interface ChannelMessageDocument {
+  userId: Types.ObjectId;
+  channelId: Types.ObjectId;
+  responsedToMessageId: Types.ObjectId;
+  date: Date;
+  message: string;
+  responsedToMessage: ChannelMessageDocument | null;
+}
+
+interface ChannelMessageQueryHelpers {
+  byDeleted(
+    deleted: boolean
+  ): QueryWithHelpers<
+    HydratedDocument<ChannelMessageDocument>[],
+    HydratedDocument<ChannelMessageDocument>,
+    ChannelMessageQueryHelpers
+  >;
+}
+
 const Schema = mongoose.Schema;
 
-const personalMessageSchema = new Schema({
-  userId: {
-    type: Schema.Types.ObjectId,
-    required: true
+export const channelMessageSchema = new Schema<
+  ChannelMessageDocument,
+  Model<ChannelMessageDocument, ChannelMessageQueryHelpers>,
+  {},
+  ChannelMessageQueryHelpers
+>(
+  {
+    userId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
+    channelId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
+    responsedToMessageId: {
+      type: Schema.Types.ObjectId,
+    },
+    date: {
+      type: Date,
+      default: Date.now(),
+    },
+    message: {
+      type: String,
+      required: true,
+    },
+    responsedToMessage: {
+      type: Types.ObjectId,
+      ref: 'ChannelMessage',
+    },
   },
-  channelId: {
-    type: Schema.Types.ObjectId,
-    required: true,
-  },
-  responsedMessageId: {
-    type: Schema.Types.ObjectId,
-  },
-  date: {
-    type: Date,
-    default: Date.now()
-  },
-  message: {
-    type: String,
-    required: true
-  },
-});
+);
 
-export default mongoose.model('PersonalMessage', personalMessageSchema);
+channelMessageSchema.query.byDeleted = function byDeleted(
+  this: QueryWithHelpers<any, HydratedDocument<ChannelMessageDocument>, ChannelMessageQueryHelpers>,
+  deleted: boolean
+) {
+return this.find({ deleted });
+};
+
+channelMessageSchema.plugin(mongooseDelete);
+
+export default mongoose.model('ChannelMessage', channelMessageSchema);
