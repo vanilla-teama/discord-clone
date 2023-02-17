@@ -1,0 +1,53 @@
+.friends-app-bar {
+  &__container {
+    height: 59px;
+    padding: 0 15px;
+    background-color: var(--background-color-light-gray);
+    display: flex;
+    border-bottom: 1px solid var(--background-color-gray);
+  }
+  &__icons-block {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 30px;
+  }
+  &__icon {
+    background: url('/src/assets/icons/friends.svg') center no-repeat;
+    width: 25px;
+    height: 22px;
+    opacity: 0.5;
+  }
+  &__title {
+    color: var(--text-secondary);
+  }
+  &__buttons-block {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+  }
+  &__friends-btn,
+  &__add-btn {
+    border: none;
+    background-color: var(--background-color-green);
+    color: var(--text-primary);
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &__friends-btn {
+
+    }
+
+    &:hover{
+      color: var(--background-color-green);
+      background-color: transparent;
+    }
+    &_active{
+      color: var(--background-color-green);
+      background-color: transparent;
+    }
+  }
+}
