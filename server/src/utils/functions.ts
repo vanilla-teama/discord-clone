@@ -28,5 +28,6 @@ export const handleDocumentNotFound = <T extends Document>(
   const error = Object.assign(new Error('Could not find user.'), {
     statusCode: 404,
   });
-  throw error;
+  console.log(error);
+  return false;
 };

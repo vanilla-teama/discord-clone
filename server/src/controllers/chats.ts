@@ -14,6 +14,8 @@ const getChats: Handler = (req, res, next) => {
     .then((user) => {
       if (handleDocumentNotFound(user)) {
         res.status(200).json({ chats: (user.chats || []).map((c) => chatDTO(c as FetchedChat))})
+      } else {
+        res.status(200).json({ chats: []});
       }
     })
 };
@@ -26,30 +28,30 @@ const getChat = (req: TypedRequest, res: Response, next: NextFunction): void => 
     // .populate('chats')
     .then((user) => {
       if (handleDocumentNotFound(user)) {
-        if (handleDocumentNotFound(user)) {
-          res.status(200).json({ chat: chatDTO(user as FetchedChat) });
-        }
+        res.status(200).json({ chat: chatDTO(user as FetchedChat) });
       }
     })
       .catch(err => requestErrorHandler(err, next)());
 }
 
 const deleteChat: Handler = (req, res, next) => {
-  const { fromUserId, toUserId } = req.params;
+  const { userOneId, userTwoId } = req.params;
 
-  PersonalMessage.find({
-    $or: [
-      { $and: [{ fromUserId }, { toUserId }] },
-      { $and: [{ fromUserId: toUserId }, { toUserId: fromUserId }] }
-    ],
-  })
-    .updateMany({ deleted: true })
-    .then((result) => {
-      res.status(204).json({
-        message: 'Deleted chat successfully.',
-        result,
-      });
-  });
+  User
+    .findById(userOneId)
+    .populate('chats')
+    .then((user) => {
+      if (handleDocumentNotFound(user)) {
+        user.chats = user.chats.filter(({ id }) => id.toString() !== userTwoId);
+
+        user.save()
+          .then(() => {
+            res.status(200).json({ message: 'Chat deleted successfully' });
+          })
+          .catch(err => requestErrorHandler(err, next)());
+      }
+    })
+    .catch(err => requestErrorHandler(err, next)());
 };
 
 const getChatMessages: Handler = (req, res, next) => {

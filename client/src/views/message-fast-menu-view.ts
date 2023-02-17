@@ -19,9 +19,9 @@ class MessageFastMenuView extends View {
     }
     super($root);
     this.message = message;
-    this.$editButton = $('button', 'fast-menu__edit-btn');
-    this.$replyButton = $('button', 'fast-menu__reply-btn');
-    this.$deleteButton = $('button', 'fast-menu__delete-btn');
+    this.$editButton = $('button', ['tooltip', 'fast-menu__edit-btn']);
+    this.$replyButton = $('button', ['tooltip', 'fast-menu__reply-btn']);
+    this.$deleteButton = $('button', ['tooltip', 'fast-menu__delete-btn']);
     this.$message = $message;
     this.replyOrEdit = replyOrEdit;
   }
@@ -30,11 +30,11 @@ class MessageFastMenuView extends View {
 
     if (this.replyOrEdit === 'edit') {
       $container.append(this.$editButton, this.$deleteButton);
-      this.$editButton.textContent = 'Edit';
-      this.$deleteButton.textContent = 'Delete';
+      this.$editButton.dataset.text = 'Edit';
+      this.$deleteButton.dataset.text = 'Delete';
     } else {
+      this.$replyButton.dataset.text = 'Reply';
       $container.append(this.$replyButton);
-      this.$replyButton.textContent = 'Reply';
     }
 
     this.$container.append($container);

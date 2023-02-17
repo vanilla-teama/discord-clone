@@ -11,7 +11,6 @@
     margin-top: 0;
   }
   &__friend-list {
-    //height: 70px;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -24,7 +23,6 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      //background-color: var(--background-color-black);
       border-radius: 3px;
     }
   }

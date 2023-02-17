@@ -18,7 +18,7 @@ bindGlobalSocketEvents();
 })();
 
 async function main() {
-  await http.test();
+  // await http.test();
   await App.run();
   socket.emit('run');
   ChatsScreen.bindRouteChanged();

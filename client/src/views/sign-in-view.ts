@@ -8,6 +8,7 @@ class SignInView extends View {
 
   $signUpButton: HTMLButtonElement;
   $form: HTMLFormElement;
+  $errorContainer: HTMLDivElement;
 
   constructor() {
     const $root = document.getElementById('root');
@@ -17,6 +18,7 @@ class SignInView extends View {
     super($root);
     this.$form = $('form', 'sign-in__form');
     this.$signUpButton = $('button', 'btn btn-auth');
+    this.$errorContainer = $('div', 'sign-in__error-container');
   }
 
   build(): void {
@@ -43,7 +45,7 @@ class SignInView extends View {
     this.$signUpButton.textContent = 'Register';
     $btnSignUpBox.append($text, this.$signUpButton);
 
-    $box.append($title, this.$form, $btnSignUpBox);
+    $box.append($title, this.$errorContainer, this.$form, $btnSignUpBox);
     $container.append($box);
     this.$container.append($container);
   }
@@ -57,6 +59,11 @@ class SignInView extends View {
       event.preventDefault();
       handler(new FormData(this.$form));
     });
+  }
+
+  displayError(message: string) {
+    this.$errorContainer.innerHTML = '';
+    this.$errorContainer.textContent = message;
   }
 }
 

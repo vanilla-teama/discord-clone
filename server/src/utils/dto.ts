@@ -6,7 +6,7 @@ import { ChannelDocument } from '../models/channel';
 
 export type FetchedUser = HydratedDocument<UserDocument, {}, { chats: DTOChat[] }>;
 
-export type FetchedChat = HydratedDocument<Pick<UserDocument, 'name' | 'availability'>>;
+export type FetchedChat = HydratedDocument<Pick<UserDocument, 'name' | 'availability' | 'createdAt'>>;
 
 export type FetchedPersonalMessage = HydratedDocument<PersonalMessageDocument>;
 
@@ -23,6 +23,7 @@ export const userDTO = ({
   invitesFrom,
   invitesTo,
   friends,
+  createdAt,
 }: FetchedUser): DTOUser => {
   return {
     id: _id.toString(),
@@ -35,13 +36,15 @@ export const userDTO = ({
     friends: (friends || []).map((id) => id.toString()),
     invitesFrom: (invitesFrom || []).map((id) => id.toString()),
     invitesTo: (invitesTo || []).map((id) => id.toString()),
+    createdAt,
   };
 };
 
-export const chatDTO = ({ _id, name, availability }: FetchedChat): DTOChat => ({
+export const chatDTO = ({ _id, name, availability, createdAt }: FetchedChat): DTOChat => ({
   userId: _id.toString(),
   userName: name,
   availability,
+  createdAt,
 });
 
 export const personalMessageDTO = ({

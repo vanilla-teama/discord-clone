@@ -1,4 +1,5 @@
 import Controller from '../lib/controller';
+import Router from '../lib/router';
 import FriendsAppBarView from '../views/friends-app-bar-view';
 import FriendsMainContentComponent from './friends-main-content';
 

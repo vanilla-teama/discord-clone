@@ -15,6 +15,7 @@ export interface User extends MongoEntity {
   friends: MongoObjectId[];
   invitesFrom: MongoObjectId[];
   invitesTo: MongoObjectId[];
+  createdAt: string;
 }
 
 export interface FetchedUser {
@@ -50,6 +51,7 @@ export interface Chat extends MongoEntity {
   userId: MongoObjectId;
   userName: string;
   availability: Availability;
+  createdAt: string;
 }
 export interface Channel extends MongoEntity {
   serverId: MongoObjectId;

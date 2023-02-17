@@ -1,9 +1,13 @@
 import { chats, users } from '../develop/data';
-import { http } from '../lib/http';
+import { ErrorStatusCode, handleError, http, isExpressError } from '../lib/http';
 import moment from '../lib/moment';
 import { Channel, Chat, ChatAvailabilitiesMap, PersonalMessage, Server, User } from '../types/entities';
 import { AppOmit } from '../types/utils';
 import { RenderedPersonalMessage } from '../views/chats-main-content-view';
+import { personalMessages as fakePersonalMessages } from '../develop/data';
+import { AxiosError } from 'axios';
+import axios from 'axios';
+import { LoginError, RegisterError, RegisterErrorData } from '../types/http-errors';
 
 export type IncomingPersonalMessage = AppOmit<PersonalMessage, 'id' | 'responsedToMessage'>;
 
@@ -270,20 +274,43 @@ class AppStore {
     return false;
   }
 
-  async logIn(email: string, password: string): Promise<void> {
+  async logIn(email: string, password: string, onUnauthorized: (error: LoginError) => void): Promise<void> {
     const response = await http
       .post<{ email: string; password: string }, { data: { user: User } }>('/users/login', { email, password })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        if (isExpressError<{ message: string }>(error) && error.status === ErrorStatusCode.Unauthorized) {
+          onUnauthorized(error);
+        }
+      });
     if (response) {
       this.user = response.data.user;
     } else {
+      // TODO: REMOVE THIS LINE BEFORE PRODUCTION!
       this.user = users.find((user) => email === user.email) || users[0];
     }
   }
 
-  async register(email: string, password: string, name: string): Promise<void> {
-    const response = await http.post('/users/register', { email, password, name });
-    console.log(response);
+  async register(
+    { email, password, name }: { email: string; password: string; name: string },
+    onSuccess: () => void,
+    onUnauthorized: (error: RegisterError) => void
+  ): Promise<void> {
+    const response = await http
+      .post<{ email: string; password: string; name: string }, { data: { user: User } }>('/users/register', {
+        email,
+        password,
+        name,
+      })
+      .catch((error) => {
+        console.log(error);
+        if (isExpressError<RegisterErrorData>(error) && error.status === ErrorStatusCode.Unauthorized) {
+          onUnauthorized(error);
+        }
+      });
+    if (response) {
+      this.user = response.data.user;
+      onSuccess();
+    }
   }
 
   async logOut(): Promise<void> {
@@ -321,6 +348,18 @@ class AppStore {
       await this.fetchChats(this.user.id);
     }
     this.onChatListChanged(this.chats);
+  }
+
+  async deleteChat(userId: string): Promise<void> {
+    if (!this.user) {
+      return;
+    }
+    const response = await http.delete(`/chats/users/${this.user.id}/${userId}`).catch((err) => console.error(err));
+    if (response) {
+      this.chats = this.chats.filter(({ userId: chatUserId }) => chatUserId !== userId);
+      console.log(this.chats);
+      this.onChatListChanged(this.chats);
+    }
   }
 
   async addPersonalMessage(message: IncomingPersonalMessage): Promise<void> {
