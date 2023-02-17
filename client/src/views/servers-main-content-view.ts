@@ -1,5 +1,5 @@
 import View from '../lib/view';
-import { $ } from '../utils/functions';
+import { $, isClosestElementOfCssClass } from '../utils/functions';
 import MainView from './main-view';
 import * as userIcon from '../assets/icons/discord.svg';
 import { MongoObjectId } from '../types/entities';
@@ -148,6 +148,35 @@ class ServersMainContentView extends View {
       }
     });
   }
+
+  bindMessageHover = (
+    displayFastMenuHandler: (
+      $container: HTMLElement,
+      $message: HTMLLIElement,
+      message: RenderedChannelMessage
+    ) => Promise<void>
+  ): void => {
+    this.$messageList.onmouseover = async (mouseOverEvent) => {
+      if (isClosestElementOfCssClass(mouseOverEvent.target, 'channel-message')) {
+        const $message = mouseOverEvent.target.closest<HTMLLIElement>('.channel-message');
+        if ($message && !$message.classList.contains('channel-message_edit')) {
+          const items = this.messagesMap.get($message);
+          if (items) {
+            await displayFastMenuHandler(items.$fastMenu, $message, items.message);
+            mouseOverEvent.target.onmouseleave = () => {
+              this.destroyFastMenu();
+            };
+          }
+        }
+      }
+    };
+  };
+
+  bindDestroyFastMenu = (destroyFastMenuHandler: () => void): void => {
+    this.destroyFastMenu = destroyFastMenuHandler;
+  };
+
+  destroyFastMenu = (): void => {};
 
   getReplyId(): string | null {
     if (!this.$repliedMessage) {

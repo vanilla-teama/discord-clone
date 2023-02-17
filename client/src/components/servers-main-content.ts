@@ -4,6 +4,7 @@ import { IncomingChannelMessage, appStore } from '../store/app-store';
 import { Channel, Server } from '../types/entities';
 import { ServerToClientEvents } from '../types/socket';
 import ServersMainContentView, { RenderedChannelMessage } from '../views/servers-main-content-view';
+import MessageFastMenu from './message-fast-menu';
 import ServersScreen from './servers-screen';
 
 class ServersMainContentComponent extends Controller<ServersMainContentView> {
@@ -23,6 +24,8 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
       this.view.bindMessageEvent(this.handleSendMessage);
       await this.fetchMessages();
       this.bindSocketEvents();
+      this.view.bindMessageHover(this.showFastMenu);
+      this.view.bindDestroyFastMenu(this.destroyFastMenu);
     }
   }
 
@@ -58,13 +61,28 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
     socket.on(
       'channelMessage',
       (ServersMainContentComponent.onSocketChannelMessage = async ({ channelId, userId }) => {
-        if (!this.channel) {
+        if (!this.channel || this.channel.id !== channelId) {
           return;
         }
         await this.fetchMessages();
       })
     );
   }
+
+  showFastMenu = async (
+    $fastMenuContainer: HTMLElement,
+    $message: HTMLLIElement,
+    message: RenderedChannelMessage
+  ): Promise<void> => {
+    const fastMenu = new MessageFastMenu($fastMenuContainer, $message, message);
+    await fastMenu.init();
+  };
+
+  destroyFastMenu = () => {
+    if (MessageFastMenu.instance) {
+      MessageFastMenu.instance.destroy();
+    }
+  };
 
   static onSocketChannelMessage: ServerToClientEvents['channelMessage'] = () => {};
 
