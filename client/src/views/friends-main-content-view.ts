@@ -31,8 +31,12 @@ class FriendsMainContentView extends View {
     FriendsMainContentView.$friendsContent = $friendsContent;
     FriendsMainContentView.$addFriendContent = $addFriendContent;
 
+    const $addFriendContainer = $('div', 'friends__add-friend-container');
+    const $addFriendTitle = $('div', 'friends__add-friend-title');
+
     const $searchInput = this.$searchInput;
     $searchInput.placeholder = 'Search by e-mail or name';
+    $addFriendTitle.textContent = 'ADD FRIENDS';
 
     $addFriendContent.append($searchInput, this.$foundUserList);
     $friendsContent.append(this.$friendList);
@@ -67,31 +71,46 @@ class FriendsMainContentView extends View {
 
   createFriendItem(user: User, status: 'invitedTo' | 'invitedFrom' | 'friend' = 'friend'): HTMLLIElement {
     const $item = $('li', 'friends__friend-list-item');
-    const $messageButton = $('button', 'friends__friend-list-item-message-btn');
-    const $deleteFriendButton = $('button', 'friends__friend-list-item-delete-friend-btn');
-    const $acceptInvitationButton = $('button', 'friends__friend-list-item-accept-invitation-btn');
-    const $cancelInvitationButton = $('button', 'friends__friend-list-item-cancel-invite-btn');
 
-    $messageButton.textContent = 'message';
-    $deleteFriendButton.textContent = 'delete';
+    const $itemBox = $('div', 'user-item__box');
+    const $itemAvatar = $('div', 'user-item__avatar');
+    const $itemIcon = $('div', 'user-item__icon');
+    const $itemStatus = $('div', ['user-item__status', `user-item__status_${user.availability}`]);
+    const $itemName = $('div', 'user-item__name');
+    $itemName.textContent = `${user.name}`;
+
+    const $buttonsBlock = $('div', 'friends__buttons-block');
+    const $massageButtonContainer = $('div', 'friends__message-btn-container');
+    const $messageButton = $('button', 'friends__message-btn');
+    const $deleteButtonContainer = $('div', 'friends__delete-friend-btn-container');
+    const $deleteFriendButton = $('button', 'friends__delete-friend-btn');
+    const $acceptInvitationButton = $('button', 'friends__accept-invitation-btn');
+    const $cancelInvitationButton = $('button', 'friends__cancel-invite-btn');
+
+    const $status = $('div', 'friends__status');
+    const $btnContainer = $('div', 'friends__btn-accept-cancel-container');
+
     $acceptInvitationButton.textContent = 'accept';
     $cancelInvitationButton.textContent = 'cancel';
 
-    $item.append(
-      user.name,
-      ' | ',
-      status === 'invitedTo' ? 'invited' : status === 'invitedFrom' ? 'requested' : '',
-      ' | ',
-      $messageButton
-    );
+    $status.append(status === 'invitedTo' ? 'invited' : status === 'invitedFrom' ? 'requested' : '');
 
     if (status === 'invitedFrom') {
-      $item.append($acceptInvitationButton);
+      $btnContainer.append($acceptInvitationButton);
     } else if (status === 'invitedTo') {
-      $item.append($cancelInvitationButton);
-    } else if (status === 'friend') {
-      $item.append($deleteFriendButton);
+      $btnContainer.append($cancelInvitationButton);
     }
+
+    $itemAvatar.append($itemIcon, $itemStatus);
+    if (status !== 'friend') {
+      $itemBox.append($itemAvatar, $itemName, $status, $btnContainer);
+    } else {
+      $itemBox.append($itemAvatar, $itemName);
+    }
+    $massageButtonContainer.append($messageButton);
+    $deleteButtonContainer.append($deleteFriendButton);
+    $buttonsBlock.append($massageButtonContainer, $deleteButtonContainer);
+    $item.append($itemBox, $buttonsBlock);
 
     $messageButton.onclick = () => {
       this.onSendMessage(user.id);
