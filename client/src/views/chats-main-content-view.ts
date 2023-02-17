@@ -1,9 +1,8 @@
-import View from '../lib/view';
-import { Chat, MongoObjectId, PersonalMessage } from '../types/entities';
-import { $, isClosestElementOfCssClass, isElementOfCssClass } from '../utils/functions';
-import MainView from './main-view';
-import { personalMessages as fakePersonalMessages } from '../develop/data';
 import * as userIcon from '../assets/icons/discord.svg';
+import View from '../lib/view';
+import { Chat, MongoObjectId } from '../types/entities';
+import { $, isClosestElementOfCssClass } from '../utils/functions';
+import MainView from './main-view';
 
 export type RenderedPersonalMessage = {
   id: MongoObjectId;
@@ -39,7 +38,6 @@ class ChatsMainContentView extends View {
 
   constructor(chat: Chat | null) {
     const $root = MainView.$mainContent;
-    console.log($root);
     if (!$root) {
       ChatsMainContentView.throwNoRootInTheDomError('Main-content');
     }

@@ -40,6 +40,7 @@ class MessageFastMenu extends Controller<MessageFastMenuView> {
   }
 
   static onEditButtonClick = (event: MouseEvent): void => {
+    console.log('fast menu edit');
     if (isElementOfCssClass(event.target, 'fast-menu__edit-btn')) {
       MessageFastMenu.displayEditMessageForm(event);
     }

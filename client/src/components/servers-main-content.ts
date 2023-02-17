@@ -3,8 +3,10 @@ import socket from '../lib/socket';
 import { IncomingChannelMessage, appStore } from '../store/app-store';
 import { Channel, Server } from '../types/entities';
 import { ServerToClientEvents } from '../types/socket';
+import ModalView from '../views/modal-view';
 import ServersMainContentView, { RenderedChannelMessage } from '../views/servers-main-content-view';
 import MessageFastMenu from './message-fast-menu';
+import ModalComponent from './modal';
 import ServersScreen from './servers-screen';
 
 class ServersMainContentComponent extends Controller<ServersMainContentView> {
@@ -25,7 +27,18 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
       await this.fetchMessages();
       this.bindSocketEvents();
       this.view.bindMessageHover(this.showFastMenu);
+
+      MessageFastMenu.bindDisplayEditMessageForm(this.displayEditMessageForm);
+      MessageFastMenu.bindDisplayDeleteConfirmModal(this.displayDeleteConfirmDialog);
+      MessageFastMenu.bindDisplayReply(this.displayReply);
+      this.view.bindFastMenuEditButtonClick(MessageFastMenu.onEditButtonClick);
+      this.view.bindFastMenuDeleteButtonClick(MessageFastMenu.onDeleteButtonClick);
+      this.view.bindFastMenuReplyButtonClick(MessageFastMenu.onReplyButtonClick);
       this.view.bindDestroyFastMenu(this.destroyFastMenu);
+      this.view.bindEditMessageFormSubmit(this.onEditMessageFormSubmit);
+      this.view.bindDeleteMessageDialogSubmit(this.onDeleteMessageDialogSubmit);
+      this.view.bindMessageListClicks();
+      this.view.bindCancelDeleteConfirmDialog(this.cancelDeleteConfirmDialog);
     }
   }
 
@@ -82,6 +95,46 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
     if (MessageFastMenu.instance) {
       MessageFastMenu.instance.destroy();
     }
+  };
+
+  displayEditMessageForm = (event: MouseEvent): void => {
+    this.view.onDisplayEditMessageForm(event);
+  };
+
+  displayDeleteConfirmDialog = async (event: MouseEvent): Promise<void> => {
+    await new ModalComponent().init();
+    this.view.displayDeleteConfirmDialog(ModalView.getContainer(), event);
+    ModalView.show();
+  };
+
+  displayReply = (event: MouseEvent): void => {
+    this.view.displayReply(event);
+  };
+
+  onEditMessageFormSubmit = async (formData: FormData, $message: HTMLLIElement): Promise<void> => {
+    const id = formData.get('id');
+    const message = formData.get('message');
+    if (!id || !message || typeof id !== 'string' || typeof message !== 'string') {
+      return;
+    }
+    appStore.bindPersonalMessageChanged((message: RenderedChannelMessage) => {
+      this.view.editMessageContent($message, message);
+    });
+    await appStore.editPersonalMessage(id, message);
+    socket.emit('channelMessageUpdated', { messageId: id });
+  };
+
+  onDeleteMessageDialogSubmit = async (messageId: string, $message: HTMLLIElement): Promise<void> => {
+    appStore.bindPersonalMessageDeleted(() => {
+      this.view.deleteMessage($message);
+    });
+    await appStore.deletePersonalMessage(messageId);
+    socket.emit('channelMessageDeleted', { messageId });
+    ModalView.hide();
+  };
+
+  cancelDeleteConfirmDialog = () => {
+    ModalView.hide();
   };
 
   static onSocketChannelMessage: ServerToClientEvents['channelMessage'] = () => {};
