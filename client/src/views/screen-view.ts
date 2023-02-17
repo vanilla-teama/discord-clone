@@ -24,16 +24,34 @@ class ScreenView extends View {
     super($root);
   }
   build(): void {
+    this.search();
     ScreenView.$startBar = $('div', ScreenView.classNames.startBar);
     ScreenView.$sideBar = $('div', ScreenView.classNames.sideBar);
     ScreenView.$main = $('div', ScreenView.classNames.main);
     ScreenView.$portal = $('div', ScreenView.classNames.portal);
     this.$container.append(ScreenView.$startBar, ScreenView.$sideBar, ScreenView.$main, ScreenView.$portal);
   }
-  static toggleSideBar() {
+  static toggleSideBar(): void {
     if (ScreenView.$sideBar !== null) ScreenView.$sideBar.classList.toggle('_disable');
     if (MainView.$mainContainer !== null) MainView.$mainContainer.classList.toggle('_disable');
+    if (window.matchMedia('(max-width: 1000px)').matches) {
+      if (MainView.$mainContainer && MainView.$mainContainer.classList.contains('main-container_show-info-bar')) {
+        MainView.hideInfoBar();
+      }
+    }
+  }
+  search(): void {
+    window.addEventListener('resize', (event) => {
+      if (window.matchMedia('(max-width: 1000px)').matches) {
+        if (ScreenView.$sideBar !== null) ScreenView.$sideBar.classList.add('_disable');
+        if (MainView.$mainContainer !== null) MainView.$mainContainer.classList.add('_disable');
+        if (MainView.$mainContainer) {
+          MainView.$mainContainer.classList.remove('main-container_show-info-bar');
+          MainView.$mainContainer.classList.remove('main-container_hiding-info-bar');
+          MainView.$mainContainer.onanimationend = null;
+        }
+      }
+    });
   }
 }
-
 export default ScreenView;
