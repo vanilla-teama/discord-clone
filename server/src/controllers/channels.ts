@@ -120,7 +120,7 @@ const getChannelMessages: Handler = (req, res, next) => {
   const { id } = req.params;
   console.log('getChannelMessages', id);
 
-  ChannelMessage.find({ id })
+  ChannelMessage.find({ channelId: id })
     .populate('responsedToMessage')
     .then((messages) => {
       res.status(200).json({
@@ -148,18 +148,18 @@ const createChannelMessage: Handler = (req, res, next) => {
 
   channelMessage
     .save()
-    .then(() => {
-      res.status(201).json({
-        message: 'Message created successfully!',
-        channelMessage: channelMessageDTO(channelMessage as FetchedChannelMessage),
-      });
+    .then((channelMessage) => {
+      channelMessage
+        .populate('responsedToMessage')
+        .then((channelMessage) => {
+          res.status(201).json({
+            message: 'Message created successfully!',
+            channelMessage: channelMessageDTO(channelMessage as FetchedChannelMessage),
+          });
+        })
+        .catch((err) => requestErrorHandler(err, next));
     })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
+    .catch((err) => requestErrorHandler(err, next));
 };
 
 const updateChannelMessage: Handler = (req, res, next) => {
