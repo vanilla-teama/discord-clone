@@ -19,7 +19,7 @@ class ChatsSideBarView extends View {
     this.$chatList = $('ul', 'chats-sidebar__list');
     this.$friendsButton = $('button', 'chats-sidebar__to-friends');
     this.$buttonShowSidebar = $('button', 'show-sidebar-btn');
-    this.$friendsInvites = $('div', 'chats-sidebar__invites');    
+    this.$friendsInvites = $('div', 'chats-sidebar__invites');
     this.$userBar = this.createUserBar();
     this.chatListMap = new Map();
     this.$showCreateChat = this.createShowCreateChatElement();

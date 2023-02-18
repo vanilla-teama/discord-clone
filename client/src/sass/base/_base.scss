@@ -207,3 +207,9 @@ ul {
     }
   }
 }
+
+.app-bar {
+  @include media-lg-up {
+    padding-left: 240px;
+  }
+}
