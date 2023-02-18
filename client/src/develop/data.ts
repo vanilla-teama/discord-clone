@@ -187,19 +187,19 @@ export const servers: Server[] = [
     id: '1',
     name: 'Fake RS School',
     image: '',
-    owner: { name: 'ME' },
+    owner: { name: 'ME', id: '123' },
   },
   {
     id: '2',
     name: 'Fake Twin Fin',
     image: ' Buffer.from',
-    owner: { name: 'ME2' },
+    owner: { name: 'ME2', id: '123' },
   },
   {
     id: '3',
     name: 'Fake Vanilla Team',
     image: 'Buffer.from',
-    owner: { name: 'ME3' },
+    owner: { name: 'ME3', id: '123' },
   },
 ];
 

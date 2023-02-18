@@ -2,8 +2,9 @@ import { Handler } from 'express';
 import Server from '../models/server';
 import Channel from '../models/channel';
 import fs from 'fs';
-import { channelDTO } from '../utils/dto';
+import { FetchedServer, channelDTO, serverDTO } from '../utils/dto';
 import { FetchedChannel } from '../utils/dto';
+import { requestErrorHandler } from '../utils/functions';
 
 const getServers: Handler = (req, res, next) => {
   let docsCount = 0;
@@ -18,39 +19,30 @@ const getServers: Handler = (req, res, next) => {
         message: 'Fetched servers successfully.',
         count: docsCount,
         servers: servers.map((server) => {
-          return server;
+          return serverDTO(server as FetchedServer & { image: Buffer });
         }),
       });
     })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
+    .catch((err) => requestErrorHandler(err, next))
 };
 
 const getServer: Handler = (req, res, next) => {
   const serverId = req.params.id;
-  Server.findById(serverId)
+  Server
+    .findById(serverId)
+    .populate('owner')
     .then((server) => {
       if (!server) {
         const error = new Error('Could not find server.');
         //error.statusCode = 404;
         throw error;
       }
-      res.status(200).json({ messageInfo: 'Server fetched.', server });
+      res.status(200).json({ messageInfo: 'Server fetched.', server: serverDTO(server as FetchedServer & { image: Buffer }) });
     })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
+    .catch((err) => requestErrorHandler(err, next))
 };
 
 const createServer: Handler = (req, res, next) => {
-  console.log(req.body);
   let imageBuffer: Buffer | null = null;
   if (req.file) {
     const image = fs.readFileSync(req.file.path);
@@ -66,17 +58,16 @@ const createServer: Handler = (req, res, next) => {
   server
     .save()
     .then(() => {
-      res.status(201).json({
-        message: 'Server created successfully!',
-        server,
-      });
+      server
+        .populate('owner')
+        .then((server) => {
+          res.status(201).json({
+            message: 'Server created successfully!',
+            server: serverDTO(server as FetchedServer & { image: Buffer }),
+          });
+        })
     })
-    .catch((err: { statusCode: number; }) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
+    .catch((err) => requestErrorHandler(err, next))
 };
 
 const updateServer: Handler = (req, res, next) => {
@@ -94,14 +85,13 @@ const updateServer: Handler = (req, res, next) => {
       return server.save();
     })
     .then((server) => {
-      res.status(200).json({ messageInfo: 'Server updated!', server });
+      server
+        .populate('owner')
+        .then((server) => {
+          res.status(200).json({ messageInfo: 'Server updated!', server: serverDTO(server as FetchedServer & { image: Buffer }) });
+        })
     })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
+    .catch((err) => requestErrorHandler(err, next))
 };
 const deleteServer: Handler = (req, res, next) => {
   const serverId = req.params.id;
@@ -117,12 +107,7 @@ const deleteServer: Handler = (req, res, next) => {
     .then((result) => {
       res.status(200).json({ messageInfo: 'Deleted server.' });
     })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
+    .catch((err) => requestErrorHandler(err, next))
 };
 
 const getChannels: Handler = (req, res, next) => {
@@ -141,12 +126,7 @@ const getChannels: Handler = (req, res, next) => {
         channels: channels.map((channel) => channelDTO(channel as FetchedChannel)),
       });
     })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
+    .catch((err) => requestErrorHandler(err, next))
 };
 
 export default { getServers, createServer, getServer, updateServer, deleteServer, getChannels };

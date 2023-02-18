@@ -1,10 +1,11 @@
 import { HydratedDocument } from 'mongoose';
 import { UserDocument } from '../models/user';
-import { DTOChat, DTOUser, DTOPersonalMessage, DTOChannelMessage, DTOChannel, DTOChannelInvite } from '../types/dto';
+import { DTOChat, DTOUser, DTOPersonalMessage, DTOChannelMessage, DTOChannel, DTOChannelInvite, DTOServer } from '../types/dto';
 import { PersonalMessageDocument } from '../models/personal-message';
 import { ChannelDocument } from '../models/channel';
 import { ChannelMessageDocument } from '../models/channel-message';
 import { ChannelInviteDocument } from '../models/channel-invite';
+import { ServerDocument } from '../models/server';
 
 export type FetchedUser = HydratedDocument<UserDocument, {}, { chats: DTOChat[] }>;
 
@@ -13,6 +14,8 @@ export type FetchedChat = HydratedDocument<Pick<UserDocument, 'name' | 'availabi
 export type FetchedPersonalMessage = HydratedDocument<PersonalMessageDocument>;
 
 export type FetchedChannelMessage = HydratedDocument<ChannelMessageDocument>;
+
+export type FetchedServer = HydratedDocument<ServerDocument>;
 
 export type FetchedChannel = HydratedDocument<ChannelDocument>;
 
@@ -33,6 +36,7 @@ export const userDTO = ({
   invitesToChannels,
   joinedChannels,
 }: FetchedUser): DTOUser => {
+  console.log(_id, friends);
   return {
     id: _id.toString(),
     name,
@@ -44,8 +48,15 @@ export const userDTO = ({
     friends: (friends || []).map((id) => id.toString()),
     invitesFrom: (invitesFrom || []).map((id) => id.toString()),
     invitesTo: (invitesTo || []).map((id) => id.toString()),
-    invitesToChannels: invitesToChannels as unknown as DTOChannel[] || [],
-    joinedChannels: joinedChannels as unknown as DTOChannel[] || [],
+    invitesToChannels: invitesToChannels.map((invite) => {
+      const channel = invite as unknown as FetchedChannel;
+      return {
+        id: channel._id.toString(),
+        name: channel.name,
+        serverId: String(channel.serverId),
+      }
+    }),
+    joinedChannels: (joinedChannels || []) as unknown as DTOChannel[],
     createdAt,
   };
 };
@@ -98,6 +109,16 @@ export const channelMessageDTO = ({
     responsedToMessage: responsedToMessage ? channelMessageDTO(responsedToMessage as FetchedChannelMessage) : null,
   };
 };
+
+export const serverDTO = ({_id, image, name, owner}: FetchedServer): DTOServer => {
+  const ownerUser = owner as unknown as FetchedUser;
+  return {
+    id: _id.toString(),
+    name: name,
+    image: image,
+    owner: { id: ownerUser._id.toString(), name: ownerUser.name },
+  }
+}
 
 export const channelDTO = ({ _id, name, serverId }: FetchedChannel): DTOChannel => {
   return {
