@@ -34,12 +34,7 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
       throw Error('User is not defined');
     }
     this.view.render();
-    // fake channels
-    this.onChannelListChanged(fakeChannels);
-    // end of fake channels
-
-    // Do not remove this comment!
-    //appStore.bindChannelListChanged(this.onChannelListChanged);
+    appStore.bindChannelListChanged(this.onChannelListChanged);
     ServersSideBarComponent.bindRouteChanged();
     {
       const serverId = new Router().getParams()[0];
@@ -104,12 +99,6 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
 
   static async onUrlServerIdChanged(serverId: string): Promise<void> {
     appStore.resetChannels();
-    // Redirect to fake channel
-    if (['1', '2', '3'].includes(serverId)) {
-      Router.push(RouteControllers.Servers, '', [serverId, '1']);
-      return;
-    }
-    // end of redirect to fake channel
     await appStore.fetchChannels(serverId);
     ServersScreen.server = appStore.getServer(serverId);
     ServersSideBarComponent.serverId = serverId;
@@ -118,20 +107,9 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
       Router.push(RouteControllers.Servers, '', [ServersSideBarComponent.serverId, appStore.channels[0].id]);
       return;
     }
-    // await new MainComponent().init();
   }
 
   static async onUrlChannelIdChanged(channelId: string): Promise<void> {
-    // Fake channel
-    if (channelId === '1') {
-      console.log('fake channel');
-      ServersScreen.channel = fakeChannels[0];
-      ServersSideBarComponent.channelId = channelId;
-      ServersSideBarView.toggleActiveStatus(channelId);
-      await new MainComponent().init();
-      return;
-    }
-    // end of fake channel
     if (!ServersSideBarComponent.serverId) {
       return;
     }

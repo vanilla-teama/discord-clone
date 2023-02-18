@@ -110,9 +110,6 @@ class ChannelsInviteFormView extends View {
     //  //},
     //];
 
-  
-
-
     //usersFake.forEach((friend) => {
     //  this.$friendList.append(this.createFriendItem(friend));
     //});
