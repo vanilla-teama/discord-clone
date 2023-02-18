@@ -414,8 +414,31 @@ class AppStore {
 
   async addChannelMessage(message: IncomingChannelMessage): Promise<void> {
     const response = await http.post('/channels/messages', message).catch((error) => console.error(error));
-    // this.fetchChannelMessages(message.channelId);
-    // this.onChannelMessageListChanged(this.getFormattedRenderedChannelMessages());
+  }
+
+  async editChannelMessage(id: string, message: string): Promise<void> {
+    const response = await http
+      .patch<{ message: string }, { data: { message: ChannelMessage } }>(`/channels/messages/${id}`, { message })
+      .catch((error) => console.error(error));
+    if (response) {
+      const messageIdx = this.channelMessages.findIndex(({ id: itemId }) => itemId === id);
+      if (messageIdx) {
+        this.channelMessages = [
+          ...this.channelMessages.slice(0, messageIdx),
+          response.data.message,
+          ...this.channelMessages.slice(messageIdx + 1),
+        ];
+        this.onChannelMessageChanged(this.getFormattedRenderedChannelMessage(response.data.message));
+      }
+    }
+  }
+
+  async deleteChannelMessage(id: string): Promise<void> {
+    const response = await http.delete(`/channels/messages/${id}`).catch((error) => console.error(error));
+    if (response) {
+      this.channelMessages = this.channelMessages.filter(({ id: currId }) => currId !== id);
+      this.onChannelMessageDeleted();
+    }
   }
 
   async addServer(server: Partial<Server<'formData'>>): Promise<void> {
@@ -466,6 +489,8 @@ class AppStore {
   onChatUpdate = (chat: Chat): void => {};
   onPersonalMessageChanged = (message: RenderedPersonalMessage): void => {};
   onPersonalMessageDeleted = (): void => {};
+  onChannelMessageChanged = (message: RenderedChannelMessage): void => {};
+  onChannelMessageDeleted = (): void => {};
 
   async bindServerListChanged(callback: (servers: Server[]) => void): Promise<void> {
     this.onServerListChanged = callback;
@@ -493,6 +518,14 @@ class AppStore {
 
   bindChannelMessageListChanged = (callback: (messages: RenderedChannelMessage[]) => void): void => {
     this.onChannelMessageListChanged = callback;
+  };
+
+  bindChannelMessageChanged = (callback: (message: RenderedChannelMessage) => void): void => {
+    this.onChannelMessageChanged = callback;
+  };
+
+  bindChannelMessageDeleted = (callback: () => void): void => {
+    this.onChannelMessageDeleted = callback;
   };
 
   bindChatLocallyUpdate = (

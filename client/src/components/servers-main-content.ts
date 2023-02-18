@@ -12,19 +12,25 @@ import ServersScreen from './servers-screen';
 class ServersMainContentComponent extends Controller<ServersMainContentView> {
   server: Server | null;
   channel: Channel | null;
+  fastMenusMap: Map<HTMLElement, { fastMenu: MessageFastMenu; message: RenderedChannelMessage }>;
 
   constructor() {
-    super(new ServersMainContentView());
+    super(new ServersMainContentView(ServersScreen.channel));
     this.server = ServersScreen.server;
     this.channel = ServersScreen.channel;
+    this.fastMenusMap = new Map();
   }
 
   async init(): Promise<void> {
+    if (!appStore.user) {
+      throw Error('User is not defined');
+    }
+
     this.view.render();
     if (this.channel) {
       appStore.bindChannelMessageListChanged(this.onMessageListChange);
-      this.view.bindMessageEvent(this.handleSendMessage);
       await this.fetchMessages();
+      this.view.bindMessageEvent(this.handleSendMessage);
       this.bindSocketEvents();
       this.view.bindMessageHover(this.showFastMenu);
 
@@ -50,7 +56,6 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
   }
 
   onMessageListChange = async (messages: RenderedChannelMessage[]): Promise<void> => {
-    console.log(messages);
     this.view.displayMessages(messages);
   };
 
@@ -80,6 +85,28 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
         await this.fetchMessages();
       })
     );
+
+    socket.removeListener('channelMessageUpdated', ServersMainContentComponent.onSocketChannelMessageUpdated);
+    socket.on(
+      'channelMessageUpdated',
+      (ServersMainContentComponent.onSocketChannelMessageUpdated = async ({ messageId }) => {
+        if (!this.channel) {
+          return;
+        }
+        await this.fetchMessages();
+      })
+    );
+
+    socket.removeListener('channelMessageDeleted', ServersMainContentComponent.onSocketChannelMessageDeleted);
+    socket.on(
+      'channelMessageDeleted',
+      (ServersMainContentComponent.onSocketChannelMessageDeleted = async ({ messageId }) => {
+        if (!this.channel) {
+          return;
+        }
+        await this.fetchMessages();
+      })
+    );
   }
 
   showFastMenu = async (
@@ -95,6 +122,10 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
     if (MessageFastMenu.instance) {
       MessageFastMenu.instance.destroy();
     }
+  };
+
+  showEditForm = ($container: HTMLLIElement): void => {
+    this.view.displayEditMessageForm($container);
   };
 
   displayEditMessageForm = (event: MouseEvent): void => {
@@ -117,18 +148,18 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
     if (!id || !message || typeof id !== 'string' || typeof message !== 'string') {
       return;
     }
-    appStore.bindPersonalMessageChanged((message: RenderedChannelMessage) => {
+    appStore.bindChannelMessageChanged((message: RenderedChannelMessage) => {
       this.view.editMessageContent($message, message);
     });
-    await appStore.editPersonalMessage(id, message);
+    await appStore.editChannelMessage(id, message);
     socket.emit('channelMessageUpdated', { messageId: id });
   };
 
   onDeleteMessageDialogSubmit = async (messageId: string, $message: HTMLLIElement): Promise<void> => {
-    appStore.bindPersonalMessageDeleted(() => {
+    appStore.bindChannelMessageDeleted(() => {
       this.view.deleteMessage($message);
     });
-    await appStore.deletePersonalMessage(messageId);
+    await appStore.deleteChannelMessage(messageId);
     socket.emit('channelMessageDeleted', { messageId });
     ModalView.hide();
   };
