@@ -40,13 +40,13 @@ class ServersBarView extends View {
         name: 'server2',
         image: '/src/assets/icons/discord.svg',
         id: '123',
-        owner: { name: 'HAHA' },
+        owner: { name: 'HAHA', id: '123' },
       },
       {
         name: 'server1',
         image: '',
         id: '456',
-        owner: { name: 'HAHA' },
+        owner: { name: 'HAHA', id: '123' },
       },
     ];
 

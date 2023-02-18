@@ -9,6 +9,7 @@ import {
   ChatAvailabilitiesMap,
   PersonalMessage,
   Server,
+  ServerOwner,
   User,
 } from '../types/entities';
 import { LoginError, RegisterError, RegisterErrorData } from '../types/http-errors';
@@ -156,6 +157,28 @@ class AppStore {
     return this.channels.find(({ id }) => id === channelId) || null;
   }
 
+  getChannelOwner(channelId: string): ServerOwner | null {
+    const channel = this.getChannel(channelId);
+    if (channel) {
+      return this.getServer(channel.serverId)?.owner || null;
+    }
+    return null;
+  }
+
+  getChannelMembers(channelId: string): User[] {
+    const invitedUsers = this.users.filter((user) => {
+      if (!user.invitesToChannels) {
+        return false;
+      }
+      return user.invitesToChannels.some((channel) => channel.id == channelId);
+    });
+
+    const owner = this.getChannelOwner(channelId);
+    const ownerUser = this.users.find((user) => user.id === owner?.id) || null;
+
+    return invitedUsers.concat(ownerUser || []);
+  }
+
   getChannelNameAndServerName(channelId: string): { serverName: string; channelName: string } | null {
     const channel = this.getChannel(channelId);
     if (channel) {
@@ -209,7 +232,6 @@ class AppStore {
       .get<{ invitedToFriends: User[] }>(`/users/${this.user.id}/invited-to-friends`)
       .catch((err) => console.error(err));
     if (response) {
-      console.log(response);
       this.invitedToFriends = response.data.invitedToFriends;
     }
   }
@@ -229,6 +251,7 @@ class AppStore {
 
   async fetchChats(userId: User['id']): Promise<void> {
     const response = await http.get<{ chats: Chat[] }>(`/chats/users/${userId}`);
+    console.log(response);
     if (response) {
       this.chats = response.data.chats || [];
     } else {
@@ -283,6 +306,7 @@ class AppStore {
     const response = await http
       .get<{ servers: Server[] }>(`/users/${userId}/related-servers`)
       .catch((err) => console.error(err));
+    console.log(response);
     if (response) {
       this.servers = response.data.servers || [];
     } else {
@@ -341,6 +365,7 @@ class AppStore {
     const response = await http
       .post<{ email: string; password: string }, { data: { user: User } }>('/users/login', { email, password })
       .catch((error) => {
+        console.log(error);
         if (isExpressError<{ message: string }>(error) && error.status === ErrorStatusCode.Unauthorized) {
           onUnauthorized(error);
         }
@@ -385,9 +410,13 @@ class AppStore {
     }
   }
 
-  async updateUser(userId: string, data: Partial<User>, params?: { remove: (keyof User)[] }): Promise<void> {
+  async updateUser(
+    userId: string,
+    data: Partial<User<'formData'>>,
+    params?: { remove: (keyof User)[] }
+  ): Promise<void> {
     const response = await http
-      .patch<Partial<User>, { data: { user: User } }>(`/users/${userId}`, data, { params })
+      .patch<Partial<User<'formData'>>, { data: { user: User } }>(`/users/${userId}`, data, { params })
       .catch((err) => console.log(err));
     if (response) {
       const userIdx = this.users.findIndex(({ id }) => userId === id);

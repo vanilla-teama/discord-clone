@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 export interface ServerDocument extends mongoose.Document {
   name: string;
-  image: string;
+  image: string | null;
   owner: Types.ObjectId;
 }
 

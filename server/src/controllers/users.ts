@@ -5,7 +5,7 @@ import { IVerifyOptions } from 'passport-local';
 import User, { Availability, UserDocument, validateUserField } from '../models/user';
 import Server from '../models/server';
 import '../passport';
-import { FetchedChannel, FetchedUser, userDTO } from '../utils/dto';
+import { FetchedChannel, FetchedServer, FetchedUser, serverDTO, userDTO } from '../utils/dto';
 import { App } from '../app';
 import { TypedRequest } from 'express.types';
 import mongoose, { HydratedDocument } from 'mongoose';
@@ -369,32 +369,32 @@ const getRelatedServers: Handler = (req, res, next) => {
     .populate([
       {
         path: 'invitesToChannels',
-        populate: { path: 'serverId' },
+        populate: { path: 'serverId', populate: { path: 'owner' } },
       },
       {
         path: 'joinedChannels',
-        populate: { path: 'serverId' },
+        populate: { path: 'serverId', populate: { path: 'owner' } },
       },
     ])
     .then((user) => {
       if (handleDocumentNotFound(user)) {
-        Server.find({ owner: userId }).then((servers) => {
-          if (!servers) {
-            const error = new Error('Could not find user.');
-            next(error);
-          }
-          const invitedServers = (user.invitesToChannels || []).map(
-            (channel) => (channel as unknown as FetchedChannel).serverId
-          );
-          const joinedServers = (user.joinedChannels || []).map(
-            (channel) => (channel as unknown as FetchedChannel).serverId
-          );
-          res
-            .status(200)
-            .json({
-              message: 'Related servers fetched.',
-              servers: invitedServers.concat(joinedServers, servers as unknown as mongoose.Types.ObjectId),
-            });
+        Server
+          .find({ owner: userId })
+          .populate('owner')
+          .then((servers) => {
+            const invitedServers = (user.invitesToChannels || []).map(
+              (channel) => serverDTO((channel as unknown as FetchedChannel).serverId as unknown as FetchedServer)
+            );
+            const joinedServers = (user.joinedChannels || []).map(
+              (channel) => serverDTO((channel as unknown as FetchedChannel).serverId as unknown as FetchedServer)
+            );
+            const ownServers = servers.map((server) => serverDTO(server as unknown as FetchedServer));
+            res
+              .status(200)
+              .json({
+                message: 'Related servers fetched.',
+                servers: invitedServers.concat(joinedServers, ownServers),
+              });
         });
       }
     });

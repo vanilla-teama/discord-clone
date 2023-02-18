@@ -1,8 +1,7 @@
 import View from '../lib/view';
-import { Availability } from '../types/entities';
+import { Availability, ServerOwner, User } from '../types/entities';
 import { $ } from '../utils/functions';
 import MainView from './main-view';
-import { Chat } from './../types/entities';
 
 class ServersInfoBarView extends View {
   static readonly classes = {
@@ -10,8 +9,11 @@ class ServersInfoBarView extends View {
     userItemActive: 'servers-info-bar__item_active',
   };
 
-  $membersListOffline: HTMLUListElement;
   $membersListOnline: HTMLUListElement;
+  $membersListOffline: HTMLUListElement;
+
+  $membersListOnlineHeading: HTMLDivElement;
+  $membersListOfflineHeading: HTMLDivElement;
 
   constructor() {
     const $root = MainView.$infobar;
@@ -21,74 +23,119 @@ class ServersInfoBarView extends View {
     super($root);
     this.$membersListOnline = $('ul', 'servers-info-bar__list-online');
     this.$membersListOffline = $('ul', 'servers-info-bar__list-offline');
+    this.$membersListOnlineHeading = $('div', 'servers-info-bar__heading');
+    this.$membersListOfflineHeading = $('div', 'servers-info-bar__heading');
   }
   build(): void {
-    const chats: Chat[] = [
-      {
-        id: '63dd3dd9938e35dad6409e12',
-        userId: '63dd3d9da1340145e9b74055',
-        userName: 'Hlib Hodovaniuk',
-        availability: Availability.Online,
-        createdAt: '',
-      },
-      {
-        id: '63dd3d9da1340145e9b74055',
-        userId: '63dd3dd9938e35dad6409e12',
-        userName: 'Alexander Chornyi',
-        availability: Availability.Offline,
-        createdAt: '',
-      },
-      {
-        id: '63dd3de6938e35dad6409e14',
-        userId: '63dd3de6938e35dad6409e14',
-        userName: 'Alexander Kiroi',
-        availability: Availability.Offline,
-        createdAt: '',
-      },
-    ];
+    // const chats: Chat[] = [
+    //   {
+    //     id: '63dd3dd9938e35dad6409e12',
+    //     userId: '63dd3d9da1340145e9b74055',
+    //     userName: 'Hlib Hodovaniuk',
+    //     availability: Availability.Online,
+    //     createdAt: '',
+    //   },
+    //   {
+    //     id: '63dd3d9da1340145e9b74055',
+    //     userId: '63dd3dd9938e35dad6409e12',
+    //     userName: 'Alexander Chornyi',
+    //     availability: Availability.Offline,
+    //     createdAt: '',
+    //   },
+    //   {
+    //     id: '63dd3de6938e35dad6409e14',
+    //     userId: '63dd3de6938e35dad6409e14',
+    //     userName: 'Alexander Kiroi',
+    //     availability: Availability.Offline,
+    //     createdAt: '',
+    //   },
+    // ];
 
+    // const $serversInfoBar = $('div', 'servers-info-bar');
+    // const $membersOnline = $('div', 'servers-info-bar__members-online');
+    // const $membersOffline = $('div', 'servers-info-bar__members-offline');
+
+    // const countItem = (status: string) => chats.filter((item) => item.availability === status).length;
+
+    // chats.forEach((chat) => {
+    //   if (chat.availability === 'online') {
+    //     $membersOnline.textContent = `Online - ${countItem('online')}`;
+    //     const $item = this.createChatItem(chat);
+    //     $item.classList.add(ServersInfoBarView.classes.userItemActive);
+    //     this.$membersListOnline.append($item);
+    //     $membersOnline.append(this.$membersListOnline);
+    //   }
+    //   if (chat.availability === 'offline') {
+    //     $membersOffline.textContent = `Offline - ${countItem('offline')}`;
+    //     const $item = this.createChatItem(chat);
+    //     this.$membersListOffline.append($item);
+    //     $membersOffline.append(this.$membersListOffline);
+    //   }
+    // });
     const $serversInfoBar = $('div', 'servers-info-bar');
     const $membersOnline = $('div', 'servers-info-bar__members-online');
     const $membersOffline = $('div', 'servers-info-bar__members-offline');
 
-    const countItem = (status: string) => chats.filter((item) => item.availability === status).length;
-
-    chats.forEach((chat) => {
-      if (chat.availability === 'online') {
-        $membersOnline.textContent = `Online - ${countItem('online')}`;
-        const $item = this.createChatItem(chat);
-        $item.classList.add(ServersInfoBarView.classes.userItemActive);
-        this.$membersListOnline.append($item);
-        $membersOnline.append(this.$membersListOnline);
-      }
-      if (chat.availability === 'offline') {
-        $membersOffline.textContent = `Offline - ${countItem('offline')}`;
-        const $item = this.createChatItem(chat);
-        this.$membersListOffline.append($item);
-        $membersOffline.append(this.$membersListOffline);
-      }
-    });
+    $membersOnline.append(this.$membersListOnlineHeading, this.$membersListOnline);
+    $membersOffline.append(this.$membersListOfflineHeading, this.$membersListOffline);
 
     $serversInfoBar.append($membersOnline, $membersOffline);
     this.$container.append($serversInfoBar);
   }
 
-  private createChatItem({ userName, availability }: Chat): HTMLLIElement {
+  private createChatItem({ name, availability }: User, isOwner: boolean): HTMLLIElement {
     const $item = $('li', ServersInfoBarView.classes.userItem);
     const $itemBox = $('div', 'user-item__box');
     const $itemAvatar = $('div', 'user-item__avatar');
     const $itemIcon = $('div', 'user-item__icon');
     const $itemStatus = $('div', ['user-item__status', `user-item__status_${availability}`]);
     const $itemName = $('div', 'user-item__name');
-    $itemName.textContent = `${userName}`;
+    $itemName.textContent = `${name}`;
     const $iconCrown = $('div', ['servers-info-bar__icon-crown', 'tooltip']);
     $iconCrown.dataset.text = 'Server owner';
 
     $itemAvatar.append($itemIcon, $itemStatus);
-    $itemBox.append($itemAvatar, $itemName, $iconCrown);
+    $itemBox.append($itemAvatar, $itemName);
+    if (isOwner) {
+      $itemBox.append($iconCrown);
+    }
     $item.append($itemBox);
 
     return $item;
+  }
+
+  displayMembers(members: User[], owner: ServerOwner | null) {
+    // Sort members so that the server owner goes first
+    let sortedMembers = members;
+    if (owner) {
+      sortedMembers = sortedMembers.sort((a) => (a.id === owner.id ? -1 : 1));
+    }
+    const onlineCount = members.filter((user) => user.availability === Availability.Online).length;
+    const offlineCount = members.filter((user) => user.availability === Availability.Offline).length;
+
+    this.$membersListOnlineHeading.innerHTML = '';
+    this.$membersListOfflineHeading.innerHTML = '';
+    this.$membersListOnline.innerHTML = '';
+    this.$membersListOffline.innerHTML = '';
+
+    if (onlineCount > 0) {
+      this.$membersListOnlineHeading.textContent = `Online - ${onlineCount}`;
+    }
+    if (offlineCount > 0) {
+      this.$membersListOfflineHeading.textContent = `Offline - ${offlineCount}`;
+    }
+
+    members.forEach((user) => {
+      if (user.availability === 'online') {
+        const $item = this.createChatItem(user, user.id === owner?.id);
+        $item.classList.add(ServersInfoBarView.classes.userItemActive);
+        this.$membersListOnline.append($item);
+      }
+      if (user.availability === 'offline') {
+        const $item = this.createChatItem(user, user.id === owner?.id);
+        this.$membersListOffline.append($item);
+      }
+    });
   }
 }
 

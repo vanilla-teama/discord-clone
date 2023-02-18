@@ -41,7 +41,11 @@ export interface DTOChannelMessage extends DTOEntity {
 
 export interface DTOServer extends DTOEntity {
   name: string;
-  image: string;
+  image: string | null;
+  owner: {
+    id: string;
+    name: string;
+  }
 }
 
 export interface DTOChannel extends DTOEntity {
