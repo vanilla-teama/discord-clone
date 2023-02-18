@@ -1,4 +1,4 @@
-import { Availability, Chat, PersonalMessage, Server, User } from '../types/entities';
+import { Availability, Channel, Chat, PersonalMessage, Server, User } from '../types/entities';
 import moment from '../lib/moment';
 import { RenderedPersonalMessage } from '../views/chats-main-content-view';
 
@@ -182,23 +182,34 @@ export const personalMessages: RenderedPersonalMessage[] = [
   },
 ];
 
-// export const servers: Server[] = [
-//   {
-//     id: '1',
-//     name: 'RS School',
-//     image: Buffer.from(''),
-//   },
-//   {
-//     id: '2',
-//     name: 'Twin Fin',
-//     image: Buffer.from(''),
-//   },
-//   {
-//     id: '3',
-//     name: 'Vanilla Team',
-//     image: Buffer.from(''),
-//   },
-// ];
+export const servers: Server[] = [
+  {
+    id: '1',
+    name: 'Fake RS School',
+    image: '',
+    owner: { name: 'ME' },
+  },
+  {
+    id: '2',
+    name: 'Fake Twin Fin',
+    image: ' Buffer.from',
+    owner: { name: 'ME2' },
+  },
+  {
+    id: '3',
+    name: 'Fake Vanilla Team',
+    image: 'Buffer.from',
+    owner: { name: 'ME3' },
+  },
+];
+
+export const channels: Channel[] = [
+  {
+    id: '1',
+    name: 'Fake Test',
+    serverId: '1',
+  },
+];
 
 export const chats: Chat[] = [
   {

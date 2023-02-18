@@ -97,4 +97,22 @@
     color: var(--text-primary);
     transition: all 0.3s ease 0s;
   }
+  &__invite {
+    margin-left: auto;
+    background: url('/src/assets/icons/create-invite.svg') center / contain no-repeat;
+    width: 19px;
+    height: 16px;
+    opacity: 0.5;
+    transition: all 0.3s ease 0s;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+    
+    &.tooltip::after {
+      top: -25px;
+    }
+    &:hover {
+      opacity: 1;
+    }
+  }
 }
