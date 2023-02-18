@@ -18,8 +18,7 @@ class ChatsSideBarView extends View {
     super($root);
     this.$chatList = $('ul', 'chats-sidebar__list');
     this.$friendsButton = $('button', 'chats-sidebar__to-friends');
-    this.$buttonShowSidebar = $('button', 'show-sidebar-btn');
-    this.$friendsInvites = $('div', 'chats-sidebar__invites');    
+    this.$friendsInvites = $('div', 'chats-sidebar__invites');
     this.$userBar = this.createUserBar();
     this.chatListMap = new Map();
     this.$showCreateChat = this.createShowCreateChatElement();
@@ -31,15 +30,12 @@ class ChatsSideBarView extends View {
   chatListMap: Map<HTMLLIElement, { chat: Chat }>;
   $showCreateChat: HTMLSpanElement;
   $friendsButton: HTMLButtonElement;
-  $buttonShowSidebar: HTMLButtonElement;
 
   build(): void {
     const $chatsContainer = $('div', 'chats-sidebar__container');
     const $friendsContainer = $('div', 'chats-sidebar__friends-container');
     const $friendsIcon = $('div', 'chats-sidebar__friends-icon');
 
-    const $buttonShowSidebar = this.$buttonShowSidebar;
-    $buttonShowSidebar.textContent = 'close';
     this.$friendsButton.textContent = 'Friends';
 
     $friendsContainer.append($friendsIcon, this.$friendsButton, this.$friendsInvites);
@@ -179,10 +175,6 @@ class ChatsSideBarView extends View {
 
   displayFriendsBlockStatus(invites: number) {
     this.$friendsInvites.textContent = `${invites}`;
-  }
-
-  displaySidebar(handler: EventListener): void {
-    this.$buttonShowSidebar.onclick = handler;
   }
 
   onFriendsButtonClick: EventListener = () => {};

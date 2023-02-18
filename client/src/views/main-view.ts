@@ -3,7 +3,7 @@ import View from '../lib/view';
 import { Dispatch } from '../types/types';
 import { $ } from '../utils/functions';
 import ScreenView from './screen-view';
-
+import StartBarView from './start-bar-view';
 class MainView extends View {
   static readonly classNames = {};
 
@@ -28,6 +28,7 @@ class MainView extends View {
 
     this.$container.append(MainView.$appbar, MainView.$mainContainer);
     MainView.showInfoBar();
+    ScreenView.observerWidth();
   }
 
   static showInfoBar(): void {
@@ -54,6 +55,7 @@ class MainView extends View {
   static toggleInfoBar(): void {
     if (window.matchMedia('(max-width: 1000px)').matches) {
       if (ScreenView.$sideBar !== null) ScreenView.$sideBar.classList.add('_disable');
+      if (StartBarView.$burgerBtn) StartBarView.$burgerBtn.classList.remove('burger_active');
     }
     if (MainView.$mainContainer) {
       if (MainView.$mainContainer.classList.contains('main-container_show-info-bar')) {

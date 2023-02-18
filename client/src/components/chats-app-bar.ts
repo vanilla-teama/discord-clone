@@ -23,7 +23,6 @@ class ChatsAppBarComponent extends Controller<ChatsAppBarView> {
     this.bindSocketUserAvailabilityChangedServer();
     ChatsScreen.bindChatUpdate('appbar', this.onChatUpdate);
     this.view.bindShowInfoBarClick(this.toggleInfoBar);
-    this.view.bindShowSideBarClick(ScreenView.showSideBar);
     MainView.bindToggleInfoBar(this.view.setShowInfoBarButtonHideTooltip, this.view.setShowInfoBarButtonShowTooltip);
   }
 

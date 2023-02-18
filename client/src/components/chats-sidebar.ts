@@ -36,7 +36,6 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
     ChatsScreen.bindChatUpdate('sidebar', this.onChatUpdate);
     this.bindSocketEvents();
     this.view.displayFriendsBlockStatus(appStore.user.invitesFrom.length);
-    this.view.displaySidebar(ScreenView.hideSideBar);
     appStore.bindChatListChanged(this.onChatListChanged);
   }
 
