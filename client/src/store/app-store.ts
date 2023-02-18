@@ -13,7 +13,7 @@ export type IncomingChannelMessage = AppOmit<ChannelMessage, 'id' | 'responsedTo
 class AppStore {
   private static instance: AppStore;
 
-  private _user: User | null = null;
+  private _user: User | null = null; // Current user
 
   private _users: User[] = [];
 
@@ -23,9 +23,9 @@ class AppStore {
 
   private _invitedFromFriends: User[] = [];
 
-  private _channels: Channel[] = [];
+  private _channels: Channel[] = []; // Current user related channels
 
-  private _chats: Chat[] = [];
+  private _chats: Chat[] = []; // Current user related chats
 
   private _chatStatuses: ChatAvailabilitiesMap = new Map();
 
@@ -33,7 +33,7 @@ class AppStore {
 
   private _channelMessages: ChannelMessage[] = [];
 
-  private _servers: Server[] = [];
+  private _servers: Server[] = []; // Current user related servers
 
   get isAuth(): boolean {
     return Boolean(this.user);
@@ -251,12 +251,23 @@ class AppStore {
 
   async fetchServers(): Promise<void> {
     const response = await http.get<{ servers: Server[] }>(`/servers`);
-    console.log(response);
     if (response) {
       this.servers = response.data.servers || [];
     } else {
       this.servers = [];
     }
+  }
+
+  async fetchUserRelatedServers(userId: string): Promise<void> {
+    const response = await http
+      .get<{ servers: Server[] }>(`/users/${userId}/related-servers`)
+      .catch((err) => console.error(err));
+    if (response) {
+      this.servers = response.data.servers || [];
+    } else {
+      this.servers = [];
+    }
+    this.onServerListChanged(this.servers);
   }
 
   async fetchChannels(serverId: string): Promise<void> {
@@ -442,6 +453,9 @@ class AppStore {
   }
 
   async addServer(server: Partial<Server<'formData'>>): Promise<void> {
+    if (!this.user) {
+      return;
+    }
     await http
       .post('/servers', server, {
         headers: {
@@ -450,7 +464,7 @@ class AppStore {
         },
       })
       .catch((error) => console.error(error));
-    await this.fetchServers();
+    await this.fetchUserRelatedServers(this.user.id);
     this.onServerListChanged(this.servers);
   }
 

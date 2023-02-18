@@ -21,6 +21,9 @@ class MessageFastMenu extends Controller<MessageFastMenuView> {
       if (!appStore.user) {
         return 'edit';
       }
+      if ('service' in message && message.service) {
+        return null;
+      }
       if (message.userId === appStore.user.id) {
         return 'edit';
       } else {

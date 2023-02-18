@@ -3,12 +3,13 @@ import { body, check, validationResult } from 'express-validator';
 import passport from 'passport';
 import { IVerifyOptions } from 'passport-local';
 import User, { Availability, UserDocument, validateUserField } from '../models/user';
+import Server from '../models/server';
 import '../passport';
-import { FetchedUser, userDTO } from '../utils/dto';
+import { FetchedChannel, FetchedUser, userDTO } from '../utils/dto';
 import { App } from '../app';
 import { TypedRequest } from 'express.types';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { requestErrorHandler } from '../utils/functions';
+import { handleDocumentNotFound, requestErrorHandler } from '../utils/functions';
 import { DTOUser } from 'dto';
 
 const checkAuth = (req: Request, res: Response, next: NextFunction): void => {
@@ -145,7 +146,7 @@ const getUsers: Handler = (req, res, next) => {
     .countDocuments()
     .then((count) => {
       docsCount = count;
-      return User.find().populate('chats');
+      return User.find().populate(['chats', 'invitesToChannels', 'joinedChannels']);
     })
     .then((users) => {
       const exportedUsers = users.map((u) => userDTO(u));
@@ -190,6 +191,7 @@ const createUser: Handler = (req, res, next) => {
 const getUser: Handler = (req, res, next) => {
   const userId = req.params.id;
   User.findById(userId)
+    .populate(['chats', 'invitesToChannels', 'joinedChannels'])
     .then((user) => {
       if (!user) {
         const error = new Error('Could not find user.');
@@ -227,7 +229,10 @@ const searchUsers: Handler = (req, res, next) => {
 };
 
 const updateUser = (
-  req: TypedRequest<{ socketId: string; remove: (keyof DTOUser)[] | undefined }, DTOUser>,
+  req: TypedRequest<
+    { socketId: string; remove: (keyof DTOUser)[] | undefined },
+    DTOUser & { invitesToChannels: string[]; joinedChannels: string[] }
+  >,
   res: Response,
   next: NextFunction
 ) => {
@@ -246,17 +251,21 @@ const updateUser = (
         if (path in req.body) {
           if (path === 'name' || path === 'email' || path === 'password' || path === 'phone') {
             user[path] = req.body[path];
-          } else if (path === 'invitesFrom' || path === 'invitesTo' || path === 'invitesToChannels' || path === 'friends') {
+          } else if (
+            path === 'invitesFrom' ||
+            path === 'invitesTo' ||
+            path === 'friends' ||
+            path === 'invitesToChannels' ||
+            path === 'joinedChannels'
+          ) {
             if (remove && remove.includes(path)) {
-              const newValueOfStr = (user[path] || []).map((id) => id.toString()).filter((id) => !req.body[path].includes(id));
-              user[path] = [...new Set(newValueOfStr)].map(
-                (id) => new mongoose.Types.ObjectId(id)
-              );
+              const newValueOfStr = (user[path] || [])
+                .map((id) => id.toString())
+                .filter((id) => !req.body[path].includes(id));
+              user[path] = [...new Set(newValueOfStr)].map((id) => new mongoose.Types.ObjectId(id));
             } else {
               const newValueOfStr = (user[path] || []).map((id) => id.toString()).concat(req.body[path]);
-              user[path] = [...new Set(newValueOfStr)].map(
-                (id) => new mongoose.Types.ObjectId(id)
-              );
+              user[path] = [...new Set(newValueOfStr)].map((id) => new mongoose.Types.ObjectId(id));
             }
           }
         }
@@ -265,7 +274,12 @@ const updateUser = (
       return user.save();
     })
     .then((user) => {
-      res.status(200).json({ messageInfo: 'User updated!', user: userDTO(user) });
+      user
+        .populate(['chats', 'invitesToChannels', 'joinedChannels'])
+        .then((user) => {
+          res.status(200).json({ messageInfo: 'User updated!', user: userDTO(user) });
+        })
+        .catch((err) => requestErrorHandler(err, next));
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -348,6 +362,44 @@ const getInvitedFromFriends: Handler = (req, res, next) => {
     .catch((err) => requestErrorHandler(err, next));
 };
 
+const getRelatedServers: Handler = (req, res, next) => {
+  const userId = req.params.id;
+
+  User.findById(userId)
+    .populate([
+      {
+        path: 'invitesToChannels',
+        populate: { path: 'serverId' },
+      },
+      {
+        path: 'joinedChannels',
+        populate: { path: 'serverId' },
+      },
+    ])
+    .then((user) => {
+      if (handleDocumentNotFound(user)) {
+        Server.find({ owner: userId }).then((servers) => {
+          if (!servers) {
+            const error = new Error('Could not find user.');
+            next(error);
+          }
+          const invitedServers = (user.invitesToChannels || []).map(
+            (channel) => (channel as unknown as FetchedChannel).serverId
+          );
+          const joinedServers = (user.joinedChannels || []).map(
+            (channel) => (channel as unknown as FetchedChannel).serverId
+          );
+          res
+            .status(200)
+            .json({
+              message: 'Related servers fetched.',
+              servers: invitedServers.concat(joinedServers, servers as unknown as mongoose.Types.ObjectId),
+            });
+        });
+      }
+    });
+};
+
 const updateFriends: Handler = async (req, res, next) => {
   const userId = req.params.id;
   let friendIds = req.body.friends;
@@ -425,4 +477,5 @@ export default {
   checkAuth,
   logout,
   searchUsers,
+  getRelatedServers,
 };

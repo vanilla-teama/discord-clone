@@ -31,6 +31,7 @@ class ChannelsInviteFormComponent extends Controller<ChannelsInviteFormView> {
     const data = appStore.getChannelNameAndServerName(this.channelId);
     if (data) {
       await appStore.updateUser(userId, { invitesToChannels: [this.channelId] });
+      console.log(appStore.users);
       socket.emit('userInvitedToChannel', { userId, channelId: this.channelId });
       await appStore.addChannelMessage(this.createInviteMessage(userId));
       onSuccess();

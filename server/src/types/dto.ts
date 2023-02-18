@@ -14,7 +14,8 @@ export interface DTOUser extends DTOEntity {
   friends: string[];
   invitesFrom: string[];
   invitesTo: string[];
-  invitesToChannels: string[],
+  invitesToChannels: DTOChannel[],
+  joinedChannels: DTOChannel[],
   createdAt: Date;
 }
 
