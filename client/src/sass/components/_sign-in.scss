@@ -71,7 +71,16 @@
   }
 }
 
-@include media-md-down {
+@include media-sm-down {
+  .sign-in,
+  .sign-up {
+    &__form-wrapper {
+      width: 330px;
+    }
+  }
+}
+
+@include media-xs-down {
   .sign-in,
   .sign-up {
     &__box {
