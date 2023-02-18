@@ -76,7 +76,10 @@ export const personalMessageDTO = ({
   responsedToMessage,
   date,
   message,
-}: FetchedPersonalMessage): DTOPersonalMessage => {
+}: FetchedPersonalMessage): DTOPersonalMessage | null => {
+  if (!fromUserId) {
+    return null;
+  }
   return {
     id: _id.toString(),
     fromUserId: fromUserId.toString(),
@@ -97,7 +100,10 @@ export const channelMessageDTO = ({
   responsedToMessage,
   date,
   message,
-}: FetchedChannelMessage): DTOChannelMessage => {
+}: FetchedChannelMessage): DTOChannelMessage | null => {
+  if (!userId) {
+    return null;
+  }
   return {
     id: _id.toString(),
     service,
