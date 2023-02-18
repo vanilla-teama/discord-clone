@@ -22,9 +22,13 @@ class ChatsAppBarComponent extends Controller<ChatsAppBarView> {
     this.view.render();
     this.bindSocketUserAvailabilityChangedServer();
     ChatsScreen.bindChatUpdate('appbar', this.onChatUpdate);
-    this.view.bindShowInfoBarClick(this.toggleInfoBar);
-    MainView.bindToggleInfoBar(this.view.setShowInfoBarButtonHideTooltip, this.view.setShowInfoBarButtonShowTooltip);
+    this.bindShowInfoBarClick();
   }
+
+  bindShowInfoBarClick = (): void => {
+    MainView.bindToggleInfoBar(this.view.setShowInfoBarButtonHideTooltip, this.view.setShowInfoBarButtonShowTooltip);
+    this.view.bindShowInfoBarClick(this.toggleInfoBar);
+  };
 
   bindSocketUserAvailabilityChangedServer() {
     socket.removeListener('userChangedAvailability', ChatsAppBarComponent.onSocketUserAvailabilityChangedServer);
