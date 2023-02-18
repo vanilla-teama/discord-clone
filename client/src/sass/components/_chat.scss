@@ -35,7 +35,8 @@
       border-radius: 10px;
     }
 
-    .personal-message_edit {
+    .personal-message_edit,
+    .channel-message_edit {
       padding-bottom: 38px;
     }
   }
@@ -208,7 +209,8 @@
   }
 
   &_reply {
-    .personal-message__icon-block {
+    .personal-message__icon-block,
+    .channel-message__icon-block {
       align-self: flex-end;
       position: relative;
     }
@@ -260,7 +262,8 @@
     margin-right: auto;
   }
 }
-.chat__fast-menu {
+.chat__fast-menu,
+.servers-chat__fast-menu {
   gap: 10px;
 }
 .fast-menu {

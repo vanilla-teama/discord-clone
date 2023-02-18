@@ -46,7 +46,6 @@ const getChannel: Handler = (req, res, next) => {
 };
 
 const createChannel: Handler = (req, res, next) => {
-
   const channel = new Channel({
     serverId: req.body.serverId,
     name: req.body.name,
@@ -136,7 +135,6 @@ const getChannelMessages: Handler = (req, res, next) => {
 };
 
 const createChannelMessage: Handler = (req, res, next) => {
-
   const channelMessage = new ChannelMessage({
     userId: req.body.userId,
     channelId: req.body.channelId,
@@ -161,4 +159,65 @@ const createChannelMessage: Handler = (req, res, next) => {
     });
 };
 
-export default { getChannels, getChannel, createChannel, updateChannel, deleteChannel, getChannelMessages,createChannelMessage };
+const updateChannelMessage: Handler = (req, res, next) => {
+  const messageId = req.params.id;
+
+  ChannelMessage.findById(messageId)
+    .then((message) => {
+      if (!message) {
+        const error = new Error('Could not find message.');
+        // error.statusCode = 404;
+        throw error;
+      }
+      const contentMessage = req.body.message;
+      message.message = contentMessage;
+      return message.save();
+    })
+    .then((message) => {
+      message.populate('responsedToMessage').then((message) => {
+        res
+          .status(200)
+          .json({ messageInfo: 'Message updated!', message: channelMessageDTO(message as FetchedChannelMessage) });
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+const deleteChannelMessage: Handler = (req, res, next) => {
+  const messageId = req.params.id;
+  ChannelMessage.findById(messageId)
+    .then((message) => {
+      if (!message) {
+        const error = new Error('Could not find message.');
+        // error.statusCode = 404;
+        throw error;
+      }
+      return ChannelMessage.findByIdAndRemove(messageId);
+    })
+    .then((result) => {
+      res.status(200).json({ messageInfo: 'Deleted message.' });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+export default {
+  getChannels,
+  getChannel,
+  createChannel,
+  updateChannel,
+  deleteChannel,
+  getChannelMessages,
+  createChannelMessage,
+  updateChannelMessage,
+  deleteChannelMessage,
+};

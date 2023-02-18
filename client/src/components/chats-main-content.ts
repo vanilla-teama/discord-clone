@@ -13,7 +13,6 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
     super(new ChatsMainContentView(ChatsScreen.chat));
     this.chat = ChatsScreen.chat;
     this.fastMenusMap = new Map();
-    console.log('ChatsMainComponent constructed');
   }
 
   chat: Chat | null;
