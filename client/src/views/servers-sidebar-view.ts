@@ -129,9 +129,9 @@ class ServersSideBarView extends View {
     const $item = $('li', ServersSideBarView.classes.channelItem);
     const $itemIcon = $('div', 'servers-sidebar__hash-icon');
     const $itemName = $('div', 'servers-sidebar__name');
-    const $inviteButton = $('button', 'servers-sidebar__invite');
+    const $inviteButton = $('button', ['servers-sidebar__invite', 'tooltip']);
     $itemName.textContent = `${name}`;
-    $inviteButton.textContent = 'Invite';
+    $inviteButton.dataset.text = 'Create invite';
 
     $item.append($itemIcon, $itemName, $inviteButton);
 
