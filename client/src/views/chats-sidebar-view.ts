@@ -10,7 +10,6 @@ class ChatsSideBarView extends View {
     chatItem: 'chats-sidebar__item',
     chatItemActive: 'chats-sidebar__item_active',
   };
-
   constructor() {
     const $root = ScreenView.$sideBar;
     if (!$root) {
@@ -19,6 +18,7 @@ class ChatsSideBarView extends View {
     super($root);
     this.$chatList = $('ul', 'chats-sidebar__list');
     this.$friendsButton = $('button', 'chats-sidebar__to-friends');
+    this.$buttonShowSidebar = $('button', 'show-sidebar-btn');
     this.$userBar = this.createUserBar();
     this.chatListMap = new Map();
     this.$showCreateChat = this.createShowCreateChatElement();
@@ -29,15 +29,18 @@ class ChatsSideBarView extends View {
   chatListMap: Map<HTMLLIElement, { chat: Chat }>;
   $showCreateChat: HTMLSpanElement;
   $friendsButton: HTMLButtonElement;
+  $buttonShowSidebar: HTMLButtonElement;
 
   build(): void {
     const $topContainer = $('div', 'chats-sidebar__top-container');
     const $chatsContainer = $('div', 'chats-sidebar__container');
 
     const $friendsButton = this.$friendsButton;
+    const $buttonShowSidebar = this.$buttonShowSidebar;
+    $buttonShowSidebar.textContent = 'close';
     $friendsButton.textContent = 'Friends';
 
-    $topContainer.append($friendsButton);
+    $topContainer.append($friendsButton, $buttonShowSidebar);
 
     const $directMessagesContainer = $('div', 'chats-sidebar__dm-container');
     const $directMessagesTitle = $('div', 'chats-sidebar__dm-title');
@@ -174,6 +177,10 @@ class ChatsSideBarView extends View {
 
   displayFriendsBlockStatus(invites: number) {
     this.$friendsButton.textContent = `Friends ${invites}`;
+  }
+
+  displaySidebar(handler: EventListener): void {
+    this.$buttonShowSidebar.onclick = handler;
   }
 
   onFriendsButtonClick: EventListener = () => {};

@@ -4,10 +4,10 @@
   background-color: var(--background-color-gray);
   position: absolute;
   left: 70px;
-  top: 55px;
   transition: 0.2s all linear;
   animation-duration: 500ms;
   animation-timing-function: ease-in;
+  z-index: 80;
 }
 
 .sidebar._disable {

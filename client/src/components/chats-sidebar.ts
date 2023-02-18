@@ -12,7 +12,7 @@ import { PopupCoords } from '../views/popup-view';
 import ChatsCreateFormComponent from './chats-create-form';
 import ChatsScreen from './chats-screen';
 import PopupComponent from './popup';
-
+import ScreenView from '../views/screen-view';
 class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
   // Keeps last instance of itself
   static instance: ChatsSideBarComponent;
@@ -36,6 +36,7 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
     ChatsScreen.bindChatUpdate('sidebar', this.onChatUpdate);
     this.bindSocketEvents();
     this.view.displayFriendsBlockStatus(appStore.user.invitesFrom.length);
+    this.view.displaySidebar(ScreenView.hideSideBar);
     appStore.bindChatListChanged(this.onChatListChanged);
   }
 
