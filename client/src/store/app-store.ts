@@ -1,7 +1,16 @@
 import { chats, users } from '../develop/data';
 import { ErrorStatusCode, http, isExpressError } from '../lib/http';
 import moment from '../lib/moment';
-import { Channel, ChannelMessage, Chat, ChatAvailabilitiesMap, PersonalMessage, Server, User } from '../types/entities';
+import {
+  Channel,
+  ChannelInvite,
+  ChannelMessage,
+  Chat,
+  ChatAvailabilitiesMap,
+  PersonalMessage,
+  Server,
+  User,
+} from '../types/entities';
 import { LoginError, RegisterError, RegisterErrorData } from '../types/http-errors';
 import { AppOmit } from '../types/utils';
 import { RenderedPersonalMessage } from '../views/chats-main-content-view';
@@ -32,6 +41,10 @@ class AppStore {
   private _personalMessages: PersonalMessage[] = [];
 
   private _channelMessages: ChannelMessage[] = [];
+
+  private _lastAddedChannelMessage: ChannelMessage | null = null;
+
+  private _channelInvites: ChannelInvite[] = [];
 
   private _servers: Server[] = []; // Current user related servers
 
@@ -117,6 +130,14 @@ class AppStore {
 
   private set channelMessages(messages: ChannelMessage[]) {
     this._channelMessages = messages;
+  }
+
+  get channelInvites(): ChannelInvite[] {
+    return this._channelInvites;
+  }
+
+  private set channelInvites(invites: ChannelInvite[]) {
+    this._channelInvites = invites;
   }
 
   get servers(): Server[] {
@@ -246,7 +267,7 @@ class AppStore {
     } else {
       this.channelMessages = [];
     }
-    this.onChannelMessageListChanged(this.getFormattedRenderedChannelMessages());
+    this.onChannelMessageListChanged(this.getFormattedRenderedChannelMessages(), this.channelInvites);
   }
 
   async fetchServers(): Promise<void> {
@@ -284,6 +305,17 @@ class AppStore {
 
   resetChannels(): void {
     this.channels = [];
+  }
+
+  async fetchChannelInvites(channelId: string): Promise<void> {
+    const response = await http
+      .get<{ invites: ChannelInvite[] }>(`/channels/${channelId}/invites`)
+      .catch((error) => console.error(error));
+    if (response) {
+      this.channelInvites = response.data.invites || [];
+    } else {
+      this.channelInvites = [];
+    }
   }
 
   async searchUsers(value: string): Promise<User[]> {
@@ -423,8 +455,14 @@ class AppStore {
     }
   }
 
-  async addChannelMessage(message: IncomingChannelMessage): Promise<void> {
-    const response = await http.post('/channels/messages', message).catch((error) => console.error(error));
+  async addChannelMessage(message: IncomingChannelMessage): Promise<ChannelMessage | null> {
+    const response = await http
+      .post<IncomingChannelMessage, { data: { channelMessage: ChannelMessage } }>('/channels/messages', message)
+      .catch((error) => console.error(error));
+    if (response) {
+      return response.data.channelMessage;
+    }
+    return null;
   }
 
   async editChannelMessage(id: string, message: string): Promise<void> {
@@ -480,6 +518,13 @@ class AppStore {
     return null;
   }
 
+  async addChannelInvite(data: Partial<ChannelInvite>) {
+    const response = await http
+      .post<Partial<ChannelInvite>, { data: { invite: ChannelInvite } }>('/channels/invites', data)
+      .catch((err) => console.error(err));
+    console.log(response);
+  }
+
   updateChatLocally(chatId: Chat['userId'], data: Partial<Pick<Chat, 'userName' | 'availability'>>) {
     let chat = this.chats.find(({ userId }) => userId === chatId);
     if (chat) {
@@ -491,7 +536,7 @@ class AppStore {
   onServerListChanged = (servers: Server[]): void => {};
   onSigningIn = (data: FormData): void => {};
   onPersonalMessageListChanged = (messages: RenderedPersonalMessage[]): void => {};
-  onChannelMessageListChanged = (messages: RenderedChannelMessage[]): void => {};
+  onChannelMessageListChanged = (messages: RenderedChannelMessage[], invites: ChannelInvite[]): void => {};
   onChatLocallyUpdate: Record<'appbar' | 'sidebar' | 'main-content' | 'infobar', (chat: Chat) => void> = {
     appbar: (chat: Chat) => {},
     sidebar: (chat: Chat) => {},
@@ -530,7 +575,9 @@ class AppStore {
     this.onPersonalMessageDeleted = callback;
   };
 
-  bindChannelMessageListChanged = (callback: (messages: RenderedChannelMessage[]) => void): void => {
+  bindChannelMessageListChanged = (
+    callback: (messages: RenderedChannelMessage[], invites: ChannelInvite[]) => void
+  ): void => {
     this.onChannelMessageListChanged = callback;
   };
 

@@ -1,8 +1,10 @@
 import { Handler } from 'express';
 import Channel from '../models/channel';
-import { FetchedChannelMessage, channelDTO, channelMessageDTO } from '../utils/dto';
+import ChannelInvite from '../models/channel-invite';
+import { FetchedChannelMessage, channelDTO, channelInviteDTO, channelMessageDTO } from '../utils/dto';
 import { FetchedChannel } from '../utils/dto';
 import ChannelMessage from '../models/channel-message';
+import { requestErrorHandler } from '../utils/functions';
 const getChannels: Handler = (req, res, next) => {
   let docsCount = 0;
   Channel.find()
@@ -211,6 +213,44 @@ const deleteChannelMessage: Handler = (req, res, next) => {
     });
 };
 
+const getChannelInvitesByChannelId: Handler = (req, res, next) => {
+  const {  channelId } = req.params;
+  ChannelInvite.find({ channelId })
+    .then((invites) => {
+      res.status(200).json({
+        message: 'Fetched channels successfully.',
+        invites: invites.map((invite) => channelInviteDTO(invite)),
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+const createChannelInvite: Handler = (req, res, next) => {
+  console.log(req.body);
+  const invite = new ChannelInvite({
+    channelId: req.body.channelId,
+    userId: req.body.userId,
+    messageId: req.body.messageId,
+    message: req.body.message,
+    status: req.body.status,
+  });
+
+  invite
+    .save()
+    .then(() => {
+      res.status(201).json({
+        message: 'Invite created successfully!',
+        invite: channelInviteDTO(invite),
+      });
+    })
+    .catch((err) => requestErrorHandler(err, next));
+};
+
 export default {
   getChannels,
   getChannel,
@@ -221,4 +261,6 @@ export default {
   createChannelMessage,
   updateChannelMessage,
   deleteChannelMessage,
+  createChannelInvite,
+  getChannelInvitesByChannelId,
 };

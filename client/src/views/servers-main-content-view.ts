@@ -2,7 +2,7 @@ import View from '../lib/view';
 import { $, isClosestElementOfCssClass } from '../utils/functions';
 import MainView from './main-view';
 import * as userIcon from '../assets/icons/discord.svg';
-import { Channel, MongoObjectId } from '../types/entities';
+import { Channel, ChannelInvite, MongoObjectId } from '../types/entities';
 
 export type RenderedChannelMessage = {
   id: MongoObjectId;
@@ -85,9 +85,6 @@ class ServersMainContentView extends View {
       },
     ];
 
-    // messagesFake.forEach((message) => {
-    //   this.$messageList.append(this.createMessageItem(message));
-    // });
     if (this.channel) {
       $inputContainer.append(this.$replyContainer, this.$chatInput);
       $container.append(this.$messageList, $inputContainer);
@@ -98,7 +95,7 @@ class ServersMainContentView extends View {
     this.$container.append($container);
   }
 
-  createMessageItem(message_: RenderedChannelMessage): HTMLLIElement {
+  createMessageItem(message_: RenderedChannelMessage, invites: ChannelInvite[]): HTMLLIElement {
     const { id, username, message, date, responsedToMessage, service } = message_;
     const $item = $('li', ['chat__messages-list-item', 'channel-message']);
     const $userIconBlock = $('div', 'channel-message__icon-block');
@@ -140,11 +137,11 @@ class ServersMainContentView extends View {
     return $item;
   }
 
-  displayMessages = (messages: RenderedChannelMessage[]) => {
+  displayMessages = (messages: RenderedChannelMessage[], invites: ChannelInvite[]) => {
     this.$messageList.innerHTML = '';
     this.messagesMap = new Map();
     messages.forEach((message) => {
-      this.$messageList.append(this.createMessageItem(message));
+      this.$messageList.append(this.createMessageItem(message, invites));
     });
   };
 

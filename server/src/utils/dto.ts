@@ -1,9 +1,10 @@
 import { HydratedDocument } from 'mongoose';
 import { UserDocument } from '../models/user';
-import { DTOChat, DTOUser, DTOPersonalMessage, DTOChannelMessage, DTOChannel } from '../types/dto';
+import { DTOChat, DTOUser, DTOPersonalMessage, DTOChannelMessage, DTOChannel, DTOChannelInvite } from '../types/dto';
 import { PersonalMessageDocument } from '../models/personal-message';
 import { ChannelDocument } from '../models/channel';
 import { ChannelMessageDocument } from '../models/channel-message';
+import { ChannelInviteDocument } from '../models/channel-invite';
 
 export type FetchedUser = HydratedDocument<UserDocument, {}, { chats: DTOChat[] }>;
 
@@ -14,6 +15,8 @@ export type FetchedPersonalMessage = HydratedDocument<PersonalMessageDocument>;
 export type FetchedChannelMessage = HydratedDocument<ChannelMessageDocument>;
 
 export type FetchedChannel = HydratedDocument<ChannelDocument>;
+
+export type FetchedChannelInvite = HydratedDocument<ChannelInviteDocument>;
 
 export const userDTO = ({
   _id,
@@ -103,3 +106,15 @@ export const channelDTO = ({ _id, name, serverId }: FetchedChannel): DTOChannel 
     serverId: serverId.toString(),
   };
 };
+
+export const channelInviteDTO = ({_id, userId, channelId, date, message, status, messageId }: FetchedChannelInvite): DTOChannelInvite => {
+  return {
+    id: _id.toString(),
+    userId: userId.toString(),
+    channelId: channelId.toString(),
+    messageId: messageId.toString(),
+    date,
+    message,
+    status,
+  }
+}

@@ -1,3 +1,4 @@
+import { ChannelInviteStatus } from "../models/channel-invite";
 import { Availability } from "../models/user";
 
 interface DTOEntity {
@@ -46,6 +47,15 @@ export interface DTOServer extends DTOEntity {
 export interface DTOChannel extends DTOEntity {
   name: string;
   serverId: string;
+}
+
+export interface DTOChannelInvite extends DTOEntity {
+  userId: string;
+  channelId: string;
+  messageId: string;
+  date: Date;
+  message: string;
+  status: ChannelInviteStatus;
 }
 
 export interface DTOChat {
