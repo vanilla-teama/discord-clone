@@ -19,6 +19,7 @@ class ChatsSideBarView extends View {
     this.$chatList = $('ul', 'chats-sidebar__list');
     this.$friendsButton = $('button', 'chats-sidebar__to-friends');
     this.$buttonShowSidebar = $('button', 'show-sidebar-btn');
+    this.$friendsInvites = $('div', 'chats-sidebar__invites');    
     this.$userBar = this.createUserBar();
     this.chatListMap = new Map();
     this.$showCreateChat = this.createShowCreateChatElement();
@@ -26,21 +27,22 @@ class ChatsSideBarView extends View {
 
   $chatList: HTMLUListElement;
   $userBar: HTMLDivElement;
+  $friendsInvites: HTMLDivElement;
   chatListMap: Map<HTMLLIElement, { chat: Chat }>;
   $showCreateChat: HTMLSpanElement;
   $friendsButton: HTMLButtonElement;
   $buttonShowSidebar: HTMLButtonElement;
 
   build(): void {
-    const $topContainer = $('div', 'chats-sidebar__top-container');
     const $chatsContainer = $('div', 'chats-sidebar__container');
+    const $friendsContainer = $('div', 'chats-sidebar__friends-container');
+    const $friendsIcon = $('div', 'chats-sidebar__friends-icon');
 
-    const $friendsButton = this.$friendsButton;
     const $buttonShowSidebar = this.$buttonShowSidebar;
     $buttonShowSidebar.textContent = 'close';
-    $friendsButton.textContent = 'Friends';
+    this.$friendsButton.textContent = 'Friends';
 
-    $topContainer.append($friendsButton, $buttonShowSidebar);
+    $friendsContainer.append($friendsIcon, this.$friendsButton, this.$friendsInvites);
 
     const $directMessagesContainer = $('div', 'chats-sidebar__dm-container');
     const $directMessagesTitle = $('div', 'chats-sidebar__dm-title');
@@ -48,10 +50,10 @@ class ChatsSideBarView extends View {
 
     $directMessagesContainer.append($directMessagesTitle, this.$showCreateChat);
 
-    $chatsContainer.append($directMessagesContainer, this.$chatList, this.$userBar);
+    $chatsContainer.append($friendsContainer, $directMessagesContainer, this.$chatList, this.$userBar);
 
-    $friendsButton.onclick = this.onFriendsButtonClick;
-    this.$container.append($topContainer, $chatsContainer);
+    $friendsContainer.onclick = this.onFriendsButtonClick;
+    this.$container.append($chatsContainer);
   }
 
   private createShowCreateChatElement(): HTMLSpanElement {
@@ -176,7 +178,7 @@ class ChatsSideBarView extends View {
   }
 
   displayFriendsBlockStatus(invites: number) {
-    this.$friendsButton.textContent = `Friends ${invites}`;
+    this.$friendsInvites.textContent = `${invites}`;
   }
 
   displaySidebar(handler: EventListener): void {

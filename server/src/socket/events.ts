@@ -37,6 +37,18 @@ export const bindSocketEvents = (
     io.emit('personalMessageDeleted', data);
   });
 
+  socket.on('channelMessage', (data) => {
+    io.emit('channelMessage', data);
+  });
+
+  socket.on('channelMessageUpdated', (data) => {
+    io.emit('channelMessageUpdated', data);
+  });
+
+  socket.on('channelMessageDeleted', (data) => {
+    io.emit('channelMessageDeleted', data);
+  });
+
   socket.on('userInvitedToFriends', (data) => {
     io.emit('userInvitedToFriends', data);
   });
@@ -51,5 +63,9 @@ export const bindSocketEvents = (
 
   socket.on('friendDeleted', (data) => {
     io.emit('friendDeleted', data);
+  });
+
+  socket.on('userInvitedToChannel', (data) => {
+    io.emit('userInvitedToChannel', data);
   });
 };

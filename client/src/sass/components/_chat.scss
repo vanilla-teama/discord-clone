@@ -1,6 +1,7 @@
-.chat {
+.chat,
+.servers-chat {
   padding-top: 15px;
-  height: calc(100% - 55px);
+  height: calc(100% - 15px);
   display: flex;
   flex-direction: column;
   background-color: var(--background-color-light-gray);
@@ -34,7 +35,8 @@
       border-radius: 10px;
     }
 
-    .personal-message_edit {
+    .personal-message_edit,
+    .channel-message_edit {
       padding-bottom: 38px;
     }
   }
@@ -156,7 +158,8 @@
   }
 }
 
-.personal-message {
+.personal-message,
+.channel-message {
   padding: 10px 16px;
   display: flex;
   justify-content: space-between;
@@ -206,7 +209,8 @@
   }
 
   &_reply {
-    .personal-message__icon-block {
+    .personal-message__icon-block,
+    .channel-message__icon-block {
       align-self: flex-end;
       position: relative;
     }
@@ -258,7 +262,8 @@
     margin-right: auto;
   }
 }
-.chat__fast-menu {
+.chat__fast-menu,
+.servers-chat__fast-menu {
   gap: 10px;
 }
 .fast-menu {

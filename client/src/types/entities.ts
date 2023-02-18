@@ -15,6 +15,7 @@ export interface User extends MongoEntity {
   friends: MongoObjectId[];
   invitesFrom: MongoObjectId[];
   invitesTo: MongoObjectId[];
+  invitesToChannels: MongoObjectId[];
   createdAt: string;
 }
 
@@ -37,14 +38,19 @@ export interface PersonalMessage extends MongoEntity {
 }
 
 export interface ChannelMessage extends MongoEntity {
-  responseMessageId: MongoObjectId;
+  service: boolean;
+  userId: MongoObjectId;
+  channelId: MongoObjectId;
+  responsedToMessageId: MongoObjectId | null;
   date: Timestamp;
   message: string;
+  responsedToMessage: ChannelMessage | null;
 }
 
 export interface Server<S extends 'data' | 'formData' = 'data'> extends MongoEntity {
   name: string;
   image: S extends 'formData' ? File : string | null;
+  owner: S extends 'formData' ? string : Pick<User, 'name'>;
 }
 
 export interface Chat extends MongoEntity {
@@ -58,11 +64,25 @@ export interface Channel extends MongoEntity {
   name: string;
 }
 
+export interface ChannelInvite {
+  userId: string;
+  channelId: string;
+  messageId: string;
+  date: Date;
+  message: string;
+  status: ChannelInviteStatus;
+}
+
 export enum Availability {
   Online = 'online',
   Offline = 'offline',
   Away = 'away',
   DoNotDisturb = 'donotdisturb',
+}
+
+export enum ChannelInviteStatus {
+  Pending = 'pending',
+  Accepted = 'accepted',
 }
 
 export type ChatAvailabilitiesMap = Map<Chat, Availability>;

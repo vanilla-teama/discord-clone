@@ -40,11 +40,13 @@ class ServersBarView extends View {
         name: 'server2',
         image: '/src/assets/icons/discord.svg',
         id: '123',
+        owner: { name: 'HAHA' },
       },
       {
         name: 'server1',
         image: '',
         id: '456',
+        owner: { name: 'HAHA' },
       },
     ];
 
@@ -97,7 +99,7 @@ class ServersBarView extends View {
     $item.append($itemImg, $itemName);
 
     $item.onclick = () => {
-      Router.push(RouteControllers.Servers, undefined, [id]);
+      this.onServerItemClick(id);
     };
     return $item;
   }
@@ -115,6 +117,12 @@ class ServersBarView extends View {
   private onAppendServerItem($item: HTMLLIElement, server: Server): void {
     this.serverListMap.set($item, { server });
   }
+
+  onServerItemClick = (serverId: string): void => {};
+
+  bindOnServerItemClick = (handler: (serverId: string) => void): void => {
+    this.onServerItemClick = handler;
+  };
 }
 
 export default ServersBarView;

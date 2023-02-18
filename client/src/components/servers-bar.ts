@@ -1,8 +1,11 @@
+import { servers as fakeServers } from '../develop/data';
 import App from '../lib/app';
 import Controller from '../lib/controller';
-import { RouteControllers } from '../lib/router';
+import Router, { RouteControllers } from '../lib/router';
+import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
 import { Server } from '../types/entities';
+import { ServerToClientEvents } from '../types/socket';
 import { CustomEvents } from '../types/types';
 import { getTypedCustomEvent } from '../utils/functions';
 import ServersBarView from '../views/servers-bar-view';
@@ -17,9 +20,11 @@ class ServersBarComponent extends Controller<ServersBarView> {
   async init(): Promise<void> {
     this.view.render();
     this.view.bindShowServerForm(this.showServerForm);
+    this.view.bindOnServerItemClick(this.onServerItemClick);
     this.onServerListChanged(appStore.servers);
     appStore.bindServerListChanged(this.onServerListChanged);
     this.bindRouteChanged();
+    this.bindSocketEvents();
   }
 
   onServerListChanged = (servers: Server[]) => {
@@ -52,6 +57,26 @@ class ServersBarComponent extends Controller<ServersBarView> {
       }
     });
   }
+
+  bindSocketEvents() {
+    socket.removeListener('userInvitedToChannel', ServersBarComponent.onSocketUserInvitedToChannel);
+    socket.on(
+      'userInvitedToChannel',
+      (ServersBarComponent.onSocketUserInvitedToChannel = async ({ userId, channelId }) => {
+        console.log('userInvitedToChannel', userId, channelId);
+        if (!appStore.user) {
+          return;
+        }
+        await appStore.fetchUserRelatedServers(appStore.user.id);
+      })
+    );
+  }
+
+  onServerItemClick = (serverId: string): void => {
+    Router.push(RouteControllers.Servers, '', [serverId]);
+  };
+
+  static onSocketUserInvitedToChannel: ServerToClientEvents['userInvitedToChannel'] = () => {};
 }
 
 export default ServersBarComponent;

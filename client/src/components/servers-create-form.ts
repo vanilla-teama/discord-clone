@@ -25,6 +25,7 @@ class ServerCreateFormComponent extends Controller<ServersCreateFormView> {
     if (typeof name === 'string' && image instanceof File) {
       server.name = name.trim();
       server.image = image;
+      server.owner = appStore.user?.id;
     }
 
     return server;
