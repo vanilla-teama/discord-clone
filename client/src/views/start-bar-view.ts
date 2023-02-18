@@ -8,10 +8,16 @@ class StartBarView extends View {
   static readonly classes = {
     chatsBar: 'start-bar__chats-bar',
     serversBar: 'start-bar__servers-bar',
+    burger: 'burger burger_active',
+    burgerLineFirst: 'burger__line burger__line_first',
+    burgerLineSecond: 'burger__line burger__line_second',
+    burgerLineThird: 'burger__line burger__line_third',
+    burgerLineFourth: 'burger__line burger__line_fourth',
   };
 
   static $chatBar: HTMLDivElement | null;
   static $serversBar: HTMLDivElement | null;
+  static $burgerBtn: HTMLDivElement | null;
 
   constructor() {
     const $root = ScreenView.$startBar;
@@ -24,13 +30,31 @@ class StartBarView extends View {
     StartBarView.$serversBar = null;
   }
   async build(): Promise<void> {
+    const $lineFirst = $('span', StartBarView.classes.burgerLineFirst);
+    const $lineSecond = $('span', StartBarView.classes.burgerLineSecond);
+    const $lineThird = $('span', StartBarView.classes.burgerLineThird);
+    const $lineFourth = $('span', StartBarView.classes.burgerLineFourth);
+    StartBarView.$burgerBtn = $('div', StartBarView.classes.burger);
     StartBarView.$chatBar = $('div', StartBarView.classes.chatsBar);
     StartBarView.$serversBar = $('div', StartBarView.classes.serversBar);
+    StartBarView.$burgerBtn.append($lineFirst, $lineSecond, $lineThird, $lineFourth);
     const $separator = $('div', 'start-bar__separator');
+    const $separatorTwo = $('div', 'start-bar__separator');
     $separator.textContent = '-------';
+    $separatorTwo.textContent = '-------';
 
-    this.$container.append(StartBarView.$chatBar, $separator, StartBarView.$serversBar);
+    this.$container.append(
+      StartBarView.$burgerBtn,
+      $separatorTwo,
+      StartBarView.$chatBar,
+      $separator,
+      StartBarView.$serversBar
+    );
   }
+
+  bindShowSideBarClick = (handler: EventListener): void => {
+    if (StartBarView.$burgerBtn) StartBarView.$burgerBtn.onclick = handler;
+  };
 }
 
 export default StartBarView;
