@@ -5,6 +5,7 @@ import Router, { RouteControllers } from '../lib/router';
 import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
 import { Availability, Channel, User } from '../types/entities';
+import { ServerToClientEvents } from '../types/socket';
 import { CustomEvents } from '../types/types';
 import { getTypedCustomEvent } from '../utils/functions';
 import ServersSideBarView from '../views/servers-sidebar-view';
@@ -49,7 +50,7 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
     this.view.bindOnInvite(this.onInvite);
     this.view.bindOnChannelItemClick(this.onChannelItemClick);
     this.onInit(appStore.user);
-    this.bindSocketUserAvailabilityChangedServer();
+    this.bindSocketEvents();
   }
 
   onInit = (user: User | null): void => {
@@ -122,10 +123,26 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
     await new MainComponent().init();
   }
 
-  bindSocketUserAvailabilityChangedServer() {
+  bindSocketEvents() {
     socket.removeListener('userChangedAvailability', ServersSideBarComponent.onSocketUserAvailabilityChangedServer);
     socket.on('userChangedAvailability', ServersSideBarComponent.onSocketUserAvailabilityChangedServer);
+
+    socket.removeListener('userInvitedToChannel', ServersSideBarComponent.onSocketUserInvitedToChannel);
+    socket.on(
+      'userInvitedToChannel',
+      (ServersSideBarComponent.onSocketUserInvitedToChannel = async ({ userId, channelId }) => {
+        if (!appStore.user) {
+          return;
+        }
+        await appStore.fetchUserRelatedServers(appStore.user.id);
+      })
+    );
   }
+
+  // bindSocketUserAvailabilityChangedServer() {
+  //   socket.removeListener('userChangedAvailability', ServersSideBarComponent.onSocketUserAvailabilityChangedServer);
+  //   socket.on('userChangedAvailability', ServersSideBarComponent.onSocketUserAvailabilityChangedServer);
+  // }
 
   static onSocketUserAvailabilityChangedServer = async ({
     availability,
@@ -140,6 +157,8 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
   onChannelItemClick = (serverId: string, channelId: string) => {
     Router.push(RouteControllers.Servers, '', [serverId, channelId]);
   };
+
+  static onSocketUserInvitedToChannel: ServerToClientEvents['userInvitedToChannel'] = () => {};
 }
 
 export default ServersSideBarComponent;

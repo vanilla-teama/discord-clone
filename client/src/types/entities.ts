@@ -38,6 +38,7 @@ export interface PersonalMessage extends MongoEntity {
 }
 
 export interface ChannelMessage extends MongoEntity {
+  service: boolean;
   userId: MongoObjectId;
   channelId: MongoObjectId;
   responsedToMessageId: MongoObjectId | null;
@@ -63,11 +64,25 @@ export interface Channel extends MongoEntity {
   name: string;
 }
 
+export interface ChannelInvite {
+  userId: string;
+  channelId: string;
+  messageId: string;
+  date: Date;
+  message: string;
+  status: ChannelInviteStatus;
+}
+
 export enum Availability {
   Online = 'online',
   Offline = 'offline',
   Away = 'away',
   DoNotDisturb = 'donotdisturb',
+}
+
+export enum ChannelInviteStatus {
+  Pending = 'pending',
+  Accepted = 'accepted',
 }
 
 export type ChatAvailabilitiesMap = Map<Chat, Availability>;

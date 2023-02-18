@@ -9,6 +9,7 @@ export interface ChannelDocument extends mongoose.Document {
 const channelSchema = new Schema<ChannelDocument>({
   serverId: {
     type: Schema.Types.ObjectId,
+    ref: 'Server',
     required: true
   },
   name: {

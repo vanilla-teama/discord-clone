@@ -1,7 +1,16 @@
 import { chats, users } from '../develop/data';
 import { ErrorStatusCode, http, isExpressError } from '../lib/http';
 import moment from '../lib/moment';
-import { Channel, ChannelMessage, Chat, ChatAvailabilitiesMap, PersonalMessage, Server, User } from '../types/entities';
+import {
+  Channel,
+  ChannelInvite,
+  ChannelMessage,
+  Chat,
+  ChatAvailabilitiesMap,
+  PersonalMessage,
+  Server,
+  User,
+} from '../types/entities';
 import { LoginError, RegisterError, RegisterErrorData } from '../types/http-errors';
 import { AppOmit } from '../types/utils';
 import { RenderedPersonalMessage } from '../views/chats-main-content-view';
@@ -13,7 +22,7 @@ export type IncomingChannelMessage = AppOmit<ChannelMessage, 'id' | 'responsedTo
 class AppStore {
   private static instance: AppStore;
 
-  private _user: User | null = null;
+  private _user: User | null = null; // Current user
 
   private _users: User[] = [];
 
@@ -23,9 +32,9 @@ class AppStore {
 
   private _invitedFromFriends: User[] = [];
 
-  private _channels: Channel[] = [];
+  private _channels: Channel[] = []; // Current user related channels
 
-  private _chats: Chat[] = [];
+  private _chats: Chat[] = []; // Current user related chats
 
   private _chatStatuses: ChatAvailabilitiesMap = new Map();
 
@@ -33,7 +42,11 @@ class AppStore {
 
   private _channelMessages: ChannelMessage[] = [];
 
-  private _servers: Server[] = [];
+  private _lastAddedChannelMessage: ChannelMessage | null = null;
+
+  private _channelInvites: ChannelInvite[] = [];
+
+  private _servers: Server[] = []; // Current user related servers
 
   get isAuth(): boolean {
     return Boolean(this.user);
@@ -117,6 +130,14 @@ class AppStore {
 
   private set channelMessages(messages: ChannelMessage[]) {
     this._channelMessages = messages;
+  }
+
+  get channelInvites(): ChannelInvite[] {
+    return this._channelInvites;
+  }
+
+  private set channelInvites(invites: ChannelInvite[]) {
+    this._channelInvites = invites;
   }
 
   get servers(): Server[] {
@@ -246,17 +267,28 @@ class AppStore {
     } else {
       this.channelMessages = [];
     }
-    this.onChannelMessageListChanged(this.getFormattedRenderedChannelMessages());
+    this.onChannelMessageListChanged(this.getFormattedRenderedChannelMessages(), this.channelInvites);
   }
 
   async fetchServers(): Promise<void> {
     const response = await http.get<{ servers: Server[] }>(`/servers`);
-    console.log(response);
     if (response) {
       this.servers = response.data.servers || [];
     } else {
       this.servers = [];
     }
+  }
+
+  async fetchUserRelatedServers(userId: string): Promise<void> {
+    const response = await http
+      .get<{ servers: Server[] }>(`/users/${userId}/related-servers`)
+      .catch((err) => console.error(err));
+    if (response) {
+      this.servers = response.data.servers || [];
+    } else {
+      this.servers = [];
+    }
+    this.onServerListChanged(this.servers);
   }
 
   async fetchChannels(serverId: string): Promise<void> {
@@ -273,6 +305,17 @@ class AppStore {
 
   resetChannels(): void {
     this.channels = [];
+  }
+
+  async fetchChannelInvites(channelId: string): Promise<void> {
+    const response = await http
+      .get<{ invites: ChannelInvite[] }>(`/channels/${channelId}/invites`)
+      .catch((error) => console.error(error));
+    if (response) {
+      this.channelInvites = response.data.invites || [];
+    } else {
+      this.channelInvites = [];
+    }
   }
 
   async searchUsers(value: string): Promise<User[]> {
@@ -412,8 +455,14 @@ class AppStore {
     }
   }
 
-  async addChannelMessage(message: IncomingChannelMessage): Promise<void> {
-    const response = await http.post('/channels/messages', message).catch((error) => console.error(error));
+  async addChannelMessage(message: IncomingChannelMessage): Promise<ChannelMessage | null> {
+    const response = await http
+      .post<IncomingChannelMessage, { data: { channelMessage: ChannelMessage } }>('/channels/messages', message)
+      .catch((error) => console.error(error));
+    if (response) {
+      return response.data.channelMessage;
+    }
+    return null;
   }
 
   async editChannelMessage(id: string, message: string): Promise<void> {
@@ -442,6 +491,9 @@ class AppStore {
   }
 
   async addServer(server: Partial<Server<'formData'>>): Promise<void> {
+    if (!this.user) {
+      return;
+    }
     await http
       .post('/servers', server, {
         headers: {
@@ -450,7 +502,7 @@ class AppStore {
         },
       })
       .catch((error) => console.error(error));
-    await this.fetchServers();
+    await this.fetchUserRelatedServers(this.user.id);
     this.onServerListChanged(this.servers);
   }
 
@@ -466,6 +518,13 @@ class AppStore {
     return null;
   }
 
+  async addChannelInvite(data: Partial<ChannelInvite>) {
+    const response = await http
+      .post<Partial<ChannelInvite>, { data: { invite: ChannelInvite } }>('/channels/invites', data)
+      .catch((err) => console.error(err));
+    console.log(response);
+  }
+
   updateChatLocally(chatId: Chat['userId'], data: Partial<Pick<Chat, 'userName' | 'availability'>>) {
     let chat = this.chats.find(({ userId }) => userId === chatId);
     if (chat) {
@@ -477,7 +536,7 @@ class AppStore {
   onServerListChanged = (servers: Server[]): void => {};
   onSigningIn = (data: FormData): void => {};
   onPersonalMessageListChanged = (messages: RenderedPersonalMessage[]): void => {};
-  onChannelMessageListChanged = (messages: RenderedChannelMessage[]): void => {};
+  onChannelMessageListChanged = (messages: RenderedChannelMessage[], invites: ChannelInvite[]): void => {};
   onChatLocallyUpdate: Record<'appbar' | 'sidebar' | 'main-content' | 'infobar', (chat: Chat) => void> = {
     appbar: (chat: Chat) => {},
     sidebar: (chat: Chat) => {},
@@ -516,7 +575,9 @@ class AppStore {
     this.onPersonalMessageDeleted = callback;
   };
 
-  bindChannelMessageListChanged = (callback: (messages: RenderedChannelMessage[]) => void): void => {
+  bindChannelMessageListChanged = (
+    callback: (messages: RenderedChannelMessage[], invites: ChannelInvite[]) => void
+  ): void => {
     this.onChannelMessageListChanged = callback;
   };
 
@@ -577,7 +638,7 @@ class AppStore {
     };
   }
 
-  getFormattedRenderedChannelMessages(): RenderedPersonalMessage[] {
+  getFormattedRenderedChannelMessages(): RenderedChannelMessage[] {
     return this.channelMessages.map((message) => {
       return this.getFormattedRenderedChannelMessage(message);
     });
@@ -586,6 +647,7 @@ class AppStore {
   getFormattedRenderedChannelMessage({
     id,
     userId,
+    service,
     channelId,
     date,
     message,
@@ -596,6 +658,7 @@ class AppStore {
     const responsedUser = this.users.find((user) => user.id === responsedToMessage?.userId);
     return {
       id,
+      service,
       userId,
       username: user?.name || '',
       date: moment(date).calendar(),
@@ -603,6 +666,7 @@ class AppStore {
       responsedToMessage: responsedToMessage
         ? {
             id: responsedToMessage.id,
+            service,
             userId: responsedToMessage.userId,
             username: responsedUser?.name || '',
             date: moment(responsedToMessage.date).calendar(),

@@ -15,6 +15,7 @@ export interface UserDocument extends mongoose.Document {
   invitesFrom: Types.ObjectId[];
   invitesTo: Types.ObjectId[];
   invitesToChannels: Types.ObjectId[];
+  joinedChannels: Types.ObjectId[];
   chats: UserDocument[];
   availability: Availability;
   profile: {
@@ -66,6 +67,7 @@ const UserSchema = new Schema<UserDocument>(
     invitesFrom: [{ type: Types.ObjectId, ref: 'User' }],
     invitesTo: [{ type: Types.ObjectId, ref: 'User' }],
     invitesToChannels: [{ type: Types.ObjectId, ref: 'Channel' }],
+    joinedChannels: [{ type: Types.ObjectId, ref: 'Channel' }],
     chats: [{ 
       type: Types.ObjectId, 
       ref: 'User', 

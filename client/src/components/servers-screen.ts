@@ -1,6 +1,6 @@
 import Controller from '../lib/controller';
 import Router, { RouteControllers } from '../lib/router';
-import AppStore from '../store/app-store';
+import AppStore, { appStore } from '../store/app-store';
 import { Channel, Server } from '../types/entities';
 import { CustomEvents } from '../types/types';
 import { getTypedCustomEvent } from '../utils/functions';
@@ -19,9 +19,11 @@ class ServersScreen extends Controller<ServersScreenView> {
   static channel: Channel | null;
 
   async init(): Promise<void> {
-    const appStore = AppStore.Instance;
+    if (!appStore.user) {
+      throw Error('User not found');
+    }
     await appStore.fetchUsers();
-    await appStore.fetchServers();
+    await appStore.fetchUserRelatedServers(appStore.user.id);
     this.bindRouteChanged();
 
     // Render Layout

@@ -2,7 +2,7 @@ import View from '../lib/view';
 import { $ } from '../utils/functions';
 import { RenderedPersonalMessage } from './chats-main-content-view';
 
-export type ReplyOrEdit = 'reply' | 'edit';
+export type ReplyOrEdit = 'reply' | 'edit' | null;
 
 class MessageFastMenuView extends View {
   message: RenderedPersonalMessage;
@@ -32,7 +32,7 @@ class MessageFastMenuView extends View {
       $container.append(this.$editButton, this.$deleteButton);
       this.$editButton.dataset.text = 'Edit';
       this.$deleteButton.dataset.text = 'Delete';
-    } else {
+    } else if (this.replyOrEdit === 'reply') {
       this.$replyButton.dataset.text = 'Reply';
       $container.append(this.$replyButton);
     }
