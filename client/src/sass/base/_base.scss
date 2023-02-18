@@ -2,29 +2,29 @@
 
 :root {
   --background-color-dark-grey: #202225;
-  --background-color-gray: #2F3136;
-  --background-color-light-gray: #36393F;
+  --background-color-gray: #2f3136;
+  --background-color-light-gray: #36393f;
   --background-color-light-gray-scroll: #32363b;
-  --background-color-gray-hover: #42464D;
+  --background-color-gray-hover: #42464d;
   --background-color-green: #3ba55d;
   --background-color-green-dark: #226737;
   --background-color-black: #000000;
   --background-color-black-light: #202225;
-  --background-color-blue: #5865F2;
+  --background-color-blue: #5865f2;
   --background-color-blue-dark: #3d4bea;
-  --background-color-blue-light: #00AFF4;
-  --background-color-white: #FFFFFF;
+  --background-color-blue-light: #00aff4;
+  --background-color-white: #ffffff;
   --background-color-white-dark: #d8d9db;
   --background-color-white-dark1: #808080;
   --background-color-white-dark2: #6f6f6f;
-  --background-color-orange: #FAA61A;
-  --background-color-red: #ED4545;
+  --background-color-orange: #faa61a;
+  --background-color-red: #ed4545;
   --background-color-red-dark: #a72626;
-  --background-color-orange-light: #584D3D;
-  --text-primary: #DCDDDE;
-  --text-secondary: #FFFFFF;
-  --text-gray: #D2D3D5;
-  --text-gray-dark: #4F5660;
+  --background-color-orange-light: #584d3d;
+  --text-primary: #dcddde;
+  --text-secondary: #ffffff;
+  --text-gray: #d2d3d5;
+  --text-gray-dark: #4f5660;
 }
 
 body {
@@ -36,6 +36,7 @@ body {
   color: var(--text-primary);
   font-family: 'Roboto', sans-serif;
   background-color: var(--background-color-dark-grey);
+  overflow-x: hidden;
 }
 
 ul {
@@ -114,12 +115,12 @@ ul {
 }
 
 .user-item {
-  &__box{
+  &__box {
     display: flex;
     gap: 10px;
     align-items: center;
   }
-  &__close{
+  &__close {
     background: url('/src/assets/icons/close.svg') center no-repeat;
     width: 15px;
     height: 15px;
@@ -131,15 +132,15 @@ ul {
       opacity: 1;
     }
   }
-  &__avatar{
-   position: relative;
+  &__avatar {
+    position: relative;
   }
-  &__icon{
+  &__icon {
     background: url('/src/assets/icons/discord.svg') center no-repeat;
     width: 32px;
     height: 32px;
   }
-  &__status{
+  &__status {
     position: absolute;
     height: 10px;
     width: 10px;
@@ -160,14 +161,14 @@ ul {
       border-radius: 50px;
     }
 
-    &_online{
+    &_online {
       background-color: var(--background-color-green);
       &::before {
         display: none;
       }
     }
   }
-  &__name{
+  &__name {
     opacity: 0.5;
     color: var(--text-gray);
     transition: all 0.3s ease 0s;
@@ -176,12 +177,11 @@ ul {
 
 .form-create-chat {
   .user-item__status {
-    // I hide this element as we don't have time to implement status updates 
+    // I hide this element as we don't have time to implement status updates
     // for any additional elements this far
     display: none;
   }
 }
-
 
 .tooltip {
   position: relative;

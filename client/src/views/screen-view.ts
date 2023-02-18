@@ -25,7 +25,6 @@ class ScreenView extends View {
     super($root);
   }
   build(): void {
-    this.observerWidth();
     ScreenView.$startBar = $('div', ScreenView.classNames.startBar);
     ScreenView.$sideBar = $('div', ScreenView.classNames.sideBar);
     ScreenView.$main = $('div', ScreenView.classNames.main);
@@ -43,19 +42,24 @@ class ScreenView extends View {
     }
   }
 
-  observerWidth(): void {
+  static observerWidth(): void {
+    ScreenView.hideMenu();
     window.addEventListener('resize', (event) => {
-      if (window.matchMedia('(max-width: 1000px)').matches) {
-        if (StartBarView.$burgerBtn) StartBarView.$burgerBtn.classList.remove('burger_active');
-        if (ScreenView.$sideBar !== null) ScreenView.$sideBar.classList.add('_disable');
-        if (MainView.$mainContainer !== null) MainView.$mainContainer.classList.add('_disable');
-        if (MainView.$mainContainer) {
-          MainView.$mainContainer.classList.remove('main-container_show-info-bar');
-          MainView.$mainContainer.classList.remove('main-container_hiding-info-bar');
-          MainView.$mainContainer.onanimationend = null;
-        }
-      }
+      ScreenView.hideMenu();
     });
+  }
+
+  static hideMenu(): void {
+    if (window.matchMedia('(max-width: 1000px)').matches) {
+      if (StartBarView.$burgerBtn) StartBarView.$burgerBtn.classList.remove('burger_active');
+      if (ScreenView.$sideBar !== null) ScreenView.$sideBar.classList.add('_disable');
+      if (MainView.$mainContainer !== null) MainView.$mainContainer.classList.add('_disable');
+      if (MainView.$mainContainer) {
+        MainView.$mainContainer.classList.remove('main-container_show-info-bar');
+        MainView.$mainContainer.classList.remove('main-container_hiding-info-bar');
+        MainView.$mainContainer.onanimationend = null;
+      }
+    }
   }
 }
 export default ScreenView;
