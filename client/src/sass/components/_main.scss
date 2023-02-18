@@ -43,7 +43,6 @@ $infobar-width: 340px;
 }
 
 .app-bar {
-
 }
 
 .main-container {
@@ -51,7 +50,9 @@ $infobar-width: 340px;
   height: calc(100% - 60px);
   //height: 100%;
   background-color: var(--background-color-light-gray);
-
+  padding-left: 240px;
+  transition: 0.2s all linear;
+  
   animation-duration: 200ms;
   animation-timing-function: ease-in;
   animation-fill-mode: forwards;
@@ -111,8 +112,8 @@ $infobar-width: 340px;
   animation-timing-function: ease-in;
   animation-fill-mode: forwards;
 }
-  
-.info-bar{
+
+.info-bar {
   flex: 0 0 $infobar-width;
   //position: fixed;
   position: absolute;

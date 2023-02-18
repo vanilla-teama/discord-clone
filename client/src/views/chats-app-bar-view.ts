@@ -2,6 +2,7 @@ import View from '../lib/view';
 import { Chat, Availability } from '../types/entities';
 import { $ } from '../utils/functions';
 import MainView from './main-view';
+import ScreenView from './screen-view';
 
 class ChatsAppBarView extends View {
   static readonly classNames = {};
@@ -9,6 +10,7 @@ class ChatsAppBarView extends View {
   chat: Chat | null;
   $userStatus: HTMLDivElement;
   $showInfoBar: HTMLButtonElement;
+  $showSideBar: HTMLButtonElement;
 
   constructor(chat: Chat | null) {
     const $root = MainView.$appbar;
@@ -19,6 +21,7 @@ class ChatsAppBarView extends View {
     this.chat = chat;
     this.$userStatus = $('div', ['chats-app-bar__user-status', 'tooltip']);
     this.$showInfoBar = $('button', ['chats-app-bar__profile-btn', 'tooltip']);
+    this.$showSideBar = $('button', ['chats-app-bar__profile-btn']);
   }
   build(): void {
     if (this.chat) {
@@ -43,7 +46,7 @@ class ChatsAppBarView extends View {
       const $helpBtn = $('button', ['chats-app-bar__help-btn', 'tooltip']);
       $helpBtn.dataset.text = 'Help';
 
-      $userContainer.append($iconAt, $userName, $userStatus);
+      $userContainer.append(this.$showSideBar, $iconAt, $userName, $userStatus);
       $panelContainer.append($showInfoBar, $search, $helpBtn);
       $chatsAppBar.append($userContainer, $panelContainer);
 
@@ -67,6 +70,9 @@ class ChatsAppBarView extends View {
 
   bindShowInfoBarClick = (handler: EventListener): void => {
     this.$showInfoBar.onclick = handler;
+  };
+  bindShowSideBarClick = (handler: EventListener): void => {
+    this.$showSideBar.onclick = handler;
   };
 
   setShowInfoBarButtonShowTooltip = (): void => {

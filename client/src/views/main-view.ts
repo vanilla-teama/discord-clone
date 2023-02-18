@@ -52,6 +52,9 @@ class MainView extends View {
   }
 
   static toggleInfoBar(): void {
+    if (window.matchMedia('(max-width: 1000px)').matches) {
+      if (ScreenView.$sideBar !== null) ScreenView.$sideBar.classList.add('_disable');
+    }
     if (MainView.$mainContainer) {
       if (MainView.$mainContainer.classList.contains('main-container_show-info-bar')) {
         MainView.hideInfoBar();

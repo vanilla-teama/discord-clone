@@ -6,6 +6,7 @@ import ChatsAppBarView from '../views/chats-app-bar-view';
 import InfoBarView from '../views/info-bar-view';
 import MainContentView from '../views/main-content-view';
 import MainView from '../views/main-view';
+import ScreenView from '../views/screen-view';
 import ChatsScreen from './chats-screen';
 import MainComponent from './main';
 
@@ -22,6 +23,7 @@ class ChatsAppBarComponent extends Controller<ChatsAppBarView> {
     this.bindSocketUserAvailabilityChangedServer();
     ChatsScreen.bindChatUpdate('appbar', this.onChatUpdate);
     this.view.bindShowInfoBarClick(this.toggleInfoBar);
+    this.view.bindShowSideBarClick(ScreenView.showSideBar);
     MainView.bindToggleInfoBar(this.view.setShowInfoBarButtonHideTooltip, this.view.setShowInfoBarButtonShowTooltip);
   }
 
