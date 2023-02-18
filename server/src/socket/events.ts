@@ -64,4 +64,8 @@ export const bindSocketEvents = (
   socket.on('friendDeleted', (data) => {
     io.emit('friendDeleted', data);
   });
+
+  socket.on('userInvitedToChannel', (data) => {
+    io.emit('userInvitedToChannel', data);
+  });
 };

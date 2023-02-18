@@ -28,6 +28,7 @@ export interface DTOPersonalMessage extends DTOEntity {
 }
 
 export interface DTOChannelMessage extends DTOEntity {
+  service: boolean;
   userId: string;
   channelId: string;
   responsedToMessageId: string | null;

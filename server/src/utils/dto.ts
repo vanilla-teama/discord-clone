@@ -74,6 +74,7 @@ export const personalMessageDTO = ({
 
 export const channelMessageDTO = ({
   _id,
+  service,
   userId,
   channelId,
   responsedToMessageId,
@@ -83,6 +84,7 @@ export const channelMessageDTO = ({
 }: FetchedChannelMessage): DTOChannelMessage => {
   return {
     id: _id.toString(),
+    service,
     userId: userId.toString(),
     channelId: channelId.toString(),
     responsedToMessageId: responsedToMessageId ? responsedToMessageId.toString() : null,

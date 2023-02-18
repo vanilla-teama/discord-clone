@@ -64,6 +64,7 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
       return;
     }
     const message: IncomingChannelMessage = {
+      service: false,
       userId: appStore.user.id,
       channelId: this.channel.id,
       date: Date.now(),
@@ -101,6 +102,17 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
     socket.on(
       'channelMessageDeleted',
       (ServersMainContentComponent.onSocketChannelMessageDeleted = async ({ messageId }) => {
+        if (!this.channel) {
+          return;
+        }
+        await this.fetchMessages();
+      })
+    );
+
+    socket.removeListener('userInvitedToChannel', ServersMainContentComponent.onSocketUserInvitedToChannel);
+    socket.on(
+      'userInvitedToChannel',
+      (ServersMainContentComponent.onSocketUserInvitedToChannel = async ({ userId, channelId }) => {
         if (!this.channel) {
           return;
         }
@@ -173,6 +185,8 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
   static onSocketChannelMessageUpdated: ServerToClientEvents['channelMessageUpdated'] = () => {};
 
   static onSocketChannelMessageDeleted: ServerToClientEvents['channelMessageDeleted'] = () => {};
+
+  static onSocketUserInvitedToChannel: ServerToClientEvents['userInvitedToChannel'] = () => {};
 }
 
 export default ServersMainContentComponent;

@@ -577,7 +577,7 @@ class AppStore {
     };
   }
 
-  getFormattedRenderedChannelMessages(): RenderedPersonalMessage[] {
+  getFormattedRenderedChannelMessages(): RenderedChannelMessage[] {
     return this.channelMessages.map((message) => {
       return this.getFormattedRenderedChannelMessage(message);
     });
@@ -586,6 +586,7 @@ class AppStore {
   getFormattedRenderedChannelMessage({
     id,
     userId,
+    service,
     channelId,
     date,
     message,
@@ -596,6 +597,7 @@ class AppStore {
     const responsedUser = this.users.find((user) => user.id === responsedToMessage?.userId);
     return {
       id,
+      service,
       userId,
       username: user?.name || '',
       date: moment(date).calendar(),
@@ -603,6 +605,7 @@ class AppStore {
       responsedToMessage: responsedToMessage
         ? {
             id: responsedToMessage.id,
+            service,
             userId: responsedToMessage.userId,
             username: responsedUser?.name || '',
             date: moment(responsedToMessage.date).calendar(),

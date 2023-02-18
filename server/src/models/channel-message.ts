@@ -2,6 +2,7 @@ import mongoose, { HydratedDocument, Model, QueryWithHelpers, Types } from 'mong
 import mongooseDelete from 'mongoose-delete';
 
 export interface ChannelMessageDocument {
+  service: boolean;
   userId: Types.ObjectId;
   channelId: Types.ObjectId;
   responsedToMessageId: Types.ObjectId;
@@ -29,6 +30,10 @@ export const channelMessageSchema = new Schema<
   ChannelMessageQueryHelpers
 >(
   {
+    service: {
+      type: Boolean,
+      default: false,
+    },
     userId: {
       type: Schema.Types.ObjectId,
       required: true,

@@ -6,6 +6,7 @@ import { Channel, MongoObjectId } from '../types/entities';
 
 export type RenderedChannelMessage = {
   id: MongoObjectId;
+  service: boolean;
   userId: MongoObjectId;
   username: string;
   date: string;
@@ -62,6 +63,7 @@ class ServersMainContentView extends View {
         date: '01/26/2023 9:44 AM',
         message: 'Hello',
         responsedToMessage: null,
+        service: false,
       },
       {
         id: '02',
@@ -70,6 +72,7 @@ class ServersMainContentView extends View {
         date: '01/26/2023 9:45 AM',
         message: 'Hi',
         responsedToMessage: null,
+        service: false,
       },
       {
         id: '01',
@@ -78,6 +81,7 @@ class ServersMainContentView extends View {
         date: '01/26/2023 9:47 AM',
         message: 'How do you do?',
         responsedToMessage: null,
+        service: false,
       },
     ];
 
@@ -95,7 +99,7 @@ class ServersMainContentView extends View {
   }
 
   createMessageItem(message_: RenderedChannelMessage): HTMLLIElement {
-    const { id, username, message, date, responsedToMessage } = message_;
+    const { id, username, message, date, responsedToMessage, service } = message_;
     const $item = $('li', ['chat__messages-list-item', 'channel-message']);
     const $userIconBlock = $('div', 'channel-message__icon-block');
     const $userIcon = $('img', 'channel-message__icon');
@@ -111,7 +115,7 @@ class ServersMainContentView extends View {
     const $editFormContainer = $('div', 'channel-message__edit-form-container');
     const $menu = $('div', 'chat__menu');
 
-    $userName.textContent = `${username}`;
+    $userName.textContent = service ? `#${this.channel?.name || '#Unknown Channel'}` : `${username}`;
     $messageDate.textContent = `${date}`;
     $message.textContent = message;
 

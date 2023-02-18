@@ -38,6 +38,7 @@ export interface PersonalMessage extends MongoEntity {
 }
 
 export interface ChannelMessage extends MongoEntity {
+  service: boolean;
   userId: MongoObjectId;
   channelId: MongoObjectId;
   responsedToMessageId: MongoObjectId | null;

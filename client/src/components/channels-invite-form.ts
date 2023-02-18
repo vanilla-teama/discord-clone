@@ -1,5 +1,6 @@
 import Controller from '../lib/controller';
-import { appStore } from '../store/app-store';
+import socket from '../lib/socket';
+import { IncomingChannelMessage, appStore } from '../store/app-store';
 import ChannelsInviteFormView from '../views/channels-invite-form-view';
 import ModalView from '../views/modal-view';
 
@@ -24,12 +25,30 @@ class ChannelsInviteFormComponent extends Controller<ChannelsInviteFormView> {
   }
 
   onInvite = async (userId: string, onSuccess: () => void): Promise<void> => {
+    if (!appStore.user) {
+      return;
+    }
     const data = appStore.getChannelNameAndServerName(this.channelId);
     if (data) {
       await appStore.updateUser(userId, { invitesToChannels: [this.channelId] });
+      socket.emit('userInvitedToChannel', { userId, channelId: this.channelId });
+      await appStore.addChannelMessage(this.createInviteMessage(userId));
       onSuccess();
     }
   };
+
+  createInviteMessage(userId: string): IncomingChannelMessage {
+    const user = appStore.users.find((u) => u.id === userId);
+    const username = user?.name || 'Unknown User';
+    return {
+      service: true,
+      channelId: this.channelId,
+      date: Date.now(),
+      message: `Invited ${username} to Channel`,
+      userId: appStore.user?.id || '',
+      responsedToMessageId: null,
+    };
+  }
 }
 
 export default ChannelsInviteFormComponent;

@@ -141,6 +141,7 @@ const createChannelMessage: Handler = (req, res, next) => {
     responsedToMessageId: req.body.responsedToMessageId,
     responsedToMessage: req.body.responsedToMessageId,
     message: req.body.message,
+    service: req.body.service,
   });
 
   channelMessage
