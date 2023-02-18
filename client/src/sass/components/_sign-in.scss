@@ -70,3 +70,23 @@
     font-size: 14px;
   }
 }
+
+@include media-md-down {
+  .sign-in,
+  .sign-up {
+    &__box {
+      padding: 15px;
+    }
+    &__form-wrapper {
+      width: 290px;
+    }
+    &__title {
+      margin: 0 auto;
+      font-weight: 600;
+      font-size: 20px;
+    }
+    &__btn-submit {
+      font-size: 14px;
+    }
+  }
+}
