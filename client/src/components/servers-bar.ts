@@ -19,10 +19,7 @@ class ServersBarComponent extends Controller<ServersBarView> {
     this.view.render();
     this.view.bindShowServerForm(this.showServerForm);
     this.view.bindOnServerItemClick(this.onServerItemClick);
-    // Do not delete this comment!
-    // this.onServerListChanged(appStore.servers);
-
-    this.onServerListChanged(fakeServers);
+    this.onServerListChanged(appStore.servers);
     appStore.bindServerListChanged(this.onServerListChanged);
     this.bindRouteChanged();
   }
