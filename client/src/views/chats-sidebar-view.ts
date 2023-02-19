@@ -54,7 +54,7 @@ class ChatsSideBarView extends View {
 
   private createShowCreateChatElement(): HTMLSpanElement {
     const $directMessagesAddBtn = $('span', ['chats-sidebar__dm-add', 'tooltip']);
-    $directMessagesAddBtn.dataset.text= 'Create DM';
+    $directMessagesAddBtn.dataset.text = 'Create DM';
     return $directMessagesAddBtn;
   }
 
