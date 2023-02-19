@@ -22,8 +22,11 @@ class ServersScreen extends Controller<ServersScreenView> {
     if (!appStore.user) {
       throw Error('User not found');
     }
-    await appStore.fetchUsers();
-    await appStore.fetchUserRelatedServers(appStore.user.id);
+    await Promise.all([
+      await appStore.fetchUsers(),
+      await appStore.fetchAllServers(),
+      await appStore.fetchUserRelatedServers(appStore.user.id),
+    ]);
     this.bindRouteChanged();
 
     // Render Layout

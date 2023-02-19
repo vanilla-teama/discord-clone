@@ -49,6 +49,8 @@ class AppStore {
 
   private _servers: Server[] = []; // Current user related servers
 
+  private _allServers: Server[] = []; // All servers
+
   get isAuth(): boolean {
     return Boolean(this.user);
   }
@@ -149,12 +151,24 @@ class AppStore {
     this._servers = servers;
   }
 
+  get allServers(): Server[] {
+    return this._allServers;
+  }
+
+  private set allServers(servers: Server[]) {
+    this._allServers = servers;
+  }
+
   getServer(serverId: string): Server | null {
-    return this.servers.find(({ id }) => serverId === id) || null;
+    return this.allServers.find(({ id }) => serverId === id) || null;
   }
 
   getChannel(channelId: string): Channel | null {
     return this.channels.find(({ id }) => id === channelId) || null;
+  }
+
+  getServerOwner(serverId: string): ServerOwner | null {
+    return this.getServer(serverId)?.owner || null;
   }
 
   getChannelOwner(channelId: string): ServerOwner | null {
@@ -199,6 +213,25 @@ class AppStore {
       .map((friend) => this.users.find((user) => user.id === friend.id))
       .filter((friend) => !!friend) as User[];
     return friends.filter((friend) => !members.some((member) => member.id === friend?.id));
+  }
+
+  getMutualServers(opponentId: string): Server[] {
+    if (!this.user) {
+      return [];
+    }
+    const opponent = this.users.find((op) => op.id === opponentId);
+    if (!opponent) {
+      return [];
+    }
+    const userServers: Server[] = this.servers;
+    const opponentOwnServers: Server[] = this.allServers.filter((server) => server.owner.id === opponentId);
+    const opponentInviteServerIDs: string[] = opponent.invitesToChannels.map((channel) => channel.serverId);
+    const opponentInviteServers = this.allServers.filter((server) => opponentInviteServerIDs.includes(server.id));
+    const opponentServers = opponentOwnServers.concat(opponentInviteServers);
+
+    return userServers.filter((userServer) =>
+      opponentServers.some((opponentServer) => opponentServer.id === userServer.id)
+    );
   }
 
   async fetchCurrentUser(): Promise<void> {
@@ -301,20 +334,21 @@ class AppStore {
     this.onChannelMessageListChanged(this.getFormattedRenderedChannelMessages(), this.channelInvites);
   }
 
-  async fetchServers(): Promise<void> {
+  async fetchAllServers(): Promise<void> {
     const response = await http.get<{ servers: Server[] }>(`/servers`);
+    console.log('fetchAllServers', response.data.servers);
     if (response) {
-      this.servers = response.data.servers || [];
+      this.allServers = response.data.servers || [];
     } else {
-      this.servers = [];
+      this.allServers = [];
     }
   }
 
   async fetchUserRelatedServers(userId: string): Promise<void> {
+    console.log('fetching related sservers');
     const response = await http
       .get<{ servers: Server[] }>(`/users/${userId}/related-servers`)
       .catch((err) => console.error(err));
-    console.log(response);
     if (response) {
       this.servers = response.data.servers || [];
     } else {
@@ -524,20 +558,24 @@ class AppStore {
     }
   }
 
-  async addServer(server: Partial<Server<'formData'>>): Promise<void> {
+  async addServer(server: Partial<Server<'formData'>>): Promise<Server | null> {
     if (!this.user) {
-      return;
+      return null;
     }
-    await http
-      .post('/servers', server, {
+    const response = await http
+      .post<Partial<Server<'formData'>>, { data: { server: Server } }>('/servers', server, {
         headers: {
           Accept: 'multipart/form-data',
           'Content-Type': 'multipart/form-data; charset=utf-8',
         },
       })
       .catch((error) => console.error(error));
-    await this.fetchUserRelatedServers(this.user.id);
-    this.onServerListChanged(this.servers);
+    if (response) {
+      await Promise.all([await this.fetchUserRelatedServers(this.user.id), await this.fetchAllServers()]);
+      this.onServerListChanged(this.servers);
+      return response.data.server;
+    }
+    return null;
   }
 
   async addChannel(channel: Pick<Channel, 'name' | 'serverId'>, serverId: string): Promise<Channel | null> {

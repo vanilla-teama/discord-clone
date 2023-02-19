@@ -71,8 +71,19 @@
     flex-direction: column;
     flex: 1 0 auto;
     row-gap: 5px;
+    height: calc(100vh - 166px);
     padding: 10px 5px;
-    gap: 10px;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+      width: 7px;
+      height: 2px;
+      background-color: var(--background-color-dark-grey);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+    }
   }
   &__item {
     display: flex;
@@ -83,6 +94,9 @@
     border-radius: 7px;
     transition: all 0.3s ease 0s;
     padding: 5px 0px;
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
 
     &:hover,
     &_active {

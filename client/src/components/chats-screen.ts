@@ -55,6 +55,7 @@ class ChatsScreen extends Controller<ChatsScreenView> {
     }
     await Promise.all([
       await appStore.fetchUsers(),
+      await appStore.fetchAllServers(),
       await appStore.fetchUserRelatedServers(appStore.user.id),
       await appStore.fetchChats(appStore.user.id),
       await appStore.fetchFriends(),

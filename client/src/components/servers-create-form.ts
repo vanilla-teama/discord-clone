@@ -1,4 +1,5 @@
 import Controller from '../lib/controller';
+import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
 import { Server } from '../types/entities';
 import ServersCreateFormView from '../views/servers-create-form-view';
@@ -14,7 +15,13 @@ class ServerCreateFormComponent extends Controller<ServersCreateFormView> {
   }
 
   handleAddServer = async (formData: FormData): Promise<void> => {
-    await appStore.addServer(this.extractServer(formData));
+    if (!appStore.user) {
+      return;
+    }
+    const server = await appStore.addServer(this.extractServer(formData));
+    if (server) {
+      socket.emit('serverAdded', { serverId: server.id, userId: appStore.user.id });
+    }
   };
 
   private extractServer = (formData: FormData): Partial<Server<'formData'>> => {

@@ -36,7 +36,6 @@ export const userDTO = ({
   invitesToChannels,
   joinedChannels,
 }: FetchedUser): DTOUser => {
-  console.log(_id, friends);
   return {
     id: _id.toString(),
     name,
@@ -51,9 +50,9 @@ export const userDTO = ({
     invitesToChannels: invitesToChannels.map((invite) => {
       const channel = invite as unknown as FetchedChannel;
       return {
-        id: channel._id.toString(),
-        name: channel.name,
-        serverId: String(channel.serverId),
+        id: channel?._id?.toString(),
+        name: channel?.name,
+        serverId: channel?.serverId?.toString(),
       }
     }),
     joinedChannels: (joinedChannels || []) as unknown as DTOChannel[],

@@ -57,8 +57,8 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
     if (!appStore.user) {
       return;
     }
-    const channelId = new Router().getParams()[1];
-    const owner = appStore.getChannelOwner(channelId);
+    const serverId = new Router().getParams()[0];
+    const owner = appStore.getServerOwner(serverId);
     console.log({ owner });
     if (owner?.id === appStore.user.id) {
       this.view.displayCreateChannelContainer();
@@ -116,6 +116,7 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
     ServersScreen.server = appStore.getServer(serverId);
     ServersSideBarComponent.serverId = serverId;
     ServersSideBarComponent.channelId = null;
+    ServersSideBarComponent.instance.displayCreateChannelContainer();
     if (appStore.channels[0]) {
       Router.push(RouteControllers.Servers, '', [ServersSideBarComponent.serverId, appStore.channels[0].id]);
       return;
@@ -132,7 +133,6 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
     ServersScreen.channel = appStore.getChannel(channelId);
     ServersSideBarComponent.channelId = channelId;
     ServersSideBarView.toggleActiveStatus(channelId);
-    ServersSideBarComponent.instance.displayCreateChannelContainer();
     await new MainComponent().init();
   }
 

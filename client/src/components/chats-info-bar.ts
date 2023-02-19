@@ -1,7 +1,9 @@
 import Controller from '../lib/controller';
+import Router, { RouteControllers } from '../lib/router';
 import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
 import { Availability, Chat } from '../types/entities';
+import { ServerToClientEvents } from '../types/socket';
 import ChatsInfoBarView from '../views/chats-info-bar-view';
 import InfoBarView from '../views/info-bar-view';
 import ChatsScreen from './chats-screen';
@@ -15,17 +17,38 @@ class ChatsInfoBarComponent extends Controller<ChatsInfoBarView> {
   }
 
   async init(): Promise<void> {
+    this.view.bindOnMutualServerClick(this.redirectToMutualServer);
     this.view.render();
-    this.bindSocketUserAvailabilityChangedServer();
+    this.bindSocketEvents();
     ChatsScreen.bindChatUpdate('infobar', this.onChatUpdate);
     if (this.chat) {
       this.view.displayStatus(this.chat.availability);
+      this.displayMutualServers();
     }
   }
 
-  bindSocketUserAvailabilityChangedServer() {
+  displayMutualServers() {
+    if (!this.chat) {
+      return;
+    }
+    const mutualServers = appStore.getMutualServers(this.chat.userId);
+    console.log(mutualServers);
+    this.view.displayMutualServers(mutualServers);
+  }
+
+  bindSocketEvents() {
     socket.removeListener('userChangedAvailability', ChatsInfoBarComponent.onSocketUserAvailabilityChangedServer);
     socket.on('userChangedAvailability', ChatsInfoBarComponent.onSocketUserAvailabilityChangedServer);
+
+    socket.removeListener('userInvitedToChannel', ChatsInfoBarComponent.onSocketUserInvitedToChannel);
+    socket.on('userInvitedToChannel', ({ userId, channelId }) => {
+      console.log('userInvitedToChannel');
+      if (!appStore.user || appStore.user.id !== userId) {
+        return;
+      }
+      console.log('i was invited');
+      this.displayMutualServers();
+    });
   }
 
   static onSocketUserAvailabilityChangedServer = ({
@@ -41,6 +64,12 @@ class ChatsInfoBarComponent extends Controller<ChatsInfoBarView> {
   onChatUpdate = (chat: Chat): void => {
     this.view.displayStatus(chat.availability);
   };
+
+  redirectToMutualServer = (serverId: string): void => {
+    Router.push(RouteControllers.Servers, '', [serverId]);
+  };
+
+  static onSocketUserInvitedToChannel: ServerToClientEvents['userInvitedToChannel'] = () => {};
 }
 
 export default ChatsInfoBarComponent;
