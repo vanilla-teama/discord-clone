@@ -120,6 +120,12 @@ export class App {
   }
 
   public Start() {
+    if (process.env.MODE === 'front') {
+      this.server.listen(this.port, () => {
+        console.log(`Server listening on port ${this.port}. No database connection`);
+      });
+      return;
+    }
     mongoose
       .connect(env.MONGO_URI_LOCAL)
       .then((result) => {

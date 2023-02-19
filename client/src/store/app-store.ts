@@ -305,7 +305,6 @@ class AppStore {
     if (response) {
       this.chats.forEach((chat, i) => {
         if (chat.userId === userTwoId) {
-          console.log('updating chat', chat.userId, response.data.chat);
           this.chats[i] = response.data.chat;
           this.onChatUpdate(response.data.chat);
         }
@@ -325,7 +324,6 @@ class AppStore {
 
   async fetchChannelMessages(channelId: string): Promise<void> {
     const response = await http.get<{ messages: ChannelMessage[] }>(`/channels/${channelId}/messages`);
-    console.log(response);
     if (response) {
       this.channelMessages = response.data.messages || [];
     } else {
@@ -336,7 +334,6 @@ class AppStore {
 
   async fetchAllServers(): Promise<void> {
     const response = await http.get<{ servers: Server[] }>(`/servers`);
-    console.log('fetchAllServers', response.data.servers);
     if (response) {
       this.allServers = response.data.servers || [];
     } else {
@@ -345,7 +342,6 @@ class AppStore {
   }
 
   async fetchUserRelatedServers(userId: string): Promise<void> {
-    console.log('fetching related sservers');
     const response = await http
       .get<{ servers: Server[] }>(`/users/${userId}/related-servers`)
       .catch((err) => console.error(err));
