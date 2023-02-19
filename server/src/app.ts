@@ -120,6 +120,11 @@ export class App {
   }
 
   public Start() {
+    if (process.env.MODE === 'front') {
+      this.server.listen(this.port, () => {
+      });
+      return;
+    }
     mongoose
       .connect(env.MONGO_URI_LOCAL)
       .then((result) => {
