@@ -1,6 +1,6 @@
 import moment from '../lib/moment';
 import View from '../lib/view';
-import { Availability, Chat } from '../types/entities';
+import { Availability, Chat, Server } from '../types/entities';
 import { $ } from '../utils/functions';
 import InfoBarView from './info-bar-view';
 import MainView from './main-view';
@@ -10,6 +10,7 @@ class ChatsInfoBarView extends View {
 
   chat: Chat | null;
   $status: HTMLSpanElement;
+  $mutualServers: HTMLDivElement;
 
   constructor(chat: Chat | null) {
     const $root = MainView.$infobar;
@@ -19,6 +20,7 @@ class ChatsInfoBarView extends View {
     super($root);
     this.chat = chat;
     this.$status = $('span', 'chats-info-bar__status');
+    this.$mutualServers = $('div', ['chats-info-bar__mutual-server', 'mutual-server']);
   }
   build(): void {
     if (this.chat) {
@@ -68,14 +70,14 @@ class ChatsInfoBarView extends View {
         $mutualServerList.classList.toggle('mutual-server__list_visible');
       });
 
-      $chatsInfoBar.append($header, $content, $mutualServer);
+      $chatsInfoBar.append($header, $content, this.$mutualServers);
       this.$container.append($chatsInfoBar);
     } else {
       this.$container.append('NO CHAT FOR INFOBAR!');
     }
   }
 
-  displayStatus(availability: Availability) {
+  displayStatus(availability: Availability): void {
     const getClass = (availability: Availability): string => `chats-info-bar__status_${availability}`;
     if (this.chat) {
       [Availability.Online, Availability.Offline, Availability.Away, Availability.DoNotDisturb].forEach(
@@ -86,6 +88,46 @@ class ChatsInfoBarView extends View {
       this.chat.availability = availability;
     }
   }
+
+  displayMutualServers(servers: Server[]): void {
+    this.$mutualServers.innerHTML = '';
+    this.$mutualServers.style.display = 'flex';
+    if (servers.length === 0) {
+      this.$mutualServers.style.display = 'none';
+      return;
+    }
+    const count = servers.length;
+
+    const $mutualServerContainer = $('div', 'mutual-server__container');
+    const $mutualServerTitle = $('div', 'mutual-server__title');
+    $mutualServerTitle.textContent = count === 1 ? `${count} Mutual Server` : `${count} Mutual Servers`;
+    const $mutualServerArrow = $('div', 'mutual-server__arrow');
+
+    const $mutualServerList = $('ul', 'mutual-server__list');
+    servers.forEach(({ id, name, image }) => {
+      const $mutualServerItem = $('li', 'mutual-server__item');
+      $mutualServerItem.textContent = name;
+      $mutualServerList.append($mutualServerItem);
+
+      $mutualServerItem.onclick = () => {
+        this.onMutualServerClick(id);
+      };
+    });
+
+    $mutualServerContainer.append($mutualServerTitle, $mutualServerArrow);
+    this.$mutualServers.append($mutualServerContainer, $mutualServerList);
+
+    $mutualServerContainer.onclick = () => {
+      $mutualServerArrow.classList.toggle('mutual-server__arrow_rotate');
+      $mutualServerList.classList.toggle('mutual-server__list_visible');
+    };
+  }
+
+  onMutualServerClick = (serverId: string): void => {};
+
+  bindOnMutualServerClick = (handler: (serverId: string) => void) => {
+    this.onMutualServerClick = handler;
+  };
 }
 
 export default ChatsInfoBarView;
