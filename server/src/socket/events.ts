@@ -68,4 +68,8 @@ export const bindSocketEvents = (
   socket.on('userInvitedToChannel', (data) => {
     io.emit('userInvitedToChannel', data);
   });
+
+  socket.on('serverAdded', (data) => {
+    io.emit('serverAdded', data);
+  });
 };

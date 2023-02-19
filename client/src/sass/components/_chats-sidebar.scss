@@ -73,6 +73,17 @@
     row-gap: 5px;
     height: calc(100vh - 166px);
     padding: 10px 5px;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+      width: 7px;
+      height: 2px;
+      background-color: var(--background-color-dark-grey);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+    }
   }
   &__item {
     display: flex;
