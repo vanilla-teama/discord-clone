@@ -6,7 +6,6 @@ import ScreenView from './screen-view';
 
 class ChatsAppBarView extends View {
   static readonly classNames = {};
-
   chat: Chat | null;
   $userStatus: HTMLDivElement;
   $showInfoBar: HTMLButtonElement;
