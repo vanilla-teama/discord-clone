@@ -10,7 +10,7 @@
     gap: 10px;
   }
   &__hash-icon {
-    background: url('/src/assets/icons/hash.svg') center no-repeat;
+    background: var(--icons-hash) center no-repeat;
     width: 20px;
     height: 20px;
     opacity: 0.5;
@@ -21,7 +21,7 @@
     gap: 10px;
   }
   &__members-btn {
-    background: url('/src/assets/icons/members.svg') center/ cover no-repeat;
+    background: var(--icons-members) center/ cover no-repeat;
     width: 25px;
     height: 25px;
     opacity: 0.5;
@@ -32,10 +32,10 @@
     }
   }
   &__profile-btn {
-    background: url('/src/assets/icons/user-profile.svg') center / cover no-repeat;
+    background: var(--icons-user-profile) center / cover no-repeat;
   }
   &__help-btn {
-    background: url('/src/assets/icons/help.svg') center / cover no-repeat;
+    background: var(--icons-help) center / cover no-repeat;
     position: relative;
   }
 

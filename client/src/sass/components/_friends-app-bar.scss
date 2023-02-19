@@ -13,7 +13,7 @@
     margin-right: 30px;
   }
   &__icon {
-    background: url('/src/assets/icons/friends.svg') center no-repeat;
+    background: var(--icons-friends) center no-repeat;
     width: 25px;
     height: 22px;
     opacity: 0.5;

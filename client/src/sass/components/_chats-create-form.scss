@@ -1,7 +1,7 @@
 .form-create-chat {
   padding: 15px;
   border-radius: 5px;
-  background-color: #36393f;
+  background-color: var(--background-color-dark-grey);
   width: 410px;
   &__title {
     color: var(--text-secondary);
@@ -19,7 +19,7 @@
     &::-webkit-scrollbar {
       width: 7px;
       height: 2px;
-      background-color: #36393f;
+      background-color: var(--background-color-dark-grey);
     }
 
     &::-webkit-scrollbar-thumb {

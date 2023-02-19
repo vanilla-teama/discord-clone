@@ -43,7 +43,7 @@
   &__message-btn,
   &__delete-friend-btn {
     border: none;
-    background: url('/src/assets/icons/message.svg') center / cover no-repeat;
+    background: var(--icons-message) center / cover no-repeat;
     width: 20px;
     height: 20px;
     opacity: 0.5;
@@ -55,10 +55,10 @@
     }
   }
   &__message-btn {
-    background: url('/src/assets/icons/message.svg') center no-repeat;
+    background: var(--icons-message) center no-repeat;
   }
   &__delete-friend-btn {
-    background: url('/src/assets/icons/trash.svg') center no-repeat;
+    background: var(--icons-trash) center no-repeat;
   }
   &__accept-invitation-btn,
   &__cancel-invite-btn {

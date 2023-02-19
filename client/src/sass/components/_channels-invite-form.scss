@@ -20,7 +20,7 @@
       position: absolute;
       top: 50%;
       left: -20px;
-      background: url('/src/assets/icons/hash.svg') center / contain no-repeat;
+      background: var(--icons-hash) center / contain no-repeat;
       width: 15px;
       height: 15px;
       transform: translateY(-50%);
@@ -67,7 +67,7 @@
     }
   }
   &__close-btn {
-    background: url('/src/assets/icons/close.svg') center / contain no-repeat;
+    background: var(--icons-close) center / contain no-repeat;
     width: 17px;
     height: 17px;
     opacity: 0.5;

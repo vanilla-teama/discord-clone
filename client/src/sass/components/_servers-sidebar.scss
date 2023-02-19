@@ -26,7 +26,7 @@
     }
   }
   &__create-add {
-    background: url('/src/assets/icons/plus.svg') center no-repeat;
+    background: var(--icons-plus) center no-repeat;
     width: 15px;
     height: 15px;
     opacity: 0.5;
@@ -88,7 +88,7 @@
     }
   }
   &__hash-icon {
-    background: url('/src/assets/icons/hash.svg') center no-repeat;
+    background: var(--icons-hash) center no-repeat;
     width: 20px;
     height: 20px;
     opacity: .5;
@@ -99,7 +99,7 @@
   }
   &__invite {
     margin-left: auto;
-    background: url('/src/assets/icons/create-invite.svg') center / contain no-repeat;
+    background: var(--icons-create-invite) center / contain no-repeat;
     width: 19px;
     height: 16px;
     opacity: 0.5;

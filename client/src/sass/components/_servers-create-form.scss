@@ -6,7 +6,7 @@
     height: 20px;
     right: 20px;
     top: 20px;
-    background: url('/src/assets/icons/close.svg') center/ cover no-repeat;
+    background: var(--icons-close) center/ cover no-repeat;
     cursor: pointer;
     border: none;
     opacity: 0.5;
