@@ -50,7 +50,7 @@ const login = async (req: TypedRequest, res: Response, next: NextFunction): Prom
         return next(err);
       }
       const { id } = user;
-      User.findById(id)
+      User.findById(id).populate(['chats', 'invitesToChannels', 'joinedChannels'])
         .then((user) => {
           if (!user) {
             const error = new Error('Could not find user.');

@@ -3,11 +3,12 @@ import { http } from './lib/http';
 import Router from './lib/router';
 import socket, { bindGlobalSocketEvents } from './lib/socket';
 import ChatsScreen from './components/chats-screen';
+import { appStore } from './store/app-store';
 /*
   This is for debugging
   We can use window.router to navigate through our app
 */
-Object.assign(window, { app: { Router: Router } });
+Object.assign(window, { app: { Router: Router, store: appStore } });
 
 const defaultRoute = Router.createLink('');
 

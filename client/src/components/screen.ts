@@ -24,9 +24,19 @@ class Screen extends Controller<ScreenView> {
         await appStore.fetchAllServers();
       })
     );
+
+    socket.removeListener('userInvitedToChannel', Screen.onSocketUserInvitedToChannel);
+    socket.on(
+      'userInvitedToChannel',
+      (Screen.onSocketUserInvitedToChannel = async ({ channelId, userId }) => {
+        Promise.all([await appStore.fetchUsers(), await appStore.fetchCurrentUser()]);
+      })
+    );
   }
 
   static onSocketServerAdded: ServerToClientEvents['serverAdded'] = () => {};
+
+  static onSocketUserInvitedToChannel: ServerToClientEvents['userInvitedToChannel'] = () => {};
 }
 
 export default Screen;

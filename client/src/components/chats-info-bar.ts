@@ -41,12 +41,17 @@ class ChatsInfoBarComponent extends Controller<ChatsInfoBarView> {
     socket.on('userChangedAvailability', ChatsInfoBarComponent.onSocketUserAvailabilityChangedServer);
 
     socket.removeListener('userInvitedToChannel', ChatsInfoBarComponent.onSocketUserInvitedToChannel);
-    socket.on('userInvitedToChannel', ({ userId, channelId }) => {
-      console.log('userInvitedToChannel');
+    socket.on('userInvitedToChannel', async ({ userId, channelId }) => {
       if (!appStore.user || appStore.user.id !== userId) {
         return;
       }
-      console.log('i was invited');
+      await Promise.all([
+        await appStore.fetchCurrentUser(),
+        await appStore.fetchUsers(),
+        await appStore.fetchUserRelatedServers(appStore.user.id),
+        await appStore.fetchAllServers(),
+      ]);
+      console.log(appStore.user);
       this.displayMutualServers();
     });
   }
