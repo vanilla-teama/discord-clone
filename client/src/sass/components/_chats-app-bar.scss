@@ -116,3 +116,11 @@
     }
   }
 }
+
+@include media-sm-down {
+  .chats-app-bar {
+    &__search {
+      display: none;
+    }
+  }
+}
