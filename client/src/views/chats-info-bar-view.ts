@@ -4,6 +4,7 @@ import { Availability, Chat, Server } from '../types/entities';
 import { $ } from '../utils/functions';
 import InfoBarView from './info-bar-view';
 import MainView from './main-view';
+import * as urlEng from '../assets/flags/flag-eng.png';
 
 class ChatsInfoBarView extends View {
   static readonly classNames = {};
@@ -90,6 +91,21 @@ class ChatsInfoBarView extends View {
   }
 
   displayMutualServers(servers: Server[]): void {
+    const serversFake: Server[] = [
+      {
+        name: 'server2',
+        image: '/src/assets/icons/discord.svg',
+        id: '123',
+        owner: { name: 'HAHA', id: '123' },
+      },
+      {
+        name: 'server1',
+        image: '',
+        id: '456',
+        owner: { name: 'HAHA', id: '123' },
+      },
+    ];
+
     this.$mutualServers.innerHTML = '';
     this.$mutualServers.style.display = 'flex';
     if (servers.length === 0) {
@@ -102,11 +118,16 @@ class ChatsInfoBarView extends View {
     const $mutualServerTitle = $('div', 'mutual-server__title');
     $mutualServerTitle.textContent = count === 1 ? `${count} Mutual Server` : `${count} Mutual Servers`;
     const $mutualServerArrow = $('div', 'mutual-server__arrow');
-
     const $mutualServerList = $('ul', 'mutual-server__list');
+    
     servers.forEach(({ id, name, image }) => {
       const $mutualServerItem = $('li', 'mutual-server__item');
-      $mutualServerItem.textContent = name;
+      const $mutualServerIcon = Object.assign($('img', 'mutual-server__icon'), { src: image });
+      const $mutualServerName = $('div', 'mutual-server__name');
+
+      $mutualServerName.textContent = name;
+
+      $mutualServerItem.append($mutualServerIcon, $mutualServerName);
       $mutualServerList.append($mutualServerItem);
 
       $mutualServerItem.onclick = () => {
