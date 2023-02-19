@@ -59,6 +59,18 @@ class ServersAppBarView extends View {
   displayChannelName(name: string): void {
     this.$channelName.textContent = name;
   }
+
+  bindShowInfoBarClick = (handler: EventListener): void => {
+    this.$showInfoBar.onclick = handler;
+  };
+
+  setShowInfoBarButtonShowTooltip = (): void => {
+    this.$showInfoBar.dataset.text = 'Show members list';
+  };
+
+  setShowInfoBarButtonHideTooltip = (): void => {
+    this.$showInfoBar.dataset.text = 'Hide members list';
+  };
 }
 
 export default ServersAppBarView;

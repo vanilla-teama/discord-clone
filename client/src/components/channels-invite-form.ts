@@ -22,7 +22,12 @@ class ChannelsInviteFormComponent extends Controller<ChannelsInviteFormView> {
         this.view.displayTitle(data.serverName, data.channelName);
       }
     }
-    this.view.displayFriendList(appStore.friends);
+    this.displayInviteFriendList();
+  }
+
+  displayInviteFriendList() {
+    const friends = appStore.getInviteFriendList(this.channelId);
+    this.view.displayFriendList(friends);
   }
 
   onInvite = async (userId: string, onSuccess: () => void): Promise<void> => {
@@ -34,7 +39,6 @@ class ChannelsInviteFormComponent extends Controller<ChannelsInviteFormView> {
       await appStore.updateUser(userId, { invitesToChannels: [this.channelId] });
       const message = await appStore.addChannelMessage(this.createInviteMessage(userId));
       if (message) {
-        console.log(message);
         await appStore.addChannelInvite(this.createInvite(userId, this.channelId, message.id));
         socket.emit('userInvitedToChannel', { userId, channelId: this.channelId });
       }

@@ -53,6 +53,18 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
     this.bindSocketEvents();
   }
 
+  displayCreateChannelContainer() {
+    if (!appStore.user) {
+      return;
+    }
+    const channelId = new Router().getParams()[1];
+    const owner = appStore.getChannelOwner(channelId);
+    console.log({ owner });
+    if (owner?.id === appStore.user.id) {
+      this.view.displayCreateChannelContainer();
+    }
+  }
+
   onInit = (user: User | null): void => {
     this.view.displayUser(user);
   };
@@ -120,6 +132,7 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
     ServersScreen.channel = appStore.getChannel(channelId);
     ServersSideBarComponent.channelId = channelId;
     ServersSideBarView.toggleActiveStatus(channelId);
+    ServersSideBarComponent.instance.displayCreateChannelContainer();
     await new MainComponent().init();
   }
 
@@ -138,11 +151,6 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
       })
     );
   }
-
-  // bindSocketUserAvailabilityChangedServer() {
-  //   socket.removeListener('userChangedAvailability', ServersSideBarComponent.onSocketUserAvailabilityChangedServer);
-  //   socket.on('userChangedAvailability', ServersSideBarComponent.onSocketUserAvailabilityChangedServer);
-  // }
 
   static onSocketUserAvailabilityChangedServer = async ({
     availability,

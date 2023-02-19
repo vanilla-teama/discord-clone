@@ -16,12 +16,14 @@ class ServersSideBarView extends View {
       ServersSideBarView.throwNoRootInTheDomError(`Servers-sidebar`);
     }
     super($root);
+    this.$createChannelContainer = $('div', 'servers-sidebar__create-container');
     this.$serverList = $('ul', 'servers-sidebar__list');
     this.$userBar = this.createUserBar();
     ServersSideBarView.channelsListMap = new Map();
     this.$showCreateChannel = this.createShowCreateChannel();
   }
 
+  $createChannelContainer: HTMLDivElement;
   $serverList: HTMLUListElement;
   $userBar: HTMLDivElement;
   static channelsListMap: Map<HTMLLIElement, { channel: Channel }>;
@@ -30,13 +32,13 @@ class ServersSideBarView extends View {
   build(): void {
     const $serversContainer = $('div', 'servers-sidebar__container');
 
-    const $createContainer = $('div', 'servers-sidebar__create-container');
-    const $createTitle = $('div', 'servers-sidebar__create-title');
-    $createTitle.textContent = 'Create channel';
+    // const $createContainer = $('div', 'servers-sidebar__create-container');
+    // const $createTitle = $('div', 'servers-sidebar__create-title');
+    // $createTitle.textContent = 'Create channel';
 
-    $createContainer.append($createTitle, this.$showCreateChannel);
+    // $createContainer.append($createTitle, this.$showCreateChannel);
 
-    $serversContainer.append($createContainer, this.$serverList, this.$userBar);
+    $serversContainer.append(this.$createChannelContainer, this.$serverList, this.$userBar);
     this.$container.append($serversContainer);
   }
 
@@ -44,6 +46,13 @@ class ServersSideBarView extends View {
     const $directMessagesAddBtn = $('span', 'servers-sidebar__create-add');
     $directMessagesAddBtn.dataset.name = 'Create channel';
     return $directMessagesAddBtn;
+  }
+
+  displayCreateChannelContainer() {
+    const $createTitle = $('div', 'servers-sidebar__create-title');
+    $createTitle.textContent = 'Create channel';
+    this.$createChannelContainer.innerHTML = '';
+    this.$createChannelContainer.append($createTitle, this.$showCreateChannel);
   }
 
   displayChannels(channels: Channel[]): void {

@@ -49,7 +49,7 @@ class ChannelsInviteFormView extends View {
 
   displayTitle(serverName: string, channelName: string) {
     this.$title.textContent = `Invite friends to ${serverName}`;
-    this.$subtitle.textContent = `#${channelName}`;
+    this.$subtitle.textContent = `${channelName}`;
   }
 
   displayFriendList(friends: User[]): void {
@@ -113,6 +113,12 @@ class ChannelsInviteFormView extends View {
     //usersFake.forEach((friend) => {
     //  this.$friendList.append(this.createFriendItem(friend));
     //});
+
+    if (friends.length === 0) {
+      const $message = $('p', 'form-invite-to-server__not-found');
+      $message.textContent = 'All your friends already here!';
+      this.$friendList.append($message);
+    }
     friends.forEach((friend) => {
       this.$friendList.append(this.createFriendItem(friend));
     });

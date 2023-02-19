@@ -34,8 +34,13 @@ class MainView extends View {
   static showInfoBar(): void {
     if (MainView.$mainContainer) {
       MainView.$mainContainer.classList.add('main-container_show-info-bar');
+      MainView.$mainContainer.onanimationend = () => {
+        if (MainView.$mainContainer) {
+          MainView.$mainContainer.onanimationend = null;
+          MainView.onShowInfoBar();
+        }
+      };
     }
-    MainView.onShowInfoBar();
   }
 
   static hideInfoBar(): void {
@@ -45,15 +50,15 @@ class MainView extends View {
           MainView.$mainContainer.classList.remove('main-container_show-info-bar');
           MainView.$mainContainer.classList.remove('main-container_hiding-info-bar');
           MainView.$mainContainer.onanimationend = null;
+          MainView.onHideInfoBar();
         }
       };
       MainView.$mainContainer.classList.add('main-container_hiding-info-bar');
     }
-    MainView.onHideInfoBar();
   }
 
   static toggleInfoBar(): void {
-    if (window.matchMedia('(max-width: 1000px)').matches) {
+    if (window.matchMedia('(max-width: 991)').matches) {
       if (ScreenView.$sideBar !== null) ScreenView.$sideBar.classList.add('_disable');
       if (StartBarView.$burgerBtn) StartBarView.$burgerBtn.classList.remove('burger_active');
     }
