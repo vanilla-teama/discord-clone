@@ -96,13 +96,14 @@
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  padding: 15px;
-  gap: 15px;
+  padding: 5px;
+  //gap: 5px;
   &__container {
     display: flex;
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
+    padding: 10px;
   }
   &__title {
   }
@@ -118,11 +119,40 @@
   }
   &__list {
     display: none;
+
     &_visible {
       display: block;
+      //flex-direction: column;
+      //gap: 10px;
     }
   }
   &__item {
+    //width: 100%;
     list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    transition: all 0.3s ease 0s;
+    padding: 5px 5px 5px 5px;
+    //margin-right: 10px;
+    cursor: pointer;
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
+
+    &:hover {
+      border-radius: 8px;
+      background-color: var(--background-color-gray-hover);
+    }
+  }
+  &__icon {
+    height: 40px;
+    width: 40px;
+    border-radius: 13px;
+  }
+  &__name {
+    font-weight: 700;
+    margin-right: auto;
   }
 }
