@@ -31,11 +31,20 @@ class SettingsAppearanceView extends View {
     const $labelThemeLight = Object.assign($('label'), { htmlFor: 'light', textContent: 'Светлая' });
     $containerThemeLight.append($inputThemeLight, $labelThemeLight);
     const $containerThemeDark = $('div', SettingsAppearanceView.classNames.containerChild);
-    const $inputThemeDark = Object.assign($('input'), { id: 'dark', type: 'radio', name: 'radio-theme' });
+    const $inputThemeDark = Object.assign($('input'), {
+      id: 'dark',
+      type: 'radio',
+      name: 'radio-theme',
+      checked: true,
+    });
     const $labelThemeDark = Object.assign($('label'), { htmlFor: 'dark', textContent: 'Темная' });
     $containerThemeDark.append($inputThemeDark, $labelThemeDark);
     const $containerThemeSinhronization = $('div', SettingsAppearanceView.classNames.containerChild);
-    const $inputThemeSinhronization = Object.assign($('input'), { id: 'sing', type: 'radio', name: 'radio-theme' });
+    const $inputThemeSinhronization = Object.assign($('input'), {
+      id: 'sing',
+      type: 'radio',
+      name: 'radio-theme',
+    });
     const $labelThemeSinhronization = Object.assign($('label'), {
       htmlFor: 'sing',
       textContent: 'Синхронизация с компьютером',
@@ -59,6 +68,30 @@ class SettingsAppearanceView extends View {
       htmlFor: 'compact',
       textContent: 'Компактно на экране больше сообщений',
     });
+
+    const $body = document.body;
+
+    $inputThemeLight.addEventListener('change', (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      if (target.checked) $body.setAttribute('light', '');
+    });
+    $inputThemeDark.addEventListener('change', (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      if (target.checked) $body.removeAttribute('light');
+    });
+    $inputThemeSinhronization.addEventListener('change', (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      if (target.checked) {
+        window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? $body.removeAttribute('light')
+          : $body.setAttribute('light', '');
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+          e.matches ? $body.removeAttribute('light') : $body.setAttribute('light', '');
+        });
+      }
+    });
+
     $containerMessCompact.append($inputMessCompact, $labelMessCompact);
     $containerMessage.append($titleMessage, $containerMessModern, $containerMessCompact);
     $appcontainer.append($mainTitle, $containerTheme, $containerMessage);

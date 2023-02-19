@@ -49,13 +49,17 @@
     }
   }
   &__dm-add {
-    background: url('/src/assets/icons/plus.svg') center no-repeat;
+    background: var(--icons-plus) center no-repeat;
     width: 15px;
     height: 15px;
     opacity: 0.5;
     transition: all 0.3s ease 0s;
     border-radius: 7px;
     cursor: pointer;
+
+    &.tooltip::after {
+      top: -30px;
+    }
 
     &:hover {
       opacity: 1;
@@ -89,6 +93,9 @@
         transition: all 0.3s ease 0s;
         opacity: 1;
       }
+      .user-item__name {
+        opacity: 0.7;
+      }
     }
   }
 
@@ -99,6 +106,9 @@
     border-radius: 8px;
     align-items: center;
     opacity: 0.5;
+    border-bottom: 1px solid var(--background-color-light-gray-scroll);
+    transition: all 0.3s ease 0s;
+
     &:hover {
       background-color: var(--background-color-gray-hover);
       opacity: 1;
@@ -114,7 +124,7 @@
     cursor: pointer;
   }
   &__friends-icon {
-    background: url('/src/assets/icons/friends.svg') center no-repeat;
+    background: var(--icons-friends) center no-repeat;
     width: 15px;
     height: 15px;
     opacity: 0.5;
@@ -142,6 +152,9 @@
     background-color: var(--background-color-dark-grey);
     opacity: 0.8;
     padding: 5px 0;
+    .user-item__name {
+      opacity: 1;
+    }
   }
 
   &__user-container {
@@ -160,13 +173,17 @@
   }
 
   &__user-settings {
-    background: url('/src/assets/icons/settings.svg') center no-repeat;
+    background: var(--icons-settings) center no-repeat;
     width: 15px;
     height: 15px;
     opacity: 0.5;
     transition: all 0.3s ease 0s;
     padding: 10px;
     border-radius: 7px;
+
+    &.tooltip::after {
+      top: -30px;
+    }
 
     &:hover {
       opacity: 1;

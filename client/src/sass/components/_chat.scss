@@ -51,7 +51,7 @@
     width: calc(100% - 40px);
     height: 40px;
     margin-bottom: 20px;
-    background-color: var(--background-color-gray-hover);
+    background-color: var(--background-color-main-input);
     border: none;
     outline: none;
     color: var(--text-primary);
@@ -79,7 +79,7 @@
     font-weight: 600;
   }
   &__reply-notification-message-destroy {
-    background: url('/src/assets/icons/close.svg') center no-repeat;
+    background: var(--icons-close) center no-repeat;
     border: none;
     width: 10px;
     height: 10px;
@@ -287,14 +287,14 @@
   }
   &__edit-btn {
     padding: 10px;
-    background: url('/src/assets/icons/pensil.svg') center no-repeat;
+    background: var(--icons-pencil) center no-repeat;
   }
   &__reply-btn {
     margin-right: 10px;
-    background: url('/src/assets/icons/reply.svg') center no-repeat;
+    background: var(--icons-replay) center no-repeat;
   }
   &__delete-btn {
     margin-right: 10px;
-    background: url('/src/assets/icons/trash.svg') center no-repeat;
+    background: var(--icons-trash) center no-repeat;
   }
 }

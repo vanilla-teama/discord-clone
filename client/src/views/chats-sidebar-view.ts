@@ -53,8 +53,8 @@ class ChatsSideBarView extends View {
   }
 
   private createShowCreateChatElement(): HTMLSpanElement {
-    const $directMessagesAddBtn = $('span', 'chats-sidebar__dm-add');
-    $directMessagesAddBtn.dataset.name = 'Create DM';
+    const $directMessagesAddBtn = $('span', ['chats-sidebar__dm-add', 'tooltip']);
+    $directMessagesAddBtn.dataset.text = 'Create DM';
     return $directMessagesAddBtn;
   }
 
@@ -132,7 +132,8 @@ class ChatsSideBarView extends View {
       $userStatus.classList.add(`user-item__status_${user.availability}`);
     }
     $userName.textContent = user ? user.name : 'User is loading...';
-    const $userSettings = $('span', 'chats-sidebar__user-settings');
+    const $userSettings = $('span', ['chats-sidebar__user-settings', 'tooltip']);
+    $userSettings.dataset.text = 'User Settings';
     $userAvatar.append($userIcon, $userStatus);
     $userContainer.append($userAvatar, $userName);
     $userBar.append($userContainer, $userSettings);

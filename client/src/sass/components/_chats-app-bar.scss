@@ -11,7 +11,7 @@
     gap: 10px;
   }
   &__user-atIcon {
-    background: url('/src/assets/icons/at-icon.svg') center no-repeat;
+    background: var(--icons-at) center no-repeat;
     width: 20px;
     height: 20px;
     opacity: 0.5;
@@ -50,7 +50,7 @@
   }
 
   &__profile-btn {
-    background: url('/src/assets/icons/user-profile.svg') center/ cover no-repeat;
+    background: var(--icons-user-profile) center/ cover no-repeat;
     width: 25px;
     height: 25px;
     opacity: 0.5;
@@ -60,11 +60,8 @@
       opacity: 1;
     }
   }
-  &__profile-btn {
-    background: url('/src/assets/icons/user-profile.svg') center / cover no-repeat;
-  }
   &__help-btn {
-    background: url('/src/assets/icons/help.svg') center / cover no-repeat;
+    background: var(--icons-help) center / cover no-repeat;
     position: relative;
   }
 
@@ -81,14 +78,15 @@
     border: 0;
     outline: 0;
     padding: 5px;
-    background-color: var(--background-color-black);
+    background-color: var(--background-color-gray-hover);
     transition: all 0.3s ease 0s;
+    border-radius: 5px;
 
     &::placeholder {
       color: var(--text-primary);
     }
     &:focus {
-      width: 180px;
+      width: 220px;
     }
   }
 }
