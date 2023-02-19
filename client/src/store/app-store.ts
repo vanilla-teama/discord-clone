@@ -193,6 +193,14 @@ class AppStore {
     return null;
   }
 
+  getInviteFriendList(channelId: string) {
+    const members = this.getChannelMembers(channelId);
+    const friends = this.friends
+      .map((friend) => this.users.find((user) => user.id === friend.id))
+      .filter((friend) => !!friend) as User[];
+    return friends.filter((friend) => !members.some((member) => member.id === friend?.id));
+  }
+
   async fetchCurrentUser(): Promise<void> {
     if (!this.user) {
       return;
@@ -420,11 +428,8 @@ class AppStore {
       .catch((err) => console.log(err));
     if (response) {
       const userIdx = this.users.findIndex(({ id }) => userId === id);
-      if (userIdx) {
+      if (userIdx !== undefined) {
         this.users = [...this.users.slice(0, userIdx), response.data.user, ...this.users.slice(userIdx + 1)];
-      }
-      if (userId === this.user?.id) {
-        this.user = response.data.user;
       }
     }
   }

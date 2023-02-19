@@ -1,7 +1,9 @@
 import Controller from '../lib/controller';
 import Router from '../lib/router';
+import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
 import { Channel } from '../types/entities';
+import { ServerToClientEvents } from '../types/socket';
 import ChatsInfoBarView from '../views/chats-info-bar-view';
 import ServersInfoBarView from '../views/servers-info-bar-view';
 
@@ -18,6 +20,7 @@ class ServersInfoBarComponent extends Controller<ServersInfoBarView> {
     if (this.channel) {
       this.displayMembers();
     }
+    this.bindSocketEvents();
   }
 
   displayMembers() {
@@ -31,6 +34,21 @@ class ServersInfoBarComponent extends Controller<ServersInfoBarView> {
     const channelId = new Router().getParams()[1];
     return appStore.getChannel(channelId);
   }
+
+  bindSocketEvents() {
+    socket.removeListener('userInvitedToChannel', ServersInfoBarComponent.onSocketUserInvitedToChannel);
+    socket.on(
+      'userInvitedToChannel',
+      (ServersInfoBarComponent.onSocketUserInvitedToChannel = async ({ userId, channelId }) => {
+        if (!appStore.user) {
+          return;
+        }
+        this.displayMembers();
+      })
+    );
+  }
+
+  static onSocketUserInvitedToChannel: ServerToClientEvents['userInvitedToChannel'] = () => {};
 }
 
 export default ServersInfoBarComponent;
