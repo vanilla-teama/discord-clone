@@ -119,13 +119,18 @@ class ChatsInfoBarView extends View {
     $mutualServerTitle.textContent = count === 1 ? `${count} Mutual Server` : `${count} Mutual Servers`;
     const $mutualServerArrow = $('div', 'mutual-server__arrow');
     const $mutualServerList = $('ul', 'mutual-server__list');
-    
+
     servers.forEach(({ id, name, image }) => {
       const $mutualServerItem = $('li', 'mutual-server__item');
-      const $mutualServerIcon = Object.assign($('img', 'mutual-server__icon'), { src: image });
+      const $mutualServerIcon = $('img', 'mutual-server__icon');
       const $mutualServerName = $('div', 'mutual-server__name');
-
       $mutualServerName.textContent = name;
+      $mutualServerIcon.dataset.name = name.slice(0, 1).toUpperCase();
+      $mutualServerIcon.alt = name;
+
+      if (image) {
+        $mutualServerIcon.src = `data:image/png;base64, ${image}`;
+      }
 
       $mutualServerItem.append($mutualServerIcon, $mutualServerName);
       $mutualServerList.append($mutualServerItem);
