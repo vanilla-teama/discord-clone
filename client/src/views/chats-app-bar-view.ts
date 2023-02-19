@@ -6,7 +6,7 @@ import ScreenView from './screen-view';
 
 class ChatsAppBarView extends View {
   static readonly classNames = {};
-
+  static $chatsAppBar = $('div', 'chats-app-bar');
   chat: Chat | null;
   $userStatus: HTMLDivElement;
   $showInfoBar: HTMLButtonElement;
@@ -23,7 +23,7 @@ class ChatsAppBarView extends View {
   }
   build(): void {
     if (this.chat) {
-      const $chatsAppBar = $('div', 'chats-app-bar');
+      // const $chatsAppBar = $('div', 'chats-app-bar');
       const $userContainer = $('div', 'chats-app-bar__user-container');
       const $iconAt = $('div', 'chats-app-bar__user-atIcon');
       const $userName = $('div', 'chats-app-bar__user-name');
@@ -46,9 +46,9 @@ class ChatsAppBarView extends View {
 
       $userContainer.append($iconAt, $userName, $userStatus);
       $panelContainer.append($showInfoBar, $search, $helpBtn);
-      $chatsAppBar.append($userContainer, $panelContainer);
+      ChatsAppBarView.$chatsAppBar.append($userContainer, $panelContainer);
 
-      this.$container.append($chatsAppBar);
+      this.$container.append(ChatsAppBarView.$chatsAppBar);
     } else {
       this.$container.append('NO CHAT FOR APPBAR!');
     }
