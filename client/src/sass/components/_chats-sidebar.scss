@@ -1,9 +1,8 @@
 .sidebar {
-  // min-height: 100%;
   width: 240px;
   background-color: var(--background-color-gray);
   position: absolute;
-  left: 65px;
+  left: 70px;
   transition: 0.2s all linear;
   animation-duration: 500ms;
   animation-timing-function: ease-in;
@@ -11,11 +10,12 @@
 }
 
 .sidebar._disable {
-  left: -190px;
+  left: -240px;
   transition: 0.2s all linear;
 }
 
-.main-container._disable {
+.app-bar._active {
+  margin-left: -130px;
   padding-left: 0px;
   transition: 0.2s all linear;
 }
@@ -28,7 +28,6 @@
     padding-top: 15px;
     display: flex;
     flex-direction: column;
-    //min-height: 100%;
     height: calc(100% - 15px);
   }
   &__dm-container {

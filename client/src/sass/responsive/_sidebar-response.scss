@@ -1,11 +1,11 @@
 @include media-lg-down {
   .sidebar {
     z-index: 80;
-    left: 63px;
+    left: 70px;
   }
   .main-container {
-    padding-left: 0px;
-    padding-right: 0px;
+    //padding-left: 0px;
+    //padding-right: 0px;
     animation: none;
   }
   @keyframes main-content-show-info-bar {

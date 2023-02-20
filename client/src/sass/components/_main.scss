@@ -45,7 +45,8 @@ $infobar-width: 340px;
 .app-bar {
   background-color: var(--background-color-light-gray);
   border-bottom: 2px solid var(--background-color-light-gray-scroll);
-  padding-left: 240px;
+  //padding-left: 240px;
+  padding-left: 110px;
   transition: 0.2s all linear;
 }
 
@@ -54,7 +55,9 @@ $infobar-width: 340px;
   height: calc(100% - 60px);
   //height: 100%;
   background-color: var(--background-color-light-gray);
-  padding-left: 240px;
+  //padding-left: 240px;
+  margin-left: 0;
+  padding-left: 110px;
   transition: 0.2s all linear;
 
   animation-duration: 200ms;
@@ -106,6 +109,12 @@ $infobar-width: 340px;
       }
     }
   }
+}
+
+.main-container._disable {
+  margin-left: -130px;
+  padding-left: 0px;
+  transition: 0.2s all linear;
 }
 
 .main-content {

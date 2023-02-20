@@ -41,6 +41,9 @@ class ScreenView extends View {
         MainView.hideInfoBar();
       }
     }
+    if (window.matchMedia('(min-width: 992px)').matches) {
+      if (ScreenView.$sideBar !== null) ScreenView.$sideBar.classList.toggle('_disable');
+    }
   }
 
   static observerWidth(): void {
@@ -60,6 +63,13 @@ class ScreenView extends View {
         MainView.$mainContainer.classList.remove('main-container_show-info-bar');
         MainView.$mainContainer.classList.remove('main-container_hiding-info-bar');
         MainView.$mainContainer.onanimationend = null;
+      }
+    } else {
+      if (window.matchMedia('(min-width: 992px)').matches) {
+        if (StartBarView.$burgerBtn) StartBarView.$burgerBtn.classList.add('burger_active');
+        if (ScreenView.$sideBar !== null) ScreenView.$sideBar.classList.remove('_disable');
+        if (MainView.$appbar) MainView.$appbar.classList.remove('_active');
+        if (MainView.$mainContainer !== null) MainView.$mainContainer.classList.remove('_disable');
       }
     }
   }

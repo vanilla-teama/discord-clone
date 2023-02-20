@@ -58,11 +58,16 @@ class MainView extends View {
   }
 
   static toggleInfoBar(): void {
-    if (window.matchMedia('(max-width: 991px)').matches) {
+    if (window.matchMedia('(max-width: 791px)').matches) {
       if (ScreenView.$sideBar) ScreenView.$sideBar.classList.add('_disable');
       if (StartBarView.$burgerBtn) StartBarView.$burgerBtn.classList.remove('burger_active');
       if (MainView.$appbar) MainView.$appbar.classList.add('_active');
     }
+    //if (window.matchMedia('(min-width: 992px)').matches) {
+    //  //if (ScreenView.$sideBar) ScreenView.$sideBar.classList.remove('_disable');
+    //  //if (StartBarView.$burgerBtn) StartBarView.$burgerBtn.classList.remove('burger_active');
+    //  //if (MainView.$appbar) MainView.$appbar.classList.add('_active');
+    //}
     if (MainView.$mainContainer) {
       if (MainView.$mainContainer.classList.contains('main-container_show-info-bar')) {
         MainView.hideInfoBar();
