@@ -118,9 +118,10 @@ $infobar-width: 340px;
 }
 
 .info-bar {
-  flex: 0 0 $infobar-width;
-  //position: fixed;
-  position: absolute;
+  width: 340px;
+  //flex: 0 0 $infobar-width;
+  position: fixed;
+  //position: absolute;
   right: -$infobar-width;
   //top: 55px;
   height: calc(100% - 62px);

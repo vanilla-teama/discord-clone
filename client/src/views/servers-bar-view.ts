@@ -37,6 +37,54 @@ class ServersBarView extends View {
 
     const serversFake: Server[] = [
       {
+        name: 'F',
+        image: '/src/assets/icons/discord.svg',
+        id: '123',
+        owner: { name: 'HAHA', id: '123' },
+      },
+      {
+        name: 'server1',
+        image: '',
+        id: '456',
+        owner: { name: 'HAHA', id: '123' },
+      },
+      {
+        name: 'server2',
+        image: '/src/assets/icons/discord.svg',
+        id: '123',
+        owner: { name: 'HAHA', id: '123' },
+      },
+      {
+        name: 'server1',
+        image: '',
+        id: '456',
+        owner: { name: 'HAHA', id: '123' },
+      },
+      {
+        name: 'server2',
+        image: '/src/assets/icons/discord.svg',
+        id: '123',
+        owner: { name: 'HAHA', id: '123' },
+      },
+      {
+        name: 'server1',
+        image: '',
+        id: '456',
+        owner: { name: 'HAHA', id: '123' },
+      },
+      {
+        name: 'server2',
+        image: '/src/assets/icons/discord.svg',
+        id: '123',
+        owner: { name: 'HAHA', id: '123' },
+      },
+      {
+        name: 'server1',
+        image: '',
+        id: '456',
+        owner: { name: 'HAHA', id: '123' },
+      },
+      {
         name: 'server2',
         image: '/src/assets/icons/discord.svg',
         id: '123',
