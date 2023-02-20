@@ -6,6 +6,8 @@ import PopupView, { PopupCoords } from './popup-view';
 import ScreenView from './screen-view';
 import * as discord from '../assets/icons/discord.svg';
 
+export type ChatWithAvatar = Chat & { avatar?: string };
+
 class ChatsSideBarView extends View {
   static readonly classes = {
     chatItem: 'chats-sidebar__item',
@@ -59,7 +61,7 @@ class ChatsSideBarView extends View {
     return $directMessagesAddBtn;
   }
 
-  displayChats(chats: Chat[]): void {
+  displayChats(chats: ChatWithAvatar[]): void {
     this.$chatList.innerHTML = '';
     chats.forEach((chat) => {
       const $item = this.createChatItem(chat);
@@ -68,7 +70,7 @@ class ChatsSideBarView extends View {
     });
   }
 
-  updateChat(chat: Chat): void {
+  updateChat(chat: ChatWithAvatar): void {
     const $newItem = this.createChatItem(chat);
     for (const [
       $item,
@@ -145,15 +147,17 @@ class ChatsSideBarView extends View {
     return $userBar;
   }
 
-  private createChatItem({ userName, availability }: Chat): HTMLLIElement {
+  private createChatItem({ userName, availability, avatar }: ChatWithAvatar): HTMLLIElement {
     const $item = $('li', ChatsSideBarView.classes.chatItem);
     const $itemBox = $('div', 'user-item__box');
     const $itemAvatar = $('div', 'user-item__avatar');
-    const $itemIcon = $('div', 'user-item__icon');
+    const $itemIcon = $('img', 'user-item__icon');
     const $itemStatus = $('div', ['user-item__status', `user-item__status_${availability}`]);
     const $itemName = $('div', 'user-item__name');
     const $itemClose = $('span', 'user-item__close');
     $itemName.textContent = `${userName}`;
+
+    $itemIcon.src = avatar ? base64Url(avatar) : discord.default;
 
     $itemAvatar.append($itemIcon, $itemStatus);
     $itemBox.append($itemAvatar, $itemName);

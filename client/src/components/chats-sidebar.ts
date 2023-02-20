@@ -7,7 +7,7 @@ import { Availability, Chat, User } from '../types/entities';
 import { ServerToClientEvents } from '../types/socket';
 import { CustomEvents } from '../types/types';
 import { getTypedCustomEvent } from '../utils/functions';
-import ChatsSideBarView from '../views/chats-sidebar-view';
+import ChatsSideBarView, { ChatWithAvatar } from '../views/chats-sidebar-view';
 import { PopupCoords } from '../views/popup-view';
 import ChatsCreateFormComponent from './chats-create-form';
 import ChatsScreen from './chats-screen';
@@ -44,8 +44,17 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
   };
 
   onChatListChanged = (chats: Chat[]): void => {
-    this.view.displayChats(chats);
+    this.view.displayChats(chats.map((chat) => this.extendChatWithAvatar(chat)));
   };
+
+  extendChatWithAvatar(chat: Chat): ChatWithAvatar {
+    const { userId: chatUserId } = chat;
+    const user = appStore.users.find(({ id }) => id === chatUserId);
+    if (user?.profile?.avatar) {
+      return { ...chat, avatar: user.profile.avatar };
+    }
+    return chat;
+  }
 
   onChatUpdate = (chat: Chat): void => {
     this.view.updateChat(chat);
