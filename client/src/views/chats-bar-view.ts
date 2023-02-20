@@ -2,6 +2,7 @@ import Router, { RouteControllers } from '../lib/router';
 import View from '../lib/view';
 import { $ } from '../utils/functions';
 import StartBarView from './start-bar-view';
+import * as discord from '../assets/icons/discord.svg';
 
 class ChatsBarView extends View {
   static readonly classes = {
@@ -27,7 +28,7 @@ class ChatsBarView extends View {
     const $itemImg = $('img', 'chats-bar__img');
     const $itemName = $('div', 'chats-bar__name');
     $itemName.textContent = 'Personal Messages';
-    $itemImg.src = 'https://source.boringavatars.com/sunset';
+    $itemImg.src = discord.default;
 
     this.$item.onclick = () => {
       Router.push(RouteControllers.Chats);

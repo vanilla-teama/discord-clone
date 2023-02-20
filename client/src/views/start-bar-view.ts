@@ -40,7 +40,7 @@ class StartBarView extends View {
     StartBarView.$serversBar = $('div', StartBarView.classes.serversBar);
     StartBarView.$burgerBtn.append($lineFirst, $lineSecond, $lineThird, $lineFourth);
     const $separator = $('div', 'start-bar__separator');
-    const $separatorUp= $('div', ['start-bar__separator', 'start-bar__separator_up']);
+    const $separatorUp = $('div', ['start-bar__separator', 'start-bar__separator_up']);
 
     $startBarContainer.append(
       StartBarView.$burgerBtn,

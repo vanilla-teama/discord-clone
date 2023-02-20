@@ -1,9 +1,12 @@
 import Router, { RouteControllers, SettingsParams } from '../lib/router';
 import View from '../lib/view';
 import { Chat, User } from '../types/entities';
-import { $, isElementOfCssClass, replaceWith } from '../utils/functions';
+import { $, base64Url, isElementOfCssClass, replaceWith } from '../utils/functions';
 import PopupView, { PopupCoords } from './popup-view';
 import ScreenView from './screen-view';
+import * as discord from '../assets/icons/discord.svg';
+
+export type ChatWithAvatar = Chat & { avatar?: string };
 
 class ChatsSideBarView extends View {
   static readonly classes = {
@@ -58,7 +61,7 @@ class ChatsSideBarView extends View {
     return $directMessagesAddBtn;
   }
 
-  displayChats(chats: Chat[]): void {
+  displayChats(chats: ChatWithAvatar[]): void {
     this.$chatList.innerHTML = '';
     chats.forEach((chat) => {
       const $item = this.createChatItem(chat);
@@ -67,7 +70,7 @@ class ChatsSideBarView extends View {
     });
   }
 
-  updateChat(chat: Chat): void {
+  updateChat(chat: ChatWithAvatar): void {
     const $newItem = this.createChatItem(chat);
     for (const [
       $item,
@@ -123,7 +126,8 @@ class ChatsSideBarView extends View {
     const $userBar = $('div', 'chats-sidebar__user-bar');
     const $userContainer = $('div', 'chats-sidebar__user-container');
     const $userAvatar = $('div', 'user-item__avatar');
-    const $userIcon = $('div', 'user-item__icon');
+    // const $userIcon = $('div', 'user-item__icon');
+    const $userIcon = $('img', 'user-item__icon');
     const $userStatus = $('div', 'user-item__status');
     const $userName = $('div', 'user-item__name');
     //const $userIcon = $('div', 'chats-sidebar__user-icon');
@@ -132,6 +136,7 @@ class ChatsSideBarView extends View {
       $userStatus.classList.add(`user-item__status_${user.availability}`);
     }
     $userName.textContent = user ? user.name : 'User is loading...';
+    $userIcon.src = user?.profile?.avatar ? base64Url(user.profile.avatar) : discord.default;
     const $userSettings = $('span', ['chats-sidebar__user-settings', 'tooltip']);
     $userSettings.dataset.text = 'User Settings';
     $userAvatar.append($userIcon, $userStatus);
@@ -142,15 +147,17 @@ class ChatsSideBarView extends View {
     return $userBar;
   }
 
-  private createChatItem({ userName, availability }: Chat): HTMLLIElement {
+  private createChatItem({ userName, availability, avatar }: ChatWithAvatar): HTMLLIElement {
     const $item = $('li', ChatsSideBarView.classes.chatItem);
     const $itemBox = $('div', 'user-item__box');
     const $itemAvatar = $('div', 'user-item__avatar');
-    const $itemIcon = $('div', 'user-item__icon');
+    const $itemIcon = $('img', 'user-item__icon');
     const $itemStatus = $('div', ['user-item__status', `user-item__status_${availability}`]);
     const $itemName = $('div', 'user-item__name');
     const $itemClose = $('span', 'user-item__close');
     $itemName.textContent = `${userName}`;
+
+    $itemIcon.src = avatar ? base64Url(avatar) : discord.default;
 
     $itemAvatar.append($itemIcon, $itemStatus);
     $itemBox.append($itemAvatar, $itemName);

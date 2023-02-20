@@ -43,3 +43,18 @@ export const isClosestElementOfCssClass = <T extends HTMLElement = HTMLElement>(
 export const getTypedCustomEvent = <K extends CustomEvents>(name: K, event: Event) => {
   return event as unknown as CustomEvent<CustomEventData[K]>;
 };
+
+export const readImage = (file: File, $image: HTMLImageElement) => {
+  const reader = new FileReader();
+
+  reader.onload = function (e) {
+    console.log(e.target);
+    if (e.target) {
+      $image.src = e.target.result as string;
+    }
+  };
+
+  reader.readAsDataURL(file);
+};
+
+export const base64Url = (base64: string) => `data:image/png;base64, ${base64}`;

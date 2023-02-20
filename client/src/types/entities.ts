@@ -21,12 +21,13 @@ export interface User<T extends DataType = 'data'> extends MongoEntity {
   invitesTo: MongoObjectId[];
   invitesToChannels: Data<T, string[], Channel[]>;
   createdAt: string;
+  profile: Profile;
 }
 
 export interface Profile<T extends DataType = 'data'> {
-  avatar: Data<T, File, string | null>;
-  banner: string;
-  about: string;
+  avatar: Data<T, File, string | null> | null;
+  banner: string | null;
+  about: string | null;
 }
 
 export interface PersonalMessage extends MongoEntity {
@@ -51,7 +52,7 @@ export interface ChannelMessage extends MongoEntity {
 export interface Server<T extends DataType = 'data'> extends MongoEntity {
   name: string;
   image: Data<T, File, string | null>;
-  owner: Data<T, string, ServerOwner>;
+  owner: Data<T, string, ServerOwner> | null;
 }
 
 export interface Chat extends MongoEntity {

@@ -35,6 +35,7 @@ export const userDTO = ({
   createdAt,
   invitesToChannels,
   joinedChannels,
+  profile,
 }: FetchedUser): DTOUser => {
   return {
     id: _id.toString(),
@@ -57,6 +58,11 @@ export const userDTO = ({
     }),
     joinedChannels: (joinedChannels || []) as unknown as DTOChannel[],
     createdAt,
+    profile: {
+      avatar: profile.avatar ? profile.avatar.toString('base64') : null,
+      about: profile.about ?? null,
+      banner: profile.banner ?? null,
+    }
   };
 };
 
@@ -117,11 +123,12 @@ export const channelMessageDTO = ({
 
 export const serverDTO = ({_id, image, name, owner}: FetchedServer): DTOServer => {
   const ownerUser = owner as unknown as FetchedUser;
+
   return {
     id: _id.toString(),
     name: name,
     image: image,
-    owner: { id: ownerUser._id.toString(), name: ownerUser.name },
+    owner: owner ? { id: ownerUser._id.toString(), name: ownerUser.name } : null,
   }
 }
 

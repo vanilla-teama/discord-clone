@@ -3,6 +3,7 @@ import { $, isClosestElementOfCssClass } from '../utils/functions';
 import MainView from './main-view';
 import ModalView from './modal-view';
 import SettingsContentView from './settings-content-view';
+import { defaultBanner } from './settings-profiles-view';
 import SettingsScreenView from './settings-screen-view';
 
 class SettingsAccountView extends View {
@@ -31,6 +32,7 @@ class SettingsAccountView extends View {
     emailInput: 'form-account-email__input',
   };
 
+  $bannerBlock: HTMLDivElement;
   $headingNickname: HTMLDivElement;
   $name: HTMLDivElement;
   $email: HTMLDivElement;
@@ -43,6 +45,7 @@ class SettingsAccountView extends View {
       SettingsAccountView.throwNoRootInTheDomError('Settings-Account');
     }
     super($root);
+    this.$bannerBlock = $('div', SettingsAccountView.classNames.infoBlockHeader);
     this.$headingNickname = $('div', SettingsAccountView.classNames.nickName);
     this.$name = $('div', SettingsAccountView.classNames.titleBody);
     this.$email = $('div', SettingsAccountView.classNames.titleBody);
@@ -63,7 +66,7 @@ class SettingsAccountView extends View {
     });
     $blocDelete.append($titlDelete, $buttonDelete);
     const $infoBlock = $('div', SettingsAccountView.classNames.infoBlock);
-    const $infoBlockHeader = $('div', SettingsAccountView.classNames.infoBlockHeader);
+    const $infoBlockHeader = this.$bannerBlock;
     const $avatarBlockHeader = $('div', SettingsAccountView.classNames.avatarBlockHeader);
     $infoBlockHeader.append($avatarBlockHeader);
     const $blockBody = $('div', SettingsAccountView.classNames.blockBody);
@@ -136,7 +139,7 @@ class SettingsAccountView extends View {
     this.$container.append($mainBlock);
   }
 
-  displayData({ name, email }: { name?: string; email?: string }): void {
+  displayData({ name, email, banner }: { name?: string; email?: string; banner?: string | null }): void {
     if (name !== undefined) {
       this.$headingNickname.textContent = name;
       this.$name.textContent = name;
@@ -145,6 +148,9 @@ class SettingsAccountView extends View {
     if (email !== undefined) {
       this.$email.textContent = email;
       this.$emailInput.value = email;
+    }
+    if (banner !== undefined) {
+      this.$bannerBlock.style.backgroundColor = banner || defaultBanner;
     }
   }
 

@@ -48,12 +48,12 @@ class ServersCreateFormView extends View {
     const $imageUpload = $('img', ['form-create-server__image-upload', 'form__image']);
     $imageUpload.src = upload.default;
 
-    $imageInput.addEventListener('change', (e: Event) => {
+    $imageInput.onclick = (e: Event) => {
       const target = e.target as HTMLInputElement;
       if (target.value) {
         $imageUpload.src = plus.default;
       }
-    });
+    };
 
     const $inputContainer = $('div', ['form__input-container', 'form-create-server__input-container']);
     const $label = $('label', ['form__label', 'form-create-server__label']);

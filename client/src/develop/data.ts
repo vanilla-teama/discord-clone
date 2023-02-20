@@ -16,6 +16,11 @@ export const users: User[] = [
     invitesFrom: [],
     invitesToChannels: [],
     createdAt: '',
+    profile: {
+      about: null,
+      avatar: null,
+      banner: null,
+    },
   },
   {
     id: '63dd3dd9938e35dad6409e12',
@@ -30,6 +35,11 @@ export const users: User[] = [
     invitesFrom: [],
     invitesToChannels: [],
     createdAt: '',
+    profile: {
+      about: null,
+      avatar: null,
+      banner: null,
+    },
   },
   {
     id: '63dd3de6938e35dad6409e14',
@@ -44,6 +54,11 @@ export const users: User[] = [
     invitesFrom: [],
     invitesToChannels: [],
     createdAt: '',
+    profile: {
+      about: null,
+      avatar: null,
+      banner: null,
+    },
   },
   {
     id: '63dede6beac45c545ad1e616',
@@ -58,6 +73,11 @@ export const users: User[] = [
     invitesFrom: [],
     invitesToChannels: [],
     createdAt: '',
+    profile: {
+      about: null,
+      avatar: null,
+      banner: null,
+    },
   },
 ];
 
