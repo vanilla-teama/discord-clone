@@ -5,12 +5,18 @@ import { $, base64Url } from '../utils/functions';
 import InfoBarView from './info-bar-view';
 import MainView from './main-view';
 import * as urlEng from '../assets/flags/flag-eng.png';
+import * as discord from '../assets/icons/discord.svg';
+import { defaultBanner } from './settings-profiles-view';
 
 class ChatsInfoBarView extends View {
   static readonly classNames = {};
 
   chat: Chat | null;
   $status: HTMLSpanElement;
+  $avatar: HTMLImageElement;
+  $banner: HTMLDivElement;
+  $about: HTMLTextAreaElement;
+  $aboutContainer: HTMLDivElement;
   $mutualServers: HTMLDivElement;
 
   constructor(chat: Chat | null) {
@@ -21,6 +27,10 @@ class ChatsInfoBarView extends View {
     super($root);
     this.chat = chat;
     this.$status = $('span', 'chats-info-bar__status');
+    this.$avatar = $('img', 'chats-info-bar__avatar');
+    this.$banner = $('div', 'chats-info-bar__header');
+    this.$about = $('textarea', 'content-info__note-input');
+    this.$aboutContainer = $('div', 'content-info__note-block');
     this.$mutualServers = $('div', ['chats-info-bar__mutual-server', 'mutual-server']);
   }
   build(): void {
@@ -28,11 +38,13 @@ class ChatsInfoBarView extends View {
       InfoBarView.show();
       const $chatsInfoBar = $('div', 'chats-info-bar');
 
-      const $header = $('div', 'chats-info-bar__header');
-      const $avatar = $('div', 'chats-info-bar__avatar');
+      const $header = this.$banner;
+      const $avatar = this.$avatar;
       const $status = this.$status;
       $avatar.append($status);
       $header.append($avatar);
+
+      $avatar.src = discord.default;
 
       const $content = $('div', ['chats-info-bar__content', 'content-info']);
       const $userName = $('div', 'content-info__user-name');
@@ -42,15 +54,15 @@ class ChatsInfoBarView extends View {
       $sinceTitle.textContent = 'Discord Member Since';
       const $sinceDate = $('div', 'content-info__since-date');
       $sinceDate.textContent = moment(this.chat.createdAt).format('MMMM D, YYYY').toUpperCase();
-      const $noteBlock = $('div', 'content-info__note-block');
-      const $noteTitle = $('div', 'content-info__note-title');
-      $noteTitle.textContent = 'About me';
-      const $noteInput = $('textarea', 'content-info__note-input');
+      const $about = this.createAboutContainer();
+      // const $noteTitle = $('div', 'content-info__note-title');
+      // $noteTitle.textContent = 'About me';
+      // const $noteInput = $('textarea', 'content-info__note-input');
       // $noteInput.placeholder = 'Click to add a note';
 
       $sinceBlock.append($sinceTitle, $sinceDate);
-      $noteBlock.append($noteTitle, $noteInput);
-      $content.append($userName, $sinceBlock, $noteBlock);
+      // $about.append($noteTitle, $noteInput);
+      $content.append($userName, $sinceBlock, $about);
 
       const $mutualServer = $('div', ['chats-info-bar__mutual-server', 'mutual-server']);
       const $mutualServerContainer = $('div', 'mutual-server__container');
@@ -75,6 +87,34 @@ class ChatsInfoBarView extends View {
       this.$container.append($chatsInfoBar);
     } else {
       this.$container.append('NO CHAT FOR INFOBAR!');
+    }
+  }
+
+  createAboutContainer(): HTMLDivElement {
+    const $aboutBlock = this.$aboutContainer;
+    $aboutBlock.innerHTML = '';
+    const $noteTitle = $('div', 'content-info__note-title');
+    $noteTitle.textContent = 'About me';
+    const $about = this.$about;
+
+    $aboutBlock.append($noteTitle, $about);
+    return $aboutBlock;
+  }
+
+  displayAvatar(avatar: string | null): void {
+    this.$avatar.src = avatar ? base64Url(avatar) : discord.default;
+  }
+
+  displayBanner(banner: string | null): void {
+    this.$banner.style.backgroundColor = banner || defaultBanner;
+  }
+
+  displayAbout(about: string | null): void {
+    if (about) {
+      this.$aboutContainer = this.createAboutContainer();
+      this.$about.value = about;
+    } else {
+      this.$aboutContainer.innerHTML = '';
     }
   }
 

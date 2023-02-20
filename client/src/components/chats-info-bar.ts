@@ -24,6 +24,19 @@ class ChatsInfoBarComponent extends Controller<ChatsInfoBarView> {
     if (this.chat) {
       this.view.displayStatus(this.chat.availability);
       this.displayMutualServers();
+      this.displayProfileData();
+    }
+  }
+
+  displayProfileData() {
+    if (this.chat) {
+      const { userId: chatUserId } = this.chat;
+      const user = appStore.users.find(({ id }) => id === chatUserId);
+      if (user?.profile) {
+        this.view.displayAvatar(user.profile.avatar);
+        this.view.displayBanner(user.profile.banner);
+        this.view.displayAbout(user.profile.about);
+      }
     }
   }
 
