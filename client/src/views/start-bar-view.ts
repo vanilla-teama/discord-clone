@@ -30,6 +30,7 @@ class StartBarView extends View {
     StartBarView.$serversBar = null;
   }
   async build(): Promise<void> {
+    const $startBarContainer = $('div','start-bar__container');
     const $lineFirst = $('span', StartBarView.classes.burgerLineFirst);
     const $lineSecond = $('span', StartBarView.classes.burgerLineSecond);
     const $lineThird = $('span', StartBarView.classes.burgerLineThird);
@@ -41,13 +42,22 @@ class StartBarView extends View {
     const $separator = $('div', 'start-bar__separator');
     const $separatorUp= $('div', ['start-bar__separator', 'start-bar__separator_up']);
 
-    this.$container.append(
+    $startBarContainer.append(
       StartBarView.$burgerBtn,
       $separatorUp,
       StartBarView.$chatBar,
       $separator,
       StartBarView.$serversBar
     );
+    this.$container.append($startBarContainer);
+
+    //this.$container.append(
+    //  StartBarView.$burgerBtn,
+    //  $separatorUp,
+    //  StartBarView.$chatBar,
+    //  $separator,
+    //  StartBarView.$serversBar
+    //);
   }
 
   bindShowSideBarClick = (handler: EventListener): void => {
