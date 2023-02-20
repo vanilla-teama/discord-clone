@@ -1,9 +1,10 @@
 import Router, { RouteControllers, SettingsParams } from '../lib/router';
 import View from '../lib/view';
 import { Chat, User } from '../types/entities';
-import { $, isElementOfCssClass, replaceWith } from '../utils/functions';
+import { $, base64Url, isElementOfCssClass, replaceWith } from '../utils/functions';
 import PopupView, { PopupCoords } from './popup-view';
 import ScreenView from './screen-view';
+import * as discord from '../assets/icons/discord.svg';
 
 class ChatsSideBarView extends View {
   static readonly classes = {
@@ -123,7 +124,8 @@ class ChatsSideBarView extends View {
     const $userBar = $('div', 'chats-sidebar__user-bar');
     const $userContainer = $('div', 'chats-sidebar__user-container');
     const $userAvatar = $('div', 'user-item__avatar');
-    const $userIcon = $('div', 'user-item__icon');
+    // const $userIcon = $('div', 'user-item__icon');
+    const $userIcon = $('img', 'user-item__icon');
     const $userStatus = $('div', 'user-item__status');
     const $userName = $('div', 'user-item__name');
     //const $userIcon = $('div', 'chats-sidebar__user-icon');
@@ -132,6 +134,7 @@ class ChatsSideBarView extends View {
       $userStatus.classList.add(`user-item__status_${user.availability}`);
     }
     $userName.textContent = user ? user.name : 'User is loading...';
+    $userIcon.src = user?.profile?.avatar ? base64Url(user.profile.avatar) : discord.default;
     const $userSettings = $('span', ['chats-sidebar__user-settings', 'tooltip']);
     $userSettings.dataset.text = 'User Settings';
     $userAvatar.append($userIcon, $userStatus);
