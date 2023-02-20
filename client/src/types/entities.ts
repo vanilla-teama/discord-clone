@@ -5,7 +5,11 @@ export interface MongoEntity {
   id: MongoObjectId;
 }
 
-export interface User<T extends 'data' | 'formData' = 'data'> extends MongoEntity {
+export type DataType = 'data' | 'formData';
+
+export type Data<T extends DataType, F, D> = T extends 'formData' ? F : D;
+
+export interface User<T extends DataType = 'data'> extends MongoEntity {
   name: string;
   password: string;
   email: string;
@@ -15,17 +19,14 @@ export interface User<T extends 'data' | 'formData' = 'data'> extends MongoEntit
   friends: MongoObjectId[];
   invitesFrom: MongoObjectId[];
   invitesTo: MongoObjectId[];
-  invitesToChannels: T extends 'formData' ? string[] : Channel[];
+  invitesToChannels: Data<T, string[], Channel[]>;
   createdAt: string;
 }
 
-export interface FetchedUser {
-  _id: string;
-  name: string;
-  password: string;
-  email: string;
-  phone: string;
-  friends: string[];
+export interface Profile<T extends DataType = 'data'> {
+  avatar: Data<T, File, string | null>;
+  banner: string;
+  about: string;
 }
 
 export interface PersonalMessage extends MongoEntity {
@@ -47,10 +48,10 @@ export interface ChannelMessage extends MongoEntity {
   responsedToMessage: ChannelMessage | null;
 }
 
-export interface Server<S extends 'data' | 'formData' = 'data'> extends MongoEntity {
+export interface Server<T extends DataType = 'data'> extends MongoEntity {
   name: string;
-  image: S extends 'formData' ? File : string | null;
-  owner: S extends 'formData' ? string : ServerOwner;
+  image: Data<T, File, string | null>;
+  owner: Data<T, string, ServerOwner>;
 }
 
 export interface Chat extends MongoEntity {

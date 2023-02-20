@@ -10,8 +10,7 @@ class ModalPortalView extends View<HTMLDivElement> {
   static $modalPortal: HTMLDivElement | null = null;
   static $popupPortal: HTMLDivElement | null = null;
 
-  constructor() {
-    const $root = ScreenView.$portal;
+  constructor($root: HTMLDivElement | null = ScreenView.$portal) {
     if (!$root) {
       ModalPortalView.throwNoRootInTheDomError('Portal');
     }
