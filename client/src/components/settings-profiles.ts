@@ -40,7 +40,6 @@ class SettingsProfilesComponent extends Controller<SettingsProfilesView> {
   };
 
   saveProfile = async (profile: ProfileChanges): Promise<void> => {
-    console.log(profile);
     await appStore.updateProfile(profile);
     if (appStore.user) {
       this.profile = appStore.user.profile;

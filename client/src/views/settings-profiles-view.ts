@@ -13,7 +13,7 @@ export interface ProfileChanges {
   about: string | null | undefined;
 }
 
-const defaultBanner = '#3ba55d';
+export const defaultBanner = '#3ba55d';
 
 class SettingsProfilesView extends View {
   static readonly classNames = {
