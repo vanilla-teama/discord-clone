@@ -6,10 +6,12 @@ class SettingsScreenView extends View {
     btnClose: 'btn-close-settings',
     imgBtn: 'img-close-settings',
     containerBtn: 'container-close-btn',
+    portal: 'portal',
   };
 
   static $sidebar: HTMLDivElement | null;
   static $content: HTMLDivElement | null;
+  static $portal: HTMLDivElement | null = null;
   $closeButton: HTMLDivElement;
 
   constructor() {
@@ -29,9 +31,10 @@ class SettingsScreenView extends View {
     const $container = $('div', 'settings');
     SettingsScreenView.$sidebar = $('div', 'settings__sidebar');
     SettingsScreenView.$content = $('div', 'settings__content');
+    SettingsScreenView.$portal = $('div', SettingsScreenView.classNames.portal);
 
     $container.append(SettingsScreenView.$sidebar, SettingsScreenView.$content, $containerBtn);
-    this.$container.append($container);
+    this.$container.append($container, SettingsScreenView.$portal);
   }
 
   bindClose(handler: EventListener) {

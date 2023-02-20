@@ -464,6 +464,16 @@ class AppStore {
     }
   }
 
+  async deleteCurrentUser(): Promise<void> {
+    if (!this.user) {
+      return;
+    }
+    const userId = this.user.id;
+    await this.logOut();
+    const response = await http.delete(`/users/${userId}`).catch((err) => console.error(err));
+    console.log(response);
+  }
+
   async createChat(userIDs: string[]): Promise<void> {
     if (!this.user) {
       return;

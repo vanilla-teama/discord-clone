@@ -4,6 +4,7 @@ import Router, { RouteControllers } from '../lib/router';
 import { CustomEvents } from '../types/types';
 import { getTypedCustomEvent } from '../utils/functions';
 import SettingsScreenView from '../views/settings-screen-view';
+import ModalPortalComponent from './modal-portal';
 import SettingsContentComponent from './settings-content';
 import SettingsSidebarComponent from './settings-sidebar';
 
@@ -16,6 +17,7 @@ class SettingsScreen extends Controller<SettingsScreenView> {
     this.view.render();
     this.onRouteChanged();
     this.bindRouteChanged();
+    await new ModalPortalComponent(SettingsScreenView.$portal).init();
   }
 
   onClose: EventListener = () => {
