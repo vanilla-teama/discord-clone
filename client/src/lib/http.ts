@@ -30,6 +30,11 @@ const headers: Readonly<Record<string, string | boolean>> = {
   'X-Requested-With': 'XMLHttpRequest',
 };
 
+export const multipartHeaders = {
+  Accept: 'multipart/form-data',
+  'Content-Type': 'multipart/form-data; charset=utf-8',
+};
+
 // We can use the following function to inject the JWT token through an interceptor
 // We get the `accessToken` from the localStorage that we set when we authenticate
 const injectToken = (config: AxiosRequestConfig = {}): AxiosRequestConfig => {

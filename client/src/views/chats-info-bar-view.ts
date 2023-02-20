@@ -1,7 +1,7 @@
 import moment from '../lib/moment';
 import View from '../lib/view';
 import { Availability, Chat, Server } from '../types/entities';
-import { $ } from '../utils/functions';
+import { $, base64Url } from '../utils/functions';
 import InfoBarView from './info-bar-view';
 import MainView from './main-view';
 import * as urlEng from '../assets/flags/flag-eng.png';
@@ -44,9 +44,9 @@ class ChatsInfoBarView extends View {
       $sinceDate.textContent = moment(this.chat.createdAt).format('MMMM D, YYYY').toUpperCase();
       const $noteBlock = $('div', 'content-info__note-block');
       const $noteTitle = $('div', 'content-info__note-title');
-      $noteTitle.textContent = 'Note';
+      $noteTitle.textContent = 'About me';
       const $noteInput = $('textarea', 'content-info__note-input');
-      $noteInput.placeholder = 'Click to add a note';
+      // $noteInput.placeholder = 'Click to add a note';
 
       $sinceBlock.append($sinceTitle, $sinceDate);
       $noteBlock.append($noteTitle, $noteInput);
@@ -129,7 +129,7 @@ class ChatsInfoBarView extends View {
       $mutualServerIcon.alt = name;
 
       if (image) {
-        $mutualServerIcon.src = `data:image/png;base64, ${image}`;
+        $mutualServerIcon.src = base64Url(image);
       }
 
       $mutualServerItem.append($mutualServerIcon, $mutualServerName);

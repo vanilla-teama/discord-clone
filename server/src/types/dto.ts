@@ -18,6 +18,11 @@ export interface DTOUser extends DTOEntity {
   invitesToChannels: DTOChannel[],
   joinedChannels: DTOChannel[],
   createdAt: Date;
+  profile: {
+    avatar: string | null;
+    about: string | null;
+    banner: string | null;
+  }
 }
 
 export interface DTOPersonalMessage extends DTOEntity {
@@ -45,7 +50,7 @@ export interface DTOServer extends DTOEntity {
   owner: {
     id: string;
     name: string;
-  }
+  } | null
 }
 
 export interface DTOChannel extends DTOEntity {

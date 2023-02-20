@@ -1,7 +1,22 @@
 import express from 'express';
 import userController from '../controllers/users';
+import multer from 'multer';
 
 const router = express.Router();
+
+const storage = multer.diskStorage({
+  destination: function (request, file, callback) {
+    callback(null, './uploads/');
+  },
+  filename: function (request, file, callback) {
+    callback(null, file.originalname);
+  },
+});
+
+const uploader = multer({
+  dest: '/uploads',
+  storage: storage,
+});
 
 router.get('/check-auth', userController.checkAuth);
 router.post('/login', userController.login);
@@ -15,7 +30,7 @@ router.get('/:id/friends', userController.getFriends);
 router.get('/:id/invited-to-friends', userController.getInvitedToFriends);
 router.get('/:id/invited-from-friends', userController.getInvitedFromFriends);
 router.get('/:id/related-servers', userController.getRelatedServers);
-router.patch('/:id', userController.updateUser);
+router.patch('/:id', uploader.single('profile[avatar]'), userController.updateUser);
 router.delete('/:id', userController.deleteUser);
 
 router.get('/:id/friends', userController.getFriends);

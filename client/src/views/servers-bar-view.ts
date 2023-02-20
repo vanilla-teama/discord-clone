@@ -1,7 +1,7 @@
 import Router, { RouteControllers } from '../lib/router';
 import View from '../lib/view';
 import { Server } from '../types/entities';
-import { $ } from '../utils/functions';
+import { $, base64Url } from '../utils/functions';
 import StartBarView from './start-bar-view';
 import * as upload from '../assets/flags/flag-eng.png';
 
@@ -142,7 +142,7 @@ class ServersBarView extends View {
     $itemName.textContent = `${name}`;
 
     if (image) {
-      $itemImg.src = `data:image/png;base64, ${image}`;
+      $itemImg.src = base64Url(image);
     }
     $item.append($itemImg, $itemName);
 

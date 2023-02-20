@@ -1,5 +1,5 @@
 import { chats, users } from '../develop/data';
-import { ErrorStatusCode, http, isExpressError } from '../lib/http';
+import { ErrorStatusCode, http, isExpressError, multipartHeaders } from '../lib/http';
 import moment from '../lib/moment';
 import {
   Channel,
@@ -8,6 +8,7 @@ import {
   Chat,
   ChatAvailabilitiesMap,
   PersonalMessage,
+  Profile,
   Server,
   ServerOwner,
   User,
@@ -224,7 +225,7 @@ class AppStore {
       return [];
     }
     const userServers: Server[] = this.servers;
-    const opponentOwnServers: Server[] = this.allServers.filter((server) => server.owner.id === opponentId);
+    const opponentOwnServers: Server[] = this.allServers.filter((server) => server.owner?.id === opponentId);
     const opponentInviteServerIDs: string[] = opponent.invitesToChannels.map((channel) => channel.serverId);
     const opponentInviteServers = this.allServers.filter((server) => opponentInviteServerIDs.includes(server.id));
     const opponentServers = opponentOwnServers.concat(opponentInviteServers);
@@ -474,6 +475,27 @@ class AppStore {
     console.log(response);
   }
 
+  async updateProfile(data: Partial<Profile<'formData'>>): Promise<void> {
+    if (!this.user) {
+      return;
+    }
+    const userId = this.user.id;
+    const response = await http
+      .patch<{ profile: Partial<Profile<'formData'>> }, { data: { user: User } }>(
+        `/users/${userId}`,
+        { profile: data },
+        { headers: multipartHeaders }
+      )
+      .catch((err) => console.error(err));
+    if (response) {
+      if (this.user.profile) {
+        this.user.profile = response.data.user.profile;
+      }
+      console.log(this.users);
+      console.log(this.user);
+    }
+  }
+
   async createChat(userIDs: string[]): Promise<void> {
     if (!this.user) {
       return;
@@ -570,10 +592,7 @@ class AppStore {
     }
     const response = await http
       .post<Partial<Server<'formData'>>, { data: { server: Server } }>('/servers', server, {
-        headers: {
-          Accept: 'multipart/form-data',
-          'Content-Type': 'multipart/form-data; charset=utf-8',
-        },
+        headers: multipartHeaders,
       })
       .catch((error) => console.error(error));
     if (response) {

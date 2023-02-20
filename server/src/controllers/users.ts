@@ -1,6 +1,7 @@
+import fs from 'fs';
 import { Handler, NextFunction, Request, Response } from 'express';
 import { body, check, validationResult } from 'express-validator';
-import passport from 'passport';
+import passport, { use } from 'passport';
 import { IVerifyOptions } from 'passport-local';
 import User, { Availability, UserDocument, validateUserField } from '../models/user';
 import Server from '../models/server';
@@ -50,7 +51,8 @@ const login = async (req: TypedRequest, res: Response, next: NextFunction): Prom
         return next(err);
       }
       const { id } = user;
-      User.findById(id).populate(['chats', 'invitesToChannels', 'joinedChannels'])
+      User.findById(id)
+        .populate(['chats', 'invitesToChannels', 'joinedChannels'])
         .then((user) => {
           if (!user) {
             const error = new Error('Could not find user.');
@@ -268,8 +270,31 @@ const updateUser = (
               user[path] = [...new Set(newValueOfStr)].map((id) => new mongoose.Types.ObjectId(id));
             }
           }
+        } else if (req.body.profile) {
+          if (path === 'profile.about') {
+            const about = req.body.profile.about;
+            if (about !== undefined) {
+              user.profile.about = about || '';
+            }
+          } else if (path === 'profile.banner') {
+            const banner = req.body.profile.banner;
+            if (banner !== undefined) {
+              user.profile.banner = banner || '';
+            }
+          }
         }
       });
+
+      if (req.file) {
+        console.log('image');
+        let imageBuffer: Buffer | null = Buffer.from('');
+          if (req.file) {
+            const image = fs.readFileSync(req.file.path);
+            const encImage = image.toString('base64');
+            imageBuffer = Buffer.from(encImage, 'base64');
+          }
+          user.profile.avatar = imageBuffer;
+      }
 
       return user.save();
     })
@@ -364,6 +389,7 @@ const getInvitedFromFriends: Handler = (req, res, next) => {
 
 const getRelatedServers: Handler = (req, res, next) => {
   const userId = req.params.id;
+  console.log(userId);
 
   User.findById(userId)
     .populate([
@@ -378,24 +404,21 @@ const getRelatedServers: Handler = (req, res, next) => {
     ])
     .then((user) => {
       if (handleDocumentNotFound(user)) {
-        Server
-          .find({ owner: userId })
+        Server.find({ owner: userId })
           .populate('owner')
           .then((servers) => {
-            const invitedServers = (user.invitesToChannels || []).map(
-              (channel) => serverDTO((channel as unknown as FetchedChannel).serverId as unknown as FetchedServer)
+            const invitedServers = (user.invitesToChannels || []).map((channel) =>
+              serverDTO((channel as unknown as FetchedChannel).serverId as unknown as FetchedServer)
             );
-            const joinedServers = (user.joinedChannels || []).map(
-              (channel) => serverDTO((channel as unknown as FetchedChannel).serverId as unknown as FetchedServer)
+            const joinedServers = (user.joinedChannels || []).map((channel) =>
+              serverDTO((channel as unknown as FetchedChannel).serverId as unknown as FetchedServer)
             );
             const ownServers = servers.map((server) => serverDTO(server as unknown as FetchedServer));
-            res
-              .status(200)
-              .json({
-                message: 'Related servers fetched.',
-                servers: invitedServers.concat(joinedServers, ownServers),
-              });
-        });
+            res.status(200).json({
+              message: 'Related servers fetched.',
+              servers: invitedServers.concat(joinedServers, ownServers),
+            });
+          });
       }
     });
 };
