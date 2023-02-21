@@ -374,6 +374,17 @@ class ChatsMainContentView extends View {
     this.$repliedMessage = $message;
     this.displayInputReply($message, items.message.username);
     this.$chatInput.focus();
+
+    window.removeEventListener('keyup', ChatsMainContentView.onReplyEscapeKeyup);
+    window.addEventListener(
+      'keyup',
+      (ChatsMainContentView.onReplyEscapeKeyup = (event) => {
+        const key = event.key.toLowerCase();
+        if (key === 'escape') {
+          this.destroyReply($message);
+        }
+      })
+    );
   }
 
   displayInputReply($message: HTMLLIElement, username: string): void {
@@ -436,6 +447,8 @@ class ChatsMainContentView extends View {
   onMessageHoverBackspaceKeyup = async (event: MouseEvent, message: RenderedPersonalMessage): Promise<void> => {};
 
   static onMessageHoverKeyup = (event: KeyboardEvent): void => {};
+
+  static onReplyEscapeKeyup = (event: KeyboardEvent): void => {};
 
   cancelDeleteConfirmDialog = (): void => {};
 
