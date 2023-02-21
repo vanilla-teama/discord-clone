@@ -42,6 +42,7 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       this.view.bindDestroyFastMenu(this.destroyFastMenu);
       this.view.bindEditMessageFormSubmit(this.onEditMessageFormSubmit);
       this.view.bindDeleteMessageDialogSubmit(this.onDeleteMessageDialogSubmit);
+      this.view.bindOnMessageHoverBackspaceKeyup(this.displayDeleteConfirmDialogKeyup);
       this.view.bindMessageListClicks();
       this.view.bindCancelDeleteConfirmDialog(this.cancelDeleteConfirmDialog);
     }
@@ -164,6 +165,15 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
   };
 
   displayDeleteConfirmDialog = async (event: MouseEvent): Promise<void> => {
+    await new ModalComponent().init();
+    this.view.displayDeleteConfirmDialog(ModalView.getContainer(), event);
+    ModalView.show();
+  };
+
+  displayDeleteConfirmDialogKeyup = async (event: MouseEvent, message: RenderedPersonalMessage): Promise<void> => {
+    if (appStore.user?.id !== message.userId) {
+      return;
+    }
     await new ModalComponent().init();
     this.view.displayDeleteConfirmDialog(ModalView.getContainer(), event);
     ModalView.show();

@@ -1,4 +1,5 @@
 import View from '../lib/view';
+import { appStore } from '../store/app-store';
 import { $ } from '../utils/functions';
 import { RenderedPersonalMessage } from './chats-main-content-view';
 
@@ -28,13 +29,22 @@ class MessageFastMenuView extends View {
   async build(): Promise<void> {
     const $container = document.createDocumentFragment();
 
-    if (this.replyOrEdit === 'edit') {
+    // if (this.replyOrEdit === 'edit') {
+    //   $container.append(this.$editButton, this.$deleteButton);
+    //   this.$editButton.dataset.text = 'Edit';
+    //   this.$deleteButton.dataset.text = 'Delete';
+    // } else if (this.replyOrEdit === 'reply') {
+    //   this.$replyButton.dataset.text = 'Reply';
+    //   $container.append(this.$replyButton);
+    // }
+
+    $container.append(this.$replyButton);
+    this.$replyButton.dataset.text = 'Reply';
+
+    if (this.message.userId === appStore.user?.id) {
       $container.append(this.$editButton, this.$deleteButton);
       this.$editButton.dataset.text = 'Edit';
       this.$deleteButton.dataset.text = 'Delete';
-    } else if (this.replyOrEdit === 'reply') {
-      this.$replyButton.dataset.text = 'Reply';
-      $container.append(this.$replyButton);
     }
 
     this.$container.append($container);

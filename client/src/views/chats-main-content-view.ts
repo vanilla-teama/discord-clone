@@ -152,12 +152,37 @@ class ChatsMainContentView extends View {
   ): void => {
     this.$messageList.onmouseover = async (mouseOverEvent) => {
       if (isClosestElementOfCssClass<HTMLLIElement>(mouseOverEvent.target, 'personal-message')) {
-        if (!mouseOverEvent.target.classList.contains('personal-message_edit')) {
+        const isEdit = mouseOverEvent.target.classList.contains('personal-message_edit');
+        if (!isEdit) {
+          const $message = mouseOverEvent.target.closest<HTMLLIElement>('.personal-message');
           const items = this.messagesMap.get(mouseOverEvent.target);
           if (items) {
             await displayFastMenuHandler(items.$fastMenu, mouseOverEvent.target, items.message);
+
+            window.removeEventListener('keyup', ChatsMainContentView.onMessageHoverKeyup);
+            window.addEventListener(
+              'keyup',
+              (ChatsMainContentView.onMessageHoverKeyup = (event) => {
+                const key = event.key.toLowerCase();
+                console.log(key);
+                if (!$message) {
+                  return;
+                }
+                if (key === 'e') {
+                  if (isEdit) {
+                    return;
+                  }
+                  this.displayEditMessageForm($message);
+                } else if (key === 'r') {
+                  this.displayReply(mouseOverEvent);
+                } else if (key === 'backspace') {
+                  this.onMessageHoverBackspaceKeyup(mouseOverEvent, items.message);
+                }
+              })
+            );
             mouseOverEvent.target.onmouseleave = () => {
               this.destroyFastMenu();
+              window.removeEventListener('keyup', ChatsMainContentView.onMessageHoverKeyup);
             };
           }
         }
@@ -408,6 +433,10 @@ class ChatsMainContentView extends View {
 
   onDeleteMessageDialogSubmit = async (messageId: string, $message: HTMLLIElement): Promise<void> => {};
 
+  onMessageHoverBackspaceKeyup = async (event: MouseEvent, message: RenderedPersonalMessage): Promise<void> => {};
+
+  static onMessageHoverKeyup = (event: KeyboardEvent): void => {};
+
   cancelDeleteConfirmDialog = (): void => {};
 
   bindEditMessageFormSubmit = (handler: (formData: FormData, $message: HTMLLIElement) => Promise<void>): void => {
@@ -432,6 +461,12 @@ class ChatsMainContentView extends View {
 
   bindFastMenuReplyButtonClick = (handler: (event: MouseEvent) => void): void => {
     this.onFastMenuReplyButtonClick = handler;
+  };
+
+  bindOnMessageHoverBackspaceKeyup = (
+    handler: (event: MouseEvent, message: RenderedPersonalMessage) => Promise<void>
+  ): void => {
+    this.onMessageHoverBackspaceKeyup = handler;
   };
 
   setEditedMessageContent = (content: string): void => {
