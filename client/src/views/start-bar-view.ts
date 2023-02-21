@@ -30,7 +30,7 @@ class StartBarView extends View {
     StartBarView.$serversBar = null;
   }
   async build(): Promise<void> {
-    const $startBarContainer = $('div','start-bar__container');
+    const $startBarContainer = $('div', 'start-bar__container');
     const $lineFirst = $('span', StartBarView.classes.burgerLineFirst);
     const $lineSecond = $('span', StartBarView.classes.burgerLineSecond);
     const $lineThird = $('span', StartBarView.classes.burgerLineThird);

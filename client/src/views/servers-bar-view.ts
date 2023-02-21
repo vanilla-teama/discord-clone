@@ -98,16 +98,16 @@ class ServersBarView extends View {
       },
     ];
 
-    serversFake.forEach((server) => {
+    // serversFake.forEach((server) => {
+    //   const $item = this.createServerItem(server);
+    //   this.$serverList.append($item);
+    //   //this.onAppendServerItem($item, server);
+    // });
+    servers.forEach((server) => {
       const $item = this.createServerItem(server);
       this.$serverList.append($item);
-      //this.onAppendServerItem($item, server);
+      this.onAppendServerItem($item, server);
     });
-    //servers.forEach((server) => {
-    //  const $item = this.createServerItem(server);
-    //  this.$serverList.append($item);
-    //  this.onAppendServerItem($item, server);
-    //});
 
     this.$serverList.append(this.$addServerButton);
     this.bindShowModal();
@@ -142,6 +142,7 @@ class ServersBarView extends View {
     $itemName.textContent = `${name}`;
 
     if (image) {
+      console.log(image);
       $itemImg.src = base64Url(image);
     }
     $item.append($itemImg, $itemName);

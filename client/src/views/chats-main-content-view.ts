@@ -1,7 +1,7 @@
 import * as userIcon from '../assets/icons/discord.svg';
 import View from '../lib/view';
-import { Chat, MongoObjectId } from '../types/entities';
-import { $, isClosestElementOfCssClass } from '../utils/functions';
+import { Chat, MongoObjectId, Profile } from '../types/entities';
+import { $, base64Url, isClosestElementOfCssClass } from '../utils/functions';
 import MainView from './main-view';
 
 export type RenderedPersonalMessage = {
@@ -77,7 +77,7 @@ class ChatsMainContentView extends View {
     });
   }
 
-  displayMessages = (messages: RenderedPersonalMessage[]) => {
+  displayMessages = (messages: (RenderedPersonalMessage & { profile: Profile })[]) => {
     this.$messageList.innerHTML = '';
     this.messagesMap = new Map();
     messages.forEach((message) => {
@@ -98,12 +98,12 @@ class ChatsMainContentView extends View {
     $message.remove();
   }
 
-  createMessageItem(message_: RenderedPersonalMessage): HTMLLIElement {
+  createMessageItem(message_: RenderedPersonalMessage & { profile: Profile }): HTMLLIElement {
     const { id, username, message, date, responsedToMessage } = message_;
     const $item = $('li', ['chat__messages-list-item', 'personal-message']);
     const $userIconBlock = $('div', 'personal-message__icon-block');
     const $userIcon = $('img', 'personal-message__icon');
-    $userIcon.src = userIcon.default;
+    $userIcon.src = message_.profile.avatar ? base64Url(message_.profile.avatar) : userIcon.default;
 
     const $userBlock = $('div', 'personal-message__user-block');
     const $messageBlock = $('div', 'personal-message__massages-block');

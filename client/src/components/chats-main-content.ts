@@ -55,7 +55,22 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
   }
 
   onMessageListChange = async (messages: RenderedPersonalMessage[]): Promise<void> => {
-    this.view.displayMessages(messages);
+    if (!this.chat || !appStore.user) {
+      return;
+    }
+    const opponent = appStore.users.find((user) => user.id === this.chat?.userId);
+    if (!opponent) {
+      return;
+    }
+    const profiles = {
+      [appStore.user.id]: appStore.user.profile,
+      [opponent.id]: opponent.profile,
+    };
+    const messagesWithProfiles = messages.map((message) => ({
+      ...message,
+      profile: profiles[message.userId] ?? { about: null, avatar: null, banner: null },
+    }));
+    this.view.displayMessages(messagesWithProfiles);
   };
 
   handleSendMessage = async (messageText: string, responsedToMessageId: string | null): Promise<void> => {
