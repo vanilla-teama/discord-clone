@@ -1,25 +1,11 @@
 import express from 'express';
 import { body } from 'express-validator/check';
 import serversController from '../controllers/servers';
-import multer from 'multer';
+import uploader from '../utils/upload';
 // const feedController = require('../controllers/feed');
 // const isAuth = require('../middleware/is-auth');
 
 const router = express.Router();
-
-const storage = multer.diskStorage({
-  destination: function (request, file, callback) {
-      callback(null, './uploads/');
-  },
-  filename: function (request, file, callback) {
-      callback(null, file.originalname)
-  }
-});
-
-const uploader = multer({
-  dest: '/uploads',
-  storage: storage,
-});
 
 router.get('/', serversController.getServers);
 router.get('/:id', serversController.getServer);

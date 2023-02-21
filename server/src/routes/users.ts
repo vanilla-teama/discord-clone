@@ -1,22 +1,8 @@
 import express from 'express';
 import userController from '../controllers/users';
-import multer from 'multer';
+import uploader from '../utils/upload';
 
 const router = express.Router();
-
-const storage = multer.diskStorage({
-  destination: function (request, file, callback) {
-    callback(null, './uploads/');
-  },
-  filename: function (request, file, callback) {
-    callback(null, file.originalname);
-  },
-});
-
-const uploader = multer({
-  dest: '/uploads',
-  storage: storage,
-});
 
 router.get('/check-auth', userController.checkAuth);
 router.post('/login', userController.login);

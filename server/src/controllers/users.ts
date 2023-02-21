@@ -7,11 +7,11 @@ import User, { Availability, UserDocument, validateUserField } from '../models/u
 import Server from '../models/server';
 import '../passport';
 import { FetchedChannel, FetchedServer, FetchedUser, serverDTO, userDTO } from '../utils/dto';
-import { App } from '../app';
+import sharp from 'sharp';
 import { TypedRequest } from 'express.types';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { handleDocumentNotFound, requestErrorHandler } from '../utils/functions';
-import { DTOUser } from 'dto';
+import { DTOServer, DTOUser } from 'dto';
 
 const checkAuth = (req: Request, res: Response, next: NextFunction): void => {
   if (req.user) {
@@ -243,7 +243,7 @@ const updateUser = (
 
   User.findById(userId)
     .populate('chats')
-    .then((user) => {
+    .then(async (user) => {
       if (!user) {
         const error = new Error('Could not find user.');
         // error.statusCode = 404;
@@ -286,14 +286,11 @@ const updateUser = (
       });
 
       if (req.file) {
-        console.log('image');
-        let imageBuffer: Buffer | null = Buffer.from('');
           if (req.file) {
-            const image = fs.readFileSync(req.file.path);
-            const encImage = image.toString('base64');
-            imageBuffer = Buffer.from(encImage, 'base64');
+            const buffer = await sharp(req.file.path).resize().jpeg({ quality: 10 }).toBuffer();
+            fs.unlinkSync(req.file.path);
+            user.profile.avatar = Buffer.from(buffer.toString('base64'), 'base64');
           }
-          user.profile.avatar = imageBuffer;
       }
 
       return user.save();
@@ -407,12 +404,20 @@ const getRelatedServers: Handler = (req, res, next) => {
         Server.find({ owner: userId })
           .populate('owner')
           .then((servers) => {
-            const invitedServers = (user.invitesToChannels || []).map((channel) =>
-              serverDTO((channel as unknown as FetchedChannel).serverId as unknown as FetchedServer)
-            );
-            const joinedServers = (user.joinedChannels || []).map((channel) =>
-              serverDTO((channel as unknown as FetchedChannel).serverId as unknown as FetchedServer)
-            );
+            const invitedServers: (DTOServer | null)[] = (user.invitesToChannels || []).map((channel) =>{
+              const server = (channel as unknown as FetchedChannel).serverId as unknown as FetchedServer;
+              if (!server) {
+                return null;
+              }
+              return serverDTO((channel as unknown as FetchedChannel).serverId as unknown as FetchedServer)
+            }).filter(Boolean);
+            const joinedServers: (DTOServer | null)[] = (user.joinedChannels || []).map((channel) => {
+              const server = (channel as unknown as FetchedChannel).serverId as unknown as FetchedServer;
+              if (!server) {
+                return null;
+              }
+              return serverDTO((channel as unknown as FetchedChannel).serverId as unknown as FetchedServer)
+            }).filter(Boolean);
             const ownServers = servers.map((server) => serverDTO(server as unknown as FetchedServer));
             res.status(200).json({
               message: 'Related servers fetched.',

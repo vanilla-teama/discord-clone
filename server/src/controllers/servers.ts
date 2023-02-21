@@ -5,6 +5,7 @@ import fs from 'fs';
 import { FetchedServer, channelDTO, serverDTO } from '../utils/dto';
 import { FetchedChannel } from '../utils/dto';
 import { requestErrorHandler } from '../utils/functions';
+import sharp from 'sharp';
 
 const getServers: Handler = (req, res, next) => {
   let docsCount = 0;
@@ -42,12 +43,15 @@ const getServer: Handler = (req, res, next) => {
     .catch((err) => requestErrorHandler(err, next))
 };
 
-const createServer: Handler = (req, res, next) => {
+const createServer: Handler = async (req, res, next) => {
   let imageBuffer: Buffer | null = null;
   if (req.file) {
-    const image = fs.readFileSync(req.file.path);
-    const encImage = image.toString('base64');
-    imageBuffer = Buffer.from(encImage, 'base64');
+    const buffer = await sharp(req.file.path).resize().jpeg({ quality: 10 }).toBuffer();
+    fs.unlinkSync(req.file.path);
+    imageBuffer = Buffer.from(buffer.toString('base64'), 'base64');
+    // const image = fs.readFileSync(req.file.path);
+    // const encImage = image.toString('base64');
+    // imageBuffer = Buffer.from(encImage, 'base64');
   }
   const server = new Server({
     name: req.body.name,
