@@ -15,7 +15,7 @@
   }
   &__members-text {
     color: var(--text-primary);
-    opacity: 0.5;  
+    opacity: 0.5;
   }
   &__list-online,
   &__list-offline {
@@ -77,6 +77,7 @@
     font-weight: 600;
     font-size: 20px;
     color: var(--text-secondary);
+    @extend .text-ellipsis;
   }
   &__since-block {
     padding: 15px 0;
