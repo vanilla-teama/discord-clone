@@ -137,10 +137,16 @@ class FriendsMainContentView extends View {
   createFoundUserListItem(user: User, currentUser: User): HTMLLIElement {
     const $item = $('li', 'friends__found-user-list-item');
     const $inviteButton = $('button', 'friends__invite-user');
+    const $itemAvatar = $('div', 'user-item__avatar');
+    const $itemIcon = $('img', 'user-item__icon');
+    const $itemStatus = $('div', ['user-item__status', `user-item__status_${user.availability}`]);
+
+    $itemAvatar.append($itemIcon, $itemStatus);
+    $itemIcon.src = user.profile?.avatar ? base64Url(user.profile.avatar) : discord.default;
 
     const isInvited = currentUser.invitesTo?.includes(user.id);
 
-    $item.append(`${user.name}`, $inviteButton);
+    $item.append($itemAvatar, `${user.name}`, $inviteButton);
     $inviteButton.textContent = isInvited ? 'sent' : 'invite';
     $inviteButton.disabled = isInvited;
 
