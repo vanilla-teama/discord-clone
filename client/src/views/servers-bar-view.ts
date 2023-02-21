@@ -142,7 +142,6 @@ class ServersBarView extends View {
     $itemName.textContent = `${name}`;
 
     if (image) {
-      console.log(image);
       $itemImg.src = base64Url(image);
     }
     $item.append($itemImg, $itemName);

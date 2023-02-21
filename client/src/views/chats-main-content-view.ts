@@ -61,7 +61,6 @@ class ChatsMainContentView extends View {
     } else {
       $container.append('CHATS NOT FOUND!');
     }
-    console.log($container);
     this.$container.append($container);
   }
 
@@ -280,7 +279,6 @@ class ChatsMainContentView extends View {
   }
 
   displayDeleteConfirmDialog($container: HTMLElement, event: MouseEvent): void {
-    //console.log(this.messagesMap);
     if (!isClosestElementOfCssClass(event.target, 'personal-message')) {
       return;
     }

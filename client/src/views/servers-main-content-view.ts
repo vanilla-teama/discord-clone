@@ -453,7 +453,6 @@ class ServersMainContentView extends View {
   };
 
   bindFastMenuEditButtonClick = (handler: (event: MouseEvent) => void): void => {
-    console.log('bindFastMenu');
     this.onFastMenuEditButtonClick = handler;
   };
 

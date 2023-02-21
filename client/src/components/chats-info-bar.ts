@@ -45,7 +45,6 @@ class ChatsInfoBarComponent extends Controller<ChatsInfoBarView> {
       return;
     }
     const mutualServers = appStore.getMutualServers(this.chat.userId);
-    console.log(mutualServers);
     this.view.displayMutualServers(mutualServers);
   }
 
@@ -64,7 +63,6 @@ class ChatsInfoBarComponent extends Controller<ChatsInfoBarView> {
         await appStore.fetchUserRelatedServers(appStore.user.id),
         await appStore.fetchAllServers(),
       ]);
-      console.log(appStore.user);
       this.displayMutualServers();
     });
   }

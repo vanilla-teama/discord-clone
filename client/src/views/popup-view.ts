@@ -22,7 +22,6 @@ class PopupView extends View {
 
   constructor(coords: PopupCoords) {
     const $root = ModalPortalView.$popupPortal;
-    console.log('root', $root);
     if (!$root) {
       PopupView.throwNoRootInTheDomError('Popup');
     }

@@ -53,7 +53,6 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
       return;
     }
     await Promise.all([await this.fetchMessages(), await appStore.fetchChannelInvites(this.channel.id)]);
-    console.log(appStore.channelInvites);
   }
 
   private async fetchMessages(): Promise<void> {

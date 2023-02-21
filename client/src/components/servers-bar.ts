@@ -63,7 +63,6 @@ class ServersBarComponent extends Controller<ServersBarView> {
     socket.on(
       'userInvitedToChannel',
       (ServersBarComponent.onSocketUserInvitedToChannel = async ({ userId, channelId }) => {
-        console.log('userInvitedToChannel', userId, channelId);
         if (!appStore.user) {
           return;
         }

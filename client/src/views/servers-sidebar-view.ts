@@ -156,7 +156,6 @@ class ServersSideBarView extends View {
   }
 
   static toggleActiveStatus(channelId: string | undefined) {
-    console.log(channelId);
     ServersSideBarView.channelsListMap.forEach((data, $item) => {
       $item.classList.remove(ServersSideBarView.classes.channelItemActive);
       if (data.channel.id === channelId) {

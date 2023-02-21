@@ -104,7 +104,6 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       if (!this.chat) {
         return;
       }
-      console.log(messageId);
       await this.fetchMessages();
     });
   }
