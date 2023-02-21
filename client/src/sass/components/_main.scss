@@ -45,8 +45,8 @@ $infobar-width: 340px;
 .app-bar {
   background-color: var(--background-color-light-gray);
   border-bottom: 2px solid var(--background-color-light-gray-scroll);
-  //padding-left: 240px;
-  padding-left: 110px;
+  padding-left: 0px;
+  //padding-left: 110px;
   transition: 0.2s all linear;
 }
 
@@ -57,7 +57,8 @@ $infobar-width: 340px;
   background-color: var(--background-color-light-gray);
   //padding-left: 240px;
   margin-left: 0;
-  padding-left: 110px;
+  //padding-left: 110px;
+  padding-left: 0px;
   transition: 0.2s all linear;
 
   animation-duration: 200ms;
@@ -143,4 +144,30 @@ $infobar-width: 340px;
 .app-bar._active {
   padding-left: 0px;
   transition: 0.2s all linear;
+}
+
+@include media-md-down {
+  .app-bar._active {
+    .chats-app-bar__panel-container {
+      display: flex;
+    }
+  }
+  .app-bar {
+    padding-left: 0px;
+    .chats-app-bar__panel-container {
+      display: none;
+    }
+  }
+}
+@media (max-width: 420px){
+  .app-bar._active {
+    .chats-app-bar__user-container {
+      display: flex;
+    }
+  }
+  .app-bar {
+    .chats-app-bar__user-container {
+      display: none;
+    }
+  }
 }

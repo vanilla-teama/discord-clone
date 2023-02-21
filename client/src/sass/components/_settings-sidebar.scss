@@ -2,7 +2,7 @@
   list-style: none;
   margin-left: 50px;
   width: 218px;
-  padding: 100px 6px 60px 20px;
+  padding: 100px 6px 60px 0px;
 }
 
 .settings-bar__list-item {
@@ -22,14 +22,16 @@
 }
 .settings {
   width: 100%;
+  background: var(--background-color-gray);
   display: flex;
 }
 .container-close-btn {
+  //background: var(--background-color-gray);
   padding: 30px;
 }
 @include media-lg-down {
   .settings-bar__list {
-    padding: 47px 6px 0px 20px;
+    padding: 47px 6px 0px 0px;
     width: 80%;
     display: flex;
     flex-wrap: wrap;

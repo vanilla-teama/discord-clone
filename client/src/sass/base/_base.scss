@@ -206,9 +206,10 @@ ul {
     position: relative;
   }
   &__icon {
-    background: url('/src/assets/icons/discord.svg') center no-repeat;
+    background: url('/src/assets/icons/discord.svg') center / cover no-repeat;
     width: 32px;
     height: 32px;
+    border-radius: 50%;
   }
   &__status {
     position: absolute;

@@ -72,11 +72,18 @@
     padding-top: 60px;
     margin-left: 5%;
     width: 80%;
+    //flex: 1 1 auto;
   }
   .title-key {
     white-space: pre-wrap;
   }
   .conttainer-button-key {
     display: flex;
+  }
+}
+@include media-md-down {
+
+  .settings__content {
+    padding-top: 30px;
   }
 }

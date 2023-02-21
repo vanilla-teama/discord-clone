@@ -63,7 +63,7 @@ class SettingsProfilesView extends View {
     }
     super($root);
     this.$changeControl = $('div', 'settings-profile__change-control change-control');
-    this.$avatarExample = $('img', 'settings-profile__avatar-example');
+    this.$avatarExample = $('img', 'chats-info-bar__avatar');
     this.$nameExample = $('div', 'content-info__user-name');
     this.$bannerExample = $('div', 'chats-info-bar__header');
     this.$aboutExample = $('textarea', 'content-info__note-input');
@@ -86,7 +86,7 @@ class SettingsProfilesView extends View {
   build(): void {
     const $containerProfile = $('div', SettingsProfilesView.classNames.containerProfile);
     const $titleMain = Object.assign($('div', SettingsProfilesView.classNames.titleMain), {
-      textContent: 'Profile',
+      textContent: 'Profiles',
     });
     const $leftSection = $('div', SettingsProfilesView.classNames.leftSection);
     const $profileExample = this.$profileExample;
