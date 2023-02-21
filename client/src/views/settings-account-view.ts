@@ -1,8 +1,7 @@
+import * as discord from '../assets/icons/discord.svg';
 import View from '../lib/view';
-import { $, isClosestElementOfCssClass } from '../utils/functions';
-import MainView from './main-view';
+import { $, base64Url } from '../utils/functions';
 import ModalView from './modal-view';
-import SettingsContentView from './settings-content-view';
 import { defaultBanner } from './settings-profiles-view';
 import SettingsScreenView from './settings-screen-view';
 
@@ -32,6 +31,7 @@ class SettingsAccountView extends View {
     emailInput: 'form-account-email__input',
   };
 
+  $avatar: HTMLImageElement;
   $bannerBlock: HTMLDivElement;
   $headingNickname: HTMLDivElement;
   $name: HTMLDivElement;
@@ -45,6 +45,7 @@ class SettingsAccountView extends View {
       SettingsAccountView.throwNoRootInTheDomError('Settings-Account');
     }
     super($root);
+    this.$avatar = $('img', SettingsAccountView.classNames.avatarBlockHeader);
     this.$bannerBlock = $('div', SettingsAccountView.classNames.infoBlockHeader);
     this.$headingNickname = $('div', SettingsAccountView.classNames.nickName);
     this.$name = $('div', SettingsAccountView.classNames.titleBody);
@@ -67,7 +68,7 @@ class SettingsAccountView extends View {
     $blocDelete.append($titlDelete, $buttonDelete);
     const $infoBlock = $('div', SettingsAccountView.classNames.infoBlock);
     const $infoBlockHeader = this.$bannerBlock;
-    const $avatarBlockHeader = $('div', SettingsAccountView.classNames.avatarBlockHeader);
+    const $avatarBlockHeader = this.$avatar;
     $infoBlockHeader.append($avatarBlockHeader);
     const $blockBody = $('div', SettingsAccountView.classNames.blockBody);
     const $nickName = this.$headingNickname;
@@ -139,7 +140,17 @@ class SettingsAccountView extends View {
     this.$container.append($mainBlock);
   }
 
-  displayData({ name, email, banner }: { name?: string; email?: string; banner?: string | null }): void {
+  displayData({
+    name,
+    email,
+    banner,
+    avatar,
+  }: {
+    name?: string;
+    email?: string;
+    banner?: string | null;
+    avatar?: string | null;
+  }): void {
     if (name !== undefined) {
       this.$headingNickname.textContent = name;
       this.$name.textContent = name;
@@ -151,6 +162,9 @@ class SettingsAccountView extends View {
     }
     if (banner !== undefined) {
       this.$bannerBlock.style.backgroundColor = banner || defaultBanner;
+    }
+    if (avatar !== undefined) {
+      this.$avatar.src = avatar ? base64Url(avatar) : discord.default;
     }
   }
 
