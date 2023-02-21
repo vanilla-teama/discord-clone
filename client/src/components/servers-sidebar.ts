@@ -59,7 +59,6 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
     }
     const serverId = new Router().getParams()[0];
     const owner = appStore.getServerOwner(serverId);
-    console.log({ owner });
     if (owner?.id === appStore.user.id) {
       this.view.displayCreateChannelContainer();
     }

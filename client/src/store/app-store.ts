@@ -286,14 +286,12 @@ class AppStore {
       .get<{ invitedFromFriends: User[] }>(`/users/${this.user.id}/invited-from-friends`)
       .catch((err) => console.error(err));
     if (response) {
-      console.log(response);
       this.invitedFromFriends = response.data.invitedFromFriends;
     }
   }
 
   async fetchChats(userId: User['id']): Promise<void> {
     const response = await http.get<{ chats: Chat[] }>(`/chats/users/${userId}`);
-    console.log(response);
     if (response) {
       this.chats = response.data.chats || [];
     } else {
@@ -404,7 +402,6 @@ class AppStore {
     const response = await http
       .post<{ email: string; password: string }, { data: { user: User } }>('/users/login', { email, password })
       .catch((error) => {
-        console.log(error);
         if (isExpressError<{ message: string }>(error) && error.status === ErrorStatusCode.Unauthorized) {
           onUnauthorized(error);
         }
@@ -429,7 +426,6 @@ class AppStore {
         name,
       })
       .catch((error) => {
-        console.log(error);
         if (isExpressError<RegisterErrorData>(error) && error.status === ErrorStatusCode.Unauthorized) {
           onUnauthorized(error);
         }
@@ -472,7 +468,6 @@ class AppStore {
     const userId = this.user.id;
     await this.logOut();
     const response = await http.delete(`/users/${userId}`).catch((err) => console.error(err));
-    console.log(response);
   }
 
   async updateProfile(data: Partial<Profile<'formData'>>): Promise<void> {
@@ -491,8 +486,6 @@ class AppStore {
       if (this.user.profile) {
         this.user.profile = response.data.user.profile;
       }
-      console.log(this.users);
-      console.log(this.user);
     }
   }
 
@@ -516,7 +509,6 @@ class AppStore {
     const response = await http.delete(`/chats/users/${this.user.id}/${userId}`).catch((err) => console.error(err));
     if (response) {
       this.chats = this.chats.filter(({ userId: chatUserId }) => chatUserId !== userId);
-      console.log(this.chats);
       this.onChatListChanged(this.chats);
     }
   }
@@ -619,7 +611,6 @@ class AppStore {
     const response = await http
       .post<Partial<ChannelInvite>, { data: { invite: ChannelInvite } }>('/channels/invites', data)
       .catch((err) => console.error(err));
-    console.log(response);
   }
 
   updateChatLocally(chatId: Chat['userId'], data: Partial<Pick<Chat, 'userName' | 'availability'>>) {

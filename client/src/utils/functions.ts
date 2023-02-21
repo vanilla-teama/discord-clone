@@ -48,7 +48,6 @@ export const readImage = (file: File, $image: HTMLImageElement) => {
   const reader = new FileReader();
 
   reader.onload = function (e) {
-    console.log(e.target);
     if (e.target) {
       $image.src = e.target.result as string;
     }

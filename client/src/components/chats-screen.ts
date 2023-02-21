@@ -104,7 +104,6 @@ class ChatsScreen extends Controller<ChatsScreenView> {
       if (appStore.user.id === userId) {
         return;
       }
-      console.log('onSocketUserAvailabilityChangedServer', appStore.user.id, userId);
       await appStore.fetchChat(appStore.user.id, userId);
     }
   };

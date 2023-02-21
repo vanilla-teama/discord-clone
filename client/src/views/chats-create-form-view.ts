@@ -58,7 +58,6 @@ class ChatsCreateFormView extends View {
 
     $checkbox.onchange = () => {
       [...($checkbox.closest('form')?.elements || [])].forEach(($elem) => {
-        console.log($elem);
         if ($elem instanceof HTMLInputElement && $elem !== $checkbox) {
           $elem.checked = false;
         }

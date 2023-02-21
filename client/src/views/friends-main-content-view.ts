@@ -1,7 +1,8 @@
 import View from '../lib/view';
 import { User } from '../types/entities';
-import { $ } from '../utils/functions';
+import { $, base64Url } from '../utils/functions';
 import MainView from './main-view';
+import * as discord from '../assets/icons/discord.svg';
 
 class FriendsMainContentView extends View {
   static readonly classNames = {};
@@ -74,10 +75,12 @@ class FriendsMainContentView extends View {
 
     const $itemBox = $('div', 'user-item__box');
     const $itemAvatar = $('div', 'user-item__avatar');
-    const $itemIcon = $('div', 'user-item__icon');
+    const $itemIcon = $('img', 'user-item__icon');
     const $itemStatus = $('div', ['user-item__status', `user-item__status_${user.availability}`]);
     const $itemName = $('div', 'user-item__name');
     $itemName.textContent = `${user.name}`;
+
+    $itemIcon.src = user.profile?.avatar ? base64Url(user.profile.avatar) : discord.default;
 
     const $buttonsBlock = $('div', 'friends__buttons-block');
     const $massageButtonContainer = $('div', 'friends__message-btn-container');
@@ -134,10 +137,16 @@ class FriendsMainContentView extends View {
   createFoundUserListItem(user: User, currentUser: User): HTMLLIElement {
     const $item = $('li', 'friends__found-user-list-item');
     const $inviteButton = $('button', 'friends__invite-user');
+    const $itemAvatar = $('div', 'user-item__avatar');
+    const $itemIcon = $('img', 'user-item__icon');
+    const $itemStatus = $('div', ['user-item__status', `user-item__status_${user.availability}`]);
+
+    $itemAvatar.append($itemIcon, $itemStatus);
+    $itemIcon.src = user.profile?.avatar ? base64Url(user.profile.avatar) : discord.default;
 
     const isInvited = currentUser.invitesTo?.includes(user.id);
 
-    $item.append(`${user.name}`, $inviteButton);
+    $item.append($itemAvatar, `${user.name}`, $inviteButton);
     $inviteButton.textContent = isInvited ? 'sent' : 'invite';
     $inviteButton.disabled = isInvited;
 

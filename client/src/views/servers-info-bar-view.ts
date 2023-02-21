@@ -1,7 +1,8 @@
 import View from '../lib/view';
 import { Availability, ServerOwner, User } from '../types/entities';
-import { $ } from '../utils/functions';
+import { $, base64Url } from '../utils/functions';
 import MainView from './main-view';
+import * as discord from '../assets/icons/discord.svg';
 
 class ServersInfoBarView extends View {
   static readonly classes = {
@@ -83,16 +84,18 @@ class ServersInfoBarView extends View {
     this.$container.append($serversInfoBar);
   }
 
-  private createChatItem({ name, availability }: User, isOwner: boolean): HTMLLIElement {
+  private createChatItem({ name, availability, profile }: User, isOwner: boolean): HTMLLIElement {
     const $item = $('li', ServersInfoBarView.classes.userItem);
     const $itemBox = $('div', 'user-item__box');
     const $itemAvatar = $('div', 'user-item__avatar');
-    const $itemIcon = $('div', 'user-item__icon');
+    const $itemIcon = $('img', 'user-item__icon');
     const $itemStatus = $('div', ['user-item__status', `user-item__status_${availability}`]);
     const $itemName = $('div', 'user-item__name');
     $itemName.textContent = `${name}`;
     const $iconCrown = $('div', ['servers-info-bar__icon-crown', 'tooltip']);
     $iconCrown.dataset.text = 'Server owner';
+
+    $itemIcon.src = profile?.avatar ? base64Url(profile.avatar) : discord.default;
 
     $itemAvatar.append($itemIcon, $itemStatus);
     $itemBox.append($itemAvatar, $itemName);

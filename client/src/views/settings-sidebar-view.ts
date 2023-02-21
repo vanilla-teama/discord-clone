@@ -74,7 +74,6 @@ class SettingsSidebarView extends View {
   }
 
   toggleActiveStatus = (param: string | undefined) => {
-    console.log(param);
     this.itemsMap.forEach((itemParam, $item) => {
       $item.classList.toggle(SettingsSidebarView.classes.listItemActive, itemParam === param);
     });

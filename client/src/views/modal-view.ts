@@ -20,7 +20,6 @@ class ModalView extends View {
     if (!$root) {
       ModalView.throwNoRootInTheDomError('Modal');
     }
-    console.log($root);
     super($root);
     ModalView.$modal = $('div', ModalView.classNames.modal);
     ModalView.$container = $('div', ModalView.classNames.container);

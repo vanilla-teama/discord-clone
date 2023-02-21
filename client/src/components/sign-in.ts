@@ -29,7 +29,6 @@ class SignInComponent extends Controller<SignInView> {
     const password = formData.get('password');
     if (email && password && typeof email === 'string' && typeof password === 'string') {
       await appStore.logIn(email, password, this.onUnauthorized);
-      console.log(appStore.user);
       if (appStore.user) {
         this.onAfterLogginAttempt();
       }

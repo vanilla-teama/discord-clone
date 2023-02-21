@@ -36,7 +36,6 @@ class ChatsCreateFormComponent extends Controller<ChatsCreateFormView> {
 
   onChatListChanged = (chats: Chat[]): void => {
     ChatsSideBarComponent.instance.onChatListChanged(chats);
-    console.log('ChatsCreateFormComponent.onChatListChanged', chats);
     if (this.lastChatAdded) {
       Router.push(RouteControllers.Chats, '', [this.lastChatAdded]);
     }

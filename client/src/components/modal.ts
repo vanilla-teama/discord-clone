@@ -7,7 +7,6 @@ class ModalComponent extends Controller<ModalView> {
   }
 
   async init(): Promise<void> {
-    console.log('modal init');
     this.view.render();
   }
 }

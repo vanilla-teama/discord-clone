@@ -41,7 +41,6 @@ class MessageFastMenuView extends View {
   }
 
   bindShowEditForm = (handler: ($message: HTMLLIElement) => void): void => {
-    console.log('MessageFastMenuView.bindShowEditForm', this.$editButton, this.$message);
     this.$editButton.onclick = () => {
       handler(this.$message);
     };

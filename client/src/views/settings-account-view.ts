@@ -185,7 +185,6 @@ class SettingsAccountView extends View {
     };
 
     $confirmButton.onclick = () => {
-      console.log('click');
       this.onDeleteMessageDialogSubmit();
     };
   }
