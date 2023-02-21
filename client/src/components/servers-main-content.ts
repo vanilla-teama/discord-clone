@@ -1,7 +1,7 @@
 import Controller from '../lib/controller';
 import socket from '../lib/socket';
 import { IncomingChannelMessage, appStore } from '../store/app-store';
-import { Channel, ChannelInvite, Server } from '../types/entities';
+import { Channel, ChannelInvite, Profile, Server } from '../types/entities';
 import { ServerToClientEvents } from '../types/socket';
 import ModalView from '../views/modal-view';
 import ServersMainContentView, { RenderedChannelMessage } from '../views/servers-main-content-view';
@@ -64,7 +64,18 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
   }
 
   onMessageListChange = async (messages: RenderedChannelMessage[], invites: ChannelInvite[]): Promise<void> => {
-    this.view.displayMessages(messages, invites);
+    if (!this.channel || !appStore.user) {
+      return;
+    }
+    const messagesWithProfiles: (RenderedChannelMessage & { profile: Profile | null })[] = [];
+    messages.forEach((message) => {
+      const user = appStore.users.find((u) => u.id === message.userId);
+      if (!user) {
+        return;
+      }
+      messagesWithProfiles.push({ ...message, profile: message.service ? null : user.profile });
+    });
+    this.view.displayMessages(messagesWithProfiles, invites);
   };
 
   handleSendMessage = async (messageText: string, responsedToMessageId: string | null): Promise<void> => {

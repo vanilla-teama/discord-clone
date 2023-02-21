@@ -1,8 +1,8 @@
 import View from '../lib/view';
-import { $, isClosestElementOfCssClass } from '../utils/functions';
+import { $, base64Url, isClosestElementOfCssClass } from '../utils/functions';
 import MainView from './main-view';
 import * as userIcon from '../assets/icons/discord.svg';
-import { Channel, ChannelInvite, MongoObjectId } from '../types/entities';
+import { Channel, ChannelInvite, MongoObjectId, Profile } from '../types/entities';
 
 export type RenderedChannelMessage = {
   id: MongoObjectId;
@@ -95,12 +95,15 @@ class ServersMainContentView extends View {
     this.$container.append($container);
   }
 
-  createMessageItem(message_: RenderedChannelMessage, invites: ChannelInvite[]): HTMLLIElement {
+  createMessageItem(
+    message_: RenderedChannelMessage & { profile: Profile | null },
+    invites: ChannelInvite[]
+  ): HTMLLIElement {
     const { id, username, message, date, responsedToMessage, service } = message_;
     const $item = $('li', ['chat__messages-list-item', 'channel-message']);
     const $userIconBlock = $('div', 'channel-message__icon-block');
     const $userIcon = $('img', 'channel-message__icon');
-    $userIcon.src = userIcon.default;
+    $userIcon.src = message_.profile?.avatar ? base64Url(message_.profile.avatar) : userIcon.default;
 
     const $userBlock = $('div', 'channel-message__user-block');
     const $messageBlock = $('div', 'channel-message__massages-block');
@@ -137,7 +140,7 @@ class ServersMainContentView extends View {
     return $item;
   }
 
-  displayMessages = (messages: RenderedChannelMessage[], invites: ChannelInvite[]) => {
+  displayMessages = (messages: (RenderedChannelMessage & { profile: Profile | null })[], invites: ChannelInvite[]) => {
     this.$messageList.innerHTML = '';
     this.messagesMap = new Map();
     messages.forEach((message) => {
