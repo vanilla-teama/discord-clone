@@ -28,6 +28,7 @@ class SettingsAccountComponent extends Controller<SettingsAccountView> {
       name: appStore.user.name,
       email: appStore.user.email,
       banner: appStore.user.profile?.banner || null,
+      avatar: appStore.user.profile?.avatar || null,
     });
   }
 
