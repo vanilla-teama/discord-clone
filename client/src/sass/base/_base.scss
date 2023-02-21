@@ -239,9 +239,11 @@ ul {
     }
   }
   &__name {
+    width: 165px;
     opacity: 0.8;
     color: var(--text-gray);
     transition: all 0.3s ease 0s;
+    @extend .text-ellipsis;
   }
 }
 
