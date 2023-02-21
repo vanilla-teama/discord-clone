@@ -279,6 +279,15 @@ ul {
   }
 }
 
+.text-ellipsis{
+  overflow: hidden;
+  display: -webkit-box;
+ -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    white-space: normal;
+    -webkit-line-clamp: 1;
+}
+
 // .app-bar {
 //   @include media-lg-up {
 //     padding-left: 240px;
