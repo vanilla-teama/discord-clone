@@ -164,20 +164,10 @@ class ChatsMainContentView extends View {
               'keyup',
               (ChatsMainContentView.onMessageHoverKeyup = (event) => {
                 const key = event.key.toLowerCase();
-                console.log(key);
                 if (!$message) {
                   return;
                 }
-                if (key === 'e') {
-                  if (isEdit) {
-                    return;
-                  }
-                  this.displayEditMessageForm($message);
-                } else if (key === 'r') {
-                  this.displayReply(mouseOverEvent);
-                } else if (key === 'backspace') {
-                  this.onMessageHoverBackspaceKeyup(mouseOverEvent, items.message);
-                }
+                this.onMessageHoverKey(key, $message, items.message, isEdit, mouseOverEvent);
               })
             );
             mouseOverEvent.target.onmouseleave = () => {
@@ -272,6 +262,8 @@ class ChatsMainContentView extends View {
     items.$editFormContainer.append($form);
     this.destroyFastMenu();
     this.destroyOtherEditMessageForms($message);
+    this.destroyOthersReply($message);
+    this.destroyReply($message);
     $message.classList.add('personal-message_edit');
     this.bindFormHotKeys($message, $form);
   };
@@ -365,11 +357,9 @@ class ChatsMainContentView extends View {
     if (!items) {
       return;
     }
-    this.messagesMap.forEach((items, $item) => {
-      if ($message !== $item) {
-        this.destroyReply($item);
-      }
-    });
+    this.destroyOthersReply($message);
+    this.destroyOtherEditMessageForms($message);
+    this.destroyEditMessageForm($message);
     $message.classList.add('personal-message_reply');
     this.$repliedMessage = $message;
     this.displayInputReply($message, items.message.username);
@@ -417,6 +407,14 @@ class ChatsMainContentView extends View {
     this.destroyInputReply();
   }
 
+  destroyOthersReply($message: HTMLLIElement) {
+    this.messagesMap.forEach((items, $item) => {
+      if ($message !== $item) {
+        this.destroyReply($item);
+      }
+    });
+  }
+
   destroyInputReply(): void {
     this.$replyContainer.innerHTML = '';
   }
@@ -444,9 +442,15 @@ class ChatsMainContentView extends View {
 
   onDeleteMessageDialogSubmit = async (messageId: string, $message: HTMLLIElement): Promise<void> => {};
 
-  onMessageHoverBackspaceKeyup = async (event: MouseEvent, message: RenderedPersonalMessage): Promise<void> => {};
-
   static onMessageHoverKeyup = (event: KeyboardEvent): void => {};
+
+  onMessageHoverKey = (
+    key: string,
+    $message: HTMLLIElement,
+    message: RenderedPersonalMessage,
+    isEdit: boolean,
+    event: MouseEvent
+  ): void => {};
 
   static onReplyEscapeKeyup = (event: KeyboardEvent): void => {};
 
@@ -476,10 +480,16 @@ class ChatsMainContentView extends View {
     this.onFastMenuReplyButtonClick = handler;
   };
 
-  bindOnMessageHoverBackspaceKeyup = (
-    handler: (event: MouseEvent, message: RenderedPersonalMessage) => Promise<void>
-  ): void => {
-    this.onMessageHoverBackspaceKeyup = handler;
+  bindOnMessageHoverKey = (
+    handler: (
+      key: string,
+      $message: HTMLLIElement,
+      message: RenderedPersonalMessage,
+      isEdit: boolean,
+      event: MouseEvent
+    ) => Promise<void>
+  ) => {
+    this.onMessageHoverKey = handler;
   };
 
   setEditedMessageContent = (content: string): void => {

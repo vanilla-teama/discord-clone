@@ -2,11 +2,12 @@ import View from '../lib/view';
 import { appStore } from '../store/app-store';
 import { $ } from '../utils/functions';
 import { RenderedPersonalMessage } from './chats-main-content-view';
+import { RenderedChannelMessage } from './servers-main-content-view';
 
 export type ReplyOrEdit = 'reply' | 'edit' | null;
 
 class MessageFastMenuView extends View {
-  message: RenderedPersonalMessage;
+  message: RenderedPersonalMessage | RenderedChannelMessage;
 
   $message: HTMLLIElement;
   $editButton: HTMLButtonElement;
@@ -14,7 +15,12 @@ class MessageFastMenuView extends View {
   $deleteButton: HTMLButtonElement;
   replyOrEdit: ReplyOrEdit;
 
-  constructor($root: HTMLElement, $message: HTMLLIElement, message: RenderedPersonalMessage, replyOrEdit: ReplyOrEdit) {
+  constructor(
+    $root: HTMLElement,
+    $message: HTMLLIElement,
+    message: RenderedPersonalMessage | RenderedChannelMessage,
+    replyOrEdit: ReplyOrEdit
+  ) {
     if (!$root) {
       MessageFastMenuView.throwNoRootInTheDomError(`MessageFastMenuView`);
     }
@@ -37,14 +43,15 @@ class MessageFastMenuView extends View {
     //   this.$replyButton.dataset.text = 'Reply';
     //   $container.append(this.$replyButton);
     // }
+    if (!('service' in this.message) || !this.message.service) {
+      $container.append(this.$replyButton);
+      this.$replyButton.dataset.text = 'Reply';
 
-    $container.append(this.$replyButton);
-    this.$replyButton.dataset.text = 'Reply';
-
-    if (this.message.userId === appStore.user?.id) {
-      $container.append(this.$editButton, this.$deleteButton);
-      this.$editButton.dataset.text = 'Edit';
-      this.$deleteButton.dataset.text = 'Delete';
+      if (this.message.userId === appStore.user?.id) {
+        $container.append(this.$editButton, this.$deleteButton);
+        this.$editButton.dataset.text = 'Edit';
+        this.$deleteButton.dataset.text = 'Delete';
+      }
     }
 
     this.$container.append($container);

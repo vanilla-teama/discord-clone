@@ -32,6 +32,7 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
       await this.fetchData();
       this.view.bindMessageEvent(this.handleSendMessage);
       this.bindSocketEvents();
+      this.view.bindOnMessageHoverKey(this.onMessageHoverKey);
       this.view.bindMessageHover(this.showFastMenu);
 
       MessageFastMenu.bindDisplayEditMessageForm(this.displayEditMessageForm);
@@ -43,7 +44,6 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
       this.view.bindDestroyFastMenu(this.destroyFastMenu);
       this.view.bindEditMessageFormSubmit(this.onEditMessageFormSubmit);
       this.view.bindDeleteMessageDialogSubmit(this.onDeleteMessageDialogSubmit);
-      this.view.bindOnMessageHoverBackspaceKeyup(this.displayDeleteConfirmDialogKeyup);
       this.view.bindMessageListClicks();
       this.view.bindCancelDeleteConfirmDialog(this.cancelDeleteConfirmDialog);
     }
@@ -206,6 +206,34 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
 
   cancelDeleteConfirmDialog = () => {
     ModalView.hide();
+  };
+
+  onMessageHoverKey = async (
+    key: string,
+    $message: HTMLLIElement,
+    message: RenderedChannelMessage,
+    isEdit: boolean,
+    event: MouseEvent
+  ): Promise<void> => {
+    if (message.service) {
+      return;
+    }
+    if (key === 'e') {
+      if (isEdit) {
+        return;
+      }
+      if (appStore.user?.id !== message.userId) {
+        return;
+      }
+      this.view.displayEditMessageForm($message);
+    } else if (key === 'r') {
+      this.view.displayReply(event);
+    } else if (key === 'backspace') {
+      if (appStore.user?.id !== message.userId) {
+        return;
+      }
+      this.displayDeleteConfirmDialogKeyup(event, message);
+    }
   };
 
   static onSocketChannelMessage: ServerToClientEvents['channelMessage'] = () => {};

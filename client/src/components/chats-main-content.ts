@@ -32,6 +32,7 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       this.onSocketPersonalMessage();
       this.onSocketPersonalMessageUpdated();
       this.onSocketPersonalMessageDeleted();
+      this.view.bindOnMessageHoverKey(this.onMessageHoverKey);
       this.view.bindMessageHover(this.showFastMenu);
       MessageFastMenu.bindDisplayEditMessageForm(this.displayEditMessageForm);
       MessageFastMenu.bindDisplayDeleteConfirmModal(this.displayDeleteConfirmDialog);
@@ -42,7 +43,6 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       this.view.bindDestroyFastMenu(this.destroyFastMenu);
       this.view.bindEditMessageFormSubmit(this.onEditMessageFormSubmit);
       this.view.bindDeleteMessageDialogSubmit(this.onDeleteMessageDialogSubmit);
-      this.view.bindOnMessageHoverBackspaceKeyup(this.displayDeleteConfirmDialogKeyup);
       this.view.bindMessageListClicks();
       this.view.bindCancelDeleteConfirmDialog(this.cancelDeleteConfirmDialog);
     }
@@ -181,6 +181,31 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
 
   displayReply = (event: MouseEvent): void => {
     this.view.displayReply(event);
+  };
+
+  onMessageHoverKey = async (
+    key: string,
+    $message: HTMLLIElement,
+    message: RenderedPersonalMessage,
+    isEdit: boolean,
+    event: MouseEvent
+  ): Promise<void> => {
+    if (key === 'e') {
+      if (isEdit) {
+        return;
+      }
+      if (appStore.user?.id !== message.userId) {
+        return;
+      }
+      this.view.displayEditMessageForm($message);
+    } else if (key === 'r') {
+      this.view.displayReply(event);
+    } else if (key === 'backspace') {
+      if (appStore.user?.id !== message.userId) {
+        return;
+      }
+      this.displayDeleteConfirmDialogKeyup(event, message);
+    }
   };
 
   cancelDeleteConfirmDialog = () => {
