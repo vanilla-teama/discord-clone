@@ -352,6 +352,13 @@ class AppStore {
     this.onServerListChanged(this.servers);
   }
 
+  async fetchUserRelatedChannels(userId: string): Promise<void> {
+    const response = await http
+      .get<{ channels: Channel[] }>(`/users/${userId}/related-channels`)
+      .catch((err) => console.error(err));
+    console.log(response);
+  }
+
   async fetchChannels(serverId: string): Promise<void> {
     const response = await http
       .get<{ channels: Channel[] }>(`/servers/${serverId}/channels`)
