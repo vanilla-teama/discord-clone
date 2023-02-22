@@ -20,6 +20,7 @@ class ChatsSideBarView extends View {
     }
     super($root);
     this.$chatList = $('ul', 'chats-sidebar__list');
+    this.$friendsContainer = $('div', 'chats-sidebar__friends-container');
     this.$friendsButton = $('button', 'chats-sidebar__to-friends');
     this.$friendsInvites = $('div', 'chats-sidebar__invites');
     this.$userBar = this.createUserBar();
@@ -33,10 +34,11 @@ class ChatsSideBarView extends View {
   chatListMap: Map<HTMLLIElement, { chat: Chat }>;
   $showCreateChat: HTMLSpanElement;
   $friendsButton: HTMLButtonElement;
+  $friendsContainer: HTMLDivElement;
 
   build(): void {
     const $chatsContainer = $('div', 'chats-sidebar__container');
-    const $friendsContainer = $('div', 'chats-sidebar__friends-container');
+    const $friendsContainer = this.$friendsContainer;
     const $friendsIcon = $('div', 'chats-sidebar__friends-icon');
 
     this.$friendsButton.textContent = 'Friends';
@@ -172,13 +174,17 @@ class ChatsSideBarView extends View {
     this.chatListMap.set($item, { chat });
   }
 
-  toggleActiveStatus(userId: string | undefined) {
+  toggleChatLinksActiveStatus(userId: string | null) {
     this.chatListMap.forEach((data, $item) => {
       $item.classList.remove(ChatsSideBarView.classes.chatItemActive);
       if (data.chat.userId === userId) {
         $item.classList.add(ChatsSideBarView.classes.chatItemActive);
       }
     });
+  }
+
+  toggleFriendsLinkActiveStatus(toggle: boolean) {
+    this.$friendsContainer.classList.toggle('chats-sidebar__friends-container_active', toggle);
   }
 
   displayFriendsBlockStatus(invites: number) {

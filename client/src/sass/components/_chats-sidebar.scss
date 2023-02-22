@@ -122,7 +122,8 @@
     border-bottom: 1px solid var(--background-color-light-gray-scroll);
     transition: all 0.3s ease 0s;
 
-    &:hover {
+    &:hover,
+    &_active {
       background-color: var(--background-color-gray-hover);
       opacity: 1;
       cursor: pointer;

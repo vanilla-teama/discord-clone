@@ -75,8 +75,16 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
   };
 
   toggleActiveStatus() {
-    const params = App.getRouter().getParams();
-    this.view.toggleActiveStatus(params[0]);
+    const router = new Router();
+    const controller = router.getController();
+    const params = router.getParams();
+    if (controller === RouteControllers.Chats) {
+      this.view.toggleChatLinksActiveStatus(params[0]);
+      this.view.toggleFriendsLinkActiveStatus(false);
+    } else if (controller === RouteControllers.Friends) {
+      this.view.toggleChatLinksActiveStatus(null);
+      this.view.toggleFriendsLinkActiveStatus(true);
+    }
   }
 
   bindRouteChanged() {
@@ -87,10 +95,7 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
         const {
           detail: { controller, params },
         } = getTypedCustomEvent(CustomEvents.AFTERROUTERPUSH, event);
-
-        if (controller === RouteControllers.Chats && params.length > 0) {
-          this.view.toggleActiveStatus(params[0]);
-        }
+        this.toggleActiveStatus();
       })
     );
   }
