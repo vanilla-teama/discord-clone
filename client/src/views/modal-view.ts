@@ -39,6 +39,17 @@ class ModalView extends View {
     ModalView.$modal.onanimationend = null;
     ModalView.$modal.classList.add(ModalView.classNames.show);
     PopupView.hide();
+
+    window.removeEventListener('keyup', ModalView.onEscapeKey);
+    window.addEventListener(
+      'keyup',
+      (ModalView.onEscapeKey = (event) => {
+        const key = event.key.toLowerCase();
+        if (key === 'escape') {
+          ModalView.hide();
+        }
+      })
+    );
   }
 
   static hide(): void {
@@ -63,6 +74,8 @@ class ModalView extends View {
     }
     ModalView.hide();
   };
+
+  static onEscapeKey = (event: KeyboardEvent): void => {};
 }
 
 export default ModalView;

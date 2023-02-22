@@ -1,17 +1,18 @@
-import fs from 'fs';
+import { DTOServer, DTOUser } from 'dto';
 import { Handler, NextFunction, Request, Response } from 'express';
 import { body, check, validationResult } from 'express-validator';
-import passport, { use } from 'passport';
+import { TypedRequest } from 'express.types';
+import fs from 'fs';
+import mongoose, { HydratedDocument } from 'mongoose';
+import passport from 'passport';
 import { IVerifyOptions } from 'passport-local';
-import User, { Availability, UserDocument, validateUserField } from '../models/user';
+import sharp from 'sharp';
 import Server from '../models/server';
+import Channel from '../models/channel';
+import User, { Availability, UserDocument, validateUserField } from '../models/user';
 import '../passport';
 import { FetchedChannel, FetchedServer, FetchedUser, serverDTO, userDTO } from '../utils/dto';
-import sharp from 'sharp';
-import { TypedRequest } from 'express.types';
-import mongoose, { HydratedDocument } from 'mongoose';
 import { handleDocumentNotFound, requestErrorHandler } from '../utils/functions';
-import { DTOServer, DTOUser } from 'dto';
 
 const checkAuth = (req: Request, res: Response, next: NextFunction): void => {
   if (req.user) {
@@ -286,11 +287,11 @@ const updateUser = (
       });
 
       if (req.file) {
-          if (req.file) {
-            const buffer = await sharp(req.file.path).resize().jpeg({ quality: 10 }).toBuffer();
-            fs.unlinkSync(req.file.path);
-            user.profile.avatar = Buffer.from(buffer.toString('base64'), 'base64');
-          }
+        if (req.file) {
+          const buffer = await sharp(req.file.path).resize().jpeg({ quality: 10 }).toBuffer();
+          fs.unlinkSync(req.file.path);
+          user.profile.avatar = Buffer.from(buffer.toString('base64'), 'base64');
+        }
       }
 
       return user.save();
@@ -404,20 +405,24 @@ const getRelatedServers: Handler = (req, res, next) => {
         Server.find({ owner: userId })
           .populate('owner')
           .then((servers) => {
-            const invitedServers: (DTOServer | null)[] = (user.invitesToChannels || []).map((channel) =>{
-              const server = (channel as unknown as FetchedChannel).serverId as unknown as FetchedServer;
-              if (!server) {
-                return null;
-              }
-              return serverDTO((channel as unknown as FetchedChannel).serverId as unknown as FetchedServer)
-            }).filter(Boolean);
-            const joinedServers: (DTOServer | null)[] = (user.joinedChannels || []).map((channel) => {
-              const server = (channel as unknown as FetchedChannel).serverId as unknown as FetchedServer;
-              if (!server) {
-                return null;
-              }
-              return serverDTO((channel as unknown as FetchedChannel).serverId as unknown as FetchedServer)
-            }).filter(Boolean);
+            const invitedServers: (DTOServer | null)[] = (user.invitesToChannels || [])
+              .map((channel) => {
+                const server = (channel as unknown as FetchedChannel).serverId as unknown as FetchedServer;
+                if (!server) {
+                  return null;
+                }
+                return serverDTO((channel as unknown as FetchedChannel).serverId as unknown as FetchedServer);
+              })
+              .filter(Boolean);
+            const joinedServers: (DTOServer | null)[] = (user.joinedChannels || [])
+              .map((channel) => {
+                const server = (channel as unknown as FetchedChannel).serverId as unknown as FetchedServer;
+                if (!server) {
+                  return null;
+                }
+                return serverDTO((channel as unknown as FetchedChannel).serverId as unknown as FetchedServer);
+              })
+              .filter(Boolean);
             const ownServers = servers.map((server) => serverDTO(server as unknown as FetchedServer));
             res.status(200).json({
               message: 'Related servers fetched.',
@@ -426,6 +431,40 @@ const getRelatedServers: Handler = (req, res, next) => {
           });
       }
     });
+};
+
+const getRelatedChannels: Handler = (req, res, next) => {
+  const userId = req.params.id;
+
+  User
+    .findById(userId)
+    .then((user) => {
+      if (handleDocumentNotFound(user)) {
+        Server
+          .find({ owner: userId })
+          .then((servers) => {
+            const ownServersIDs = servers.map((server) => server.id);
+            const inviteChannelsIDs = user.invitesToChannels.map((c) => c.toString());
+            Channel
+              .find({
+                $or: [
+                  {
+                    _id: { $in: inviteChannelsIDs }
+                  },
+                  {
+                    serverId: { $in: ownServersIDs }
+                  }
+                ]
+              })
+              .then((channels) => {
+                console.log(inviteChannelsIDs);
+                console.log(channels);
+              })
+          })
+      }
+    })
+  
+  res.status(200).end();
 };
 
 const updateFriends: Handler = async (req, res, next) => {
@@ -506,4 +545,5 @@ export default {
   logout,
   searchUsers,
   getRelatedServers,
+  getRelatedChannels,
 };

@@ -30,6 +30,8 @@ class ScreenView extends View {
     ScreenView.$main = $('div', ScreenView.classNames.main);
     ScreenView.$portal = $('div', ScreenView.classNames.portal);
     this.$container.append(ScreenView.$startBar, ScreenView.$sideBar, ScreenView.$main, ScreenView.$portal);
+
+    this.bindHotKeys();
   }
   static showSideBar(): void {
     if (ScreenView.$sideBar !== null) ScreenView.$sideBar.classList.toggle('_disable');
@@ -73,5 +75,39 @@ class ScreenView extends View {
       }
     }
   }
+
+  bindHotKeys(): void {
+    window.removeEventListener('keyup', ScreenView.onKeyEvent);
+    window.addEventListener(
+      'keyup',
+      (ScreenView.onKeyEvent = async (event) => {
+        const key = event.key.toLowerCase();
+        if (key !== 'arrowup' && key !== 'arrowdown') {
+          return;
+        }
+        if (event.altKey) {
+          if (event.ctrlKey) {
+            await this.onCtrlAltArrowKey(key);
+          } else {
+            await this.onAltArrowKey(key);
+          }
+        }
+      })
+    );
+  }
+
+  static onKeyEvent = (event: KeyboardEvent): void => {};
+
+  onAltArrowKey = async (key: 'arrowup' | 'arrowdown'): Promise<void> => {};
+
+  onCtrlAltArrowKey = async (key: 'arrowup' | 'arrowdown'): Promise<void> => {};
+
+  bindOnAltArrowKey = (handler: (key: 'arrowup' | 'arrowdown') => Promise<void>): void => {
+    this.onAltArrowKey = handler;
+  };
+
+  bindOnCtrlAltArrowKey = (handler: (key: 'arrowup' | 'arrowdown') => Promise<void>): void => {
+    this.onCtrlAltArrowKey = handler;
+  };
 }
 export default ScreenView;

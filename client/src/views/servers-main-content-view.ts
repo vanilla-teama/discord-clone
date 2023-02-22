@@ -169,12 +169,26 @@ class ServersMainContentView extends View {
   ): void => {
     this.$messageList.onmouseover = async (mouseOverEvent) => {
       if (isClosestElementOfCssClass<HTMLLIElement>(mouseOverEvent.target, 'channel-message')) {
-        if (!mouseOverEvent.target.classList.contains('channel-message_edit')) {
+        const isEdit = mouseOverEvent.target.classList.contains('channel-message_edit');
+        if (!isEdit) {
+          const $message = mouseOverEvent.target.closest<HTMLLIElement>('.channel-message');
           const items = this.messagesMap.get(mouseOverEvent.target);
           if (items) {
             await displayFastMenuHandler(items.$fastMenu, mouseOverEvent.target, items.message);
+            window.removeEventListener('keyup', ServersMainContentView.onMessageHoverKeyup);
+            window.addEventListener(
+              'keyup',
+              (ServersMainContentView.onMessageHoverKeyup = (event) => {
+                const key = event.key.toLowerCase();
+                if (!$message) {
+                  return;
+                }
+                this.onMessageHoverKey(key, $message, items.message, isEdit, mouseOverEvent);
+              })
+            );
             mouseOverEvent.target.onmouseleave = () => {
               this.destroyFastMenu();
+              window.removeEventListener('keyup', ServersMainContentView.onMessageHoverKeyup);
             };
           }
         }
@@ -218,6 +232,14 @@ class ServersMainContentView extends View {
     this.destroyInputReply();
   }
 
+  destroyOthersReply($message: HTMLLIElement) {
+    this.messagesMap.forEach((items, $item) => {
+      if ($message !== $item) {
+        this.destroyReply($item);
+      }
+    });
+  }
+
   destroyInputReply(): void {
     this.$replyContainer.innerHTML = '';
   }
@@ -242,6 +264,8 @@ class ServersMainContentView extends View {
     items.$editFormContainer.append($form);
     this.destroyFastMenu();
     this.destroyOtherEditMessageForms($message);
+    this.destroyOthersReply($message);
+    this.destroyReply($message);
     $message.classList.add('channel-message_edit');
     this.bindFormHotKeys($message, $form);
   };
@@ -316,15 +340,24 @@ class ServersMainContentView extends View {
     if (!items) {
       return;
     }
-    this.messagesMap.forEach((items, $item) => {
-      if ($message !== $item) {
-        this.destroyReply($item);
-      }
-    });
+    this.destroyOthersReply($message);
+    this.destroyOtherEditMessageForms($message);
+    this.destroyEditMessageForm($message);
     $message.classList.add('channel-message_reply');
     this.$repliedMessage = $message;
     this.displayInputReply($message, items.message.username);
     this.$chatInput.focus();
+
+    window.removeEventListener('keyup', ServersMainContentView.onReplyEscapeKeyup);
+    window.addEventListener(
+      'keyup',
+      (ServersMainContentView.onReplyEscapeKeyup = (event) => {
+        const key = event.key.toLowerCase();
+        if (key === 'escape') {
+          this.destroyReply($message);
+        }
+      })
+    );
   }
 
   displayInputReply($message: HTMLLIElement, username: string): void {
@@ -442,6 +475,18 @@ class ServersMainContentView extends View {
 
   onDeleteMessageDialogSubmit = async (messageId: string, $message: HTMLLIElement): Promise<void> => {};
 
+  onMessageHoverKey = (
+    key: string,
+    $message: HTMLLIElement,
+    message: RenderedChannelMessage,
+    isEdit: boolean,
+    event: MouseEvent
+  ): void => {};
+
+  static onMessageHoverKeyup = (event: KeyboardEvent): void => {};
+
+  static onReplyEscapeKeyup = (event: KeyboardEvent): void => {};
+
   cancelDeleteConfirmDialog = (): void => {};
 
   bindEditMessageFormSubmit = (handler: (formData: FormData, $message: HTMLLIElement) => Promise<void>): void => {
@@ -466,6 +511,18 @@ class ServersMainContentView extends View {
 
   bindFastMenuReplyButtonClick = (handler: (event: MouseEvent) => void): void => {
     this.onFastMenuReplyButtonClick = handler;
+  };
+
+  bindOnMessageHoverKey = (
+    handler: (
+      key: string,
+      $message: HTMLLIElement,
+      message: RenderedChannelMessage,
+      isEdit: boolean,
+      event: MouseEvent
+    ) => Promise<void>
+  ) => {
+    this.onMessageHoverKey = handler;
   };
 
   bindFormHotKeys = ($message: HTMLLIElement, $form: HTMLFormElement): void => {
