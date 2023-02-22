@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 export interface ChannelDocument extends mongoose.Document {
   serverId: Types.ObjectId;
   name: string;
+  general: boolean;
 }
 
 const channelSchema = new Schema<ChannelDocument>({
@@ -16,6 +17,10 @@ const channelSchema = new Schema<ChannelDocument>({
     type: String,
     required: true
   },
+  general: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 export default mongoose.model('Channel', channelSchema);

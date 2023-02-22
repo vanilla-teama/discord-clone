@@ -56,6 +56,7 @@ export interface DTOServer extends DTOEntity {
 export interface DTOChannel extends DTOEntity {
   name: string;
   serverId: string;
+  general: boolean;
 }
 
 export interface DTOChannelInvite extends DTOEntity {

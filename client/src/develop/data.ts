@@ -228,6 +228,7 @@ export const channels: Channel[] = [
     id: '1',
     name: 'Fake Test',
     serverId: '1',
+    general: false,
   },
 ];
 

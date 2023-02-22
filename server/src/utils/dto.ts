@@ -54,6 +54,7 @@ export const userDTO = ({
         id: channel?._id?.toString(),
         name: channel?.name,
         serverId: channel?.serverId?.toString(),
+        general: channel?.general || false,
       }
     }),
     joinedChannels: (joinedChannels || []) as unknown as DTOChannel[],
@@ -132,11 +133,12 @@ export const serverDTO = ({_id, image, name, owner}: FetchedServer): DTOServer =
   }
 }
 
-export const channelDTO = ({ _id, name, serverId }: FetchedChannel): DTOChannel => {
+export const channelDTO = ({ _id, name, serverId, general }: FetchedChannel): DTOChannel => {
   return {
     id: _id.toString(),
     name,
     serverId: serverId.toString(),
+    general: general || false,
   };
 };
 

@@ -64,6 +64,7 @@ export interface Chat extends MongoEntity {
 export interface Channel extends MongoEntity {
   serverId: MongoObjectId;
   name: string;
+  general: boolean;
 }
 
 export type ServerOwner = Pick<User, 'name' | 'id'>;
