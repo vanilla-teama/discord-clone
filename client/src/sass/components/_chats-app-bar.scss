@@ -117,7 +117,7 @@
   }
 }
 
-@include media-sm-down {
+@include media-md-down {
   .chats-app-bar {
     &__search {
       display: none;
