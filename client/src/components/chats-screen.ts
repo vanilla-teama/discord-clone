@@ -42,6 +42,8 @@ class ChatsScreen extends Controller<ChatsScreenView> {
         Router.push(RouteControllers.Chats, '', [appStore.chats[0].userId]);
       } else if (ChatsScreen.chat && !params[0]) {
         Router.push(RouteControllers.Chats, '', [ChatsScreen.chat.userId]);
+      } else {
+        Router.push(RouteControllers.Friends, '', ['addfriend']);
       }
     }
 

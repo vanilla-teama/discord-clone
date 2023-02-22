@@ -356,7 +356,6 @@ class AppStore {
     const response = await http
       .get<{ channels: Channel[] }>(`/users/${userId}/related-channels`)
       .catch((err) => console.error(err));
-    console.log(response);
   }
 
   async fetchChannels(serverId: string): Promise<void> {
