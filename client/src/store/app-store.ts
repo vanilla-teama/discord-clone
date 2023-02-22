@@ -456,13 +456,22 @@ class AppStore {
     data: Partial<User<'formData'>>,
     params?: { remove: (keyof User)[] }
   ): Promise<void> {
+    if (!this.user) {
+      return;
+    }
     const response = await http
       .patch<Partial<User<'formData'>>, { data: { user: User } }>(`/users/${userId}`, data, { params })
       .catch((err) => console.log(err));
     if (response) {
+      if (!response.data?.user) {
+        return;
+      }
       const userIdx = this.users.findIndex(({ id }) => userId === id);
-      if (userIdx !== undefined) {
+      if (userIdx !== -1) {
         this.users = [...this.users.slice(0, userIdx), response.data.user, ...this.users.slice(userIdx + 1)];
+        if (this.user.id === response.data.user.id) {
+          this.user = response.data.user;
+        }
       }
     }
   }
