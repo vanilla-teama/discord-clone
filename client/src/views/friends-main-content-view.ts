@@ -203,12 +203,18 @@ class FriendsMainContentView extends View {
   static showFriendsContent(): void {
     FriendsMainContentView.$addFriendContent.classList.remove('friends__add-friend_show');
     FriendsMainContentView.$friendsContent.classList.add('friends__friends_show');
+    FriendsMainContentView.onShowFriendsContent();
   }
 
   static showAddFriendContent(): void {
     FriendsMainContentView.$friendsContent.classList.remove('friends__friends_show');
     FriendsMainContentView.$addFriendContent.classList.add('friends__add-friend_show');
+    FriendsMainContentView.onShowAddFriendContent();
   }
+
+  static onShowFriendsContent = (): void => {};
+
+  static onShowAddFriendContent = (): void => {};
 
   onSearch = async (value: string): Promise<void> => {};
 
@@ -221,6 +227,14 @@ class FriendsMainContentView extends View {
   onCancelInvitation = async (userId: string): Promise<void> => {};
 
   onDeleteFriend = async (userId: string): Promise<void> => {};
+
+  static bindOnShowFriendsContent = (handler: () => void): void => {
+    FriendsMainContentView.onShowFriendsContent = handler;
+  };
+
+  static bindOnShowAddFriendContent = (handler: () => void): void => {
+    FriendsMainContentView.onShowAddFriendContent = handler;
+  };
 
   bindOnSearch = (handler: (value: string) => Promise<void>): void => {
     this.onSearch = handler;

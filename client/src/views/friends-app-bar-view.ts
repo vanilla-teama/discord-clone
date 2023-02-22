@@ -3,12 +3,17 @@ import { $ } from '../utils/functions';
 import MainView from './main-view';
 
 class FriendsAppBarView extends View {
+  $navFriends: HTMLButtonElement;
+  $navAddFriend: HTMLButtonElement;
+
   constructor() {
     const $root = MainView.$appbar;
     if (!$root) {
       FriendsAppBarView.throwNoRootInTheDomError(`FriendsAppBar`);
     }
     super($root);
+    this.$navFriends = $('button', 'friends-app-bar__friends-btn');
+    this.$navAddFriend = $('button', 'friends-app-bar__add-btn');
   }
   async build(): Promise<void> {
     const $friendsContainer = $('div', 'friends-app-bar__container');
@@ -18,11 +23,15 @@ class FriendsAppBarView extends View {
     $friendsTitle.textContent = 'Friends';
 
     const $friendsBtnBlock = $('div', 'friends-app-bar__buttons-block');
-    const $navFriends = $('button', 'friends-app-bar__friends-btn');
-    const $navAddFriend = $('button', 'friends-app-bar__add-btn');
+    const $navFriends = this.$navFriends;
+    const $navAddFriend = this.$navAddFriend;
 
-    $navFriends.onclick = this.showFriends;
-    $navAddFriend.onclick = this.showAddFriend;
+    $navFriends.onclick = () => {
+      this.showFriends();
+    };
+    $navAddFriend.onclick = () => {
+      this.showAddFriend();
+    };
 
     $navFriends.textContent = 'Friends';
     $navAddFriend.textContent = 'Add Friend';
@@ -32,6 +41,16 @@ class FriendsAppBarView extends View {
     $friendsContainer.append($friendsIconsBlock, $friendsBtnBlock);
 
     this.$container.append($friendsContainer);
+  }
+
+  setFriendsActive() {
+    this.$navAddFriend.classList.remove('friends-app-bar__add-btn_active');
+    this.$navFriends.classList.add('friends-app-bar__friends-btn_active');
+  }
+
+  setAddFriendActive() {
+    this.$navFriends.classList.remove('friends-app-bar__friends-btn_active');
+    this.$navAddFriend.classList.add('friends-app-bar__add-btn_active');
   }
 
   showFriends = async (): Promise<void> => {};
