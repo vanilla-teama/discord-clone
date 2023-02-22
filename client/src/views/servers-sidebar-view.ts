@@ -64,11 +64,13 @@ class ServersSideBarView extends View {
         id: 'efef',
         serverId: '12',
         name: 'RS',
+        general: false,
       },
       {
         id: 'efef',
         serverId: '45',
         name: 'SCSS',
+        general: false,
       },
     ];
 

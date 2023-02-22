@@ -356,7 +356,6 @@ class AppStore {
     const response = await http
       .get<{ channels: Channel[] }>(`/users/${userId}/related-channels`)
       .catch((err) => console.error(err));
-    console.log(response);
   }
 
   async fetchChannels(serverId: string): Promise<void> {
@@ -602,9 +601,9 @@ class AppStore {
     return null;
   }
 
-  async addChannel(channel: Pick<Channel, 'name' | 'serverId'>, serverId: string): Promise<Channel | null> {
+  async addChannel(channel: AppOmit<Channel, 'id'>, serverId: string): Promise<Channel | null> {
     const response = await http
-      .post<Pick<Channel, 'name' | 'serverId'>, { data: { channel: Channel } }>('/channels', channel)
+      .post<AppOmit<Channel, 'id'>, { data: { channel: Channel } }>('/channels', channel)
       .catch((error) => console.error(error));
     if (response) {
       const channel = response.data.channel;

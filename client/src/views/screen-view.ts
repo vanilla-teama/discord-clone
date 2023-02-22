@@ -81,6 +81,9 @@ class ScreenView extends View {
     window.addEventListener(
       'keyup',
       (ScreenView.onKeyEvent = async (event) => {
+        if (!event.key) {
+          return;
+        }
         const key = event.key.toLowerCase();
         if (key !== 'arrowup' && key !== 'arrowdown') {
           return;

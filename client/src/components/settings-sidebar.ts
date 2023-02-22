@@ -4,6 +4,9 @@ import Router, { RouteControllers } from '../lib/router';
 import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
 import SettingsSidebarView from '../views/settings-sidebar-view';
+import ChatsScreen from './chats-screen';
+import Screen from './screen';
+import ServersScreen from './servers-screen';
 
 class SettingsSidebarComponent extends Controller<SettingsSidebarView> {
   constructor() {
@@ -22,10 +25,17 @@ class SettingsSidebarComponent extends Controller<SettingsSidebarView> {
       await appStore.logOut();
       if (!appStore.isAuth) {
         socket.emit('userLoggedOut', { userId });
+        this.clearComponentsData();
         Router.push(RouteControllers.Start);
       }
     }
   };
+
+  clearComponentsData() {
+    ChatsScreen.chat = null;
+    ServersScreen.server = null;
+    ServersScreen.channel = null;
+  }
 }
 
 export default SettingsSidebarComponent;

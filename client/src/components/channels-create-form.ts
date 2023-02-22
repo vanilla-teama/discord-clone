@@ -2,6 +2,7 @@ import Controller from '../lib/controller';
 import Router, { RouteControllers } from '../lib/router';
 import { appStore } from '../store/app-store';
 import { Channel } from '../types/entities';
+import { AppOmit } from '../types/utils';
 import ChannelsCreateFormView from '../views/channels-create-form-view';
 
 class ChannelsCreateFormComponent extends Controller<ChannelsCreateFormView> {
@@ -27,13 +28,14 @@ class ChannelsCreateFormComponent extends Controller<ChannelsCreateFormView> {
     }
   };
 
-  private extractChannel = (formData: FormData): Pick<Channel, 'name' | 'serverId'> | null => {
+  private extractChannel = (formData: FormData): AppOmit<Channel, 'id'> | null => {
     const name = formData.get('name');
 
     if (typeof name === 'string' && name.trim()) {
       return {
         name: name.trim(),
         serverId: this.serverId,
+        general: false,
       };
     }
 

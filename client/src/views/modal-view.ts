@@ -44,6 +44,9 @@ class ModalView extends View {
     window.addEventListener(
       'keyup',
       (ModalView.onEscapeKey = (event) => {
+        if (!event.key) {
+          return;
+        }
         const key = event.key.toLowerCase();
         if (key === 'escape') {
           ModalView.hide();

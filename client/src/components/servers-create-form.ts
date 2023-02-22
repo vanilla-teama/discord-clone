@@ -1,7 +1,9 @@
 import Controller from '../lib/controller';
+import Router, { RouteControllers } from '../lib/router';
 import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
-import { Server } from '../types/entities';
+import { Channel, Server } from '../types/entities';
+import { AppOmit } from '../types/utils';
 import ServersCreateFormView from '../views/servers-create-form-view';
 
 class ServerCreateFormComponent extends Controller<ServersCreateFormView> {
@@ -20,9 +22,19 @@ class ServerCreateFormComponent extends Controller<ServersCreateFormView> {
     }
     const server = await appStore.addServer(this.extractServer(formData));
     if (server) {
+      await appStore.addChannel(this.createGeneralChannel(server.id), server.id);
       socket.emit('serverAdded', { serverId: server.id, userId: appStore.user.id });
+      Router.push(RouteControllers.Servers, '', [server.id]);
     }
   };
+
+  createGeneralChannel(serverId: string): AppOmit<Channel, 'id'> {
+    return {
+      name: 'General',
+      serverId,
+      general: true,
+    };
+  }
 
   private extractServer = (formData: FormData): Partial<Server<'formData'>> => {
     const server: Partial<Server<'formData'>> = {};

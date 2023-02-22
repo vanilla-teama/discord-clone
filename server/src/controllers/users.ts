@@ -387,7 +387,6 @@ const getInvitedFromFriends: Handler = (req, res, next) => {
 
 const getRelatedServers: Handler = (req, res, next) => {
   const userId = req.params.id;
-  console.log(userId);
 
   User.findById(userId)
     .populate([
@@ -424,9 +423,16 @@ const getRelatedServers: Handler = (req, res, next) => {
               })
               .filter(Boolean);
             const ownServers = servers.map((server) => serverDTO(server as unknown as FetchedServer));
+            const allServers = invitedServers.concat(joinedServers, ownServers);
+            const uniqueAllServers = allServers.filter((server, i) => {
+              if (!server) {
+                return false;
+              }
+              return allServers.findIndex((s) => s && s.id === server.id) === i;
+            });
             res.status(200).json({
               message: 'Related servers fetched.',
-              servers: invitedServers.concat(joinedServers, ownServers),
+              servers: uniqueAllServers,
             });
           });
       }
@@ -436,34 +442,28 @@ const getRelatedServers: Handler = (req, res, next) => {
 const getRelatedChannels: Handler = (req, res, next) => {
   const userId = req.params.id;
 
-  User
-    .findById(userId)
-    .then((user) => {
-      if (handleDocumentNotFound(user)) {
-        Server
-          .find({ owner: userId })
-          .then((servers) => {
-            const ownServersIDs = servers.map((server) => server.id);
-            const inviteChannelsIDs = user.invitesToChannels.map((c) => c.toString());
-            Channel
-              .find({
-                $or: [
-                  {
-                    _id: { $in: inviteChannelsIDs }
-                  },
-                  {
-                    serverId: { $in: ownServersIDs }
-                  }
-                ]
-              })
-              .then((channels) => {
-                console.log(inviteChannelsIDs);
-                console.log(channels);
-              })
-          })
-      }
-    })
-  
+  User.findById(userId).then((user) => {
+    if (handleDocumentNotFound(user)) {
+      Server.find({ owner: userId }).then((servers) => {
+        const ownServersIDs = servers.map((server) => server.id);
+        const inviteChannelsIDs = user.invitesToChannels.map((c) => c.toString());
+        Channel.find({
+          $or: [
+            {
+              _id: { $in: inviteChannelsIDs },
+            },
+            {
+              serverId: { $in: ownServersIDs },
+            },
+          ],
+        }).then((channels) => {
+          console.log(inviteChannelsIDs);
+          console.log(channels);
+        });
+      });
+    }
+  });
+
   res.status(200).end();
 };
 
