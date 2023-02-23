@@ -72,6 +72,7 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       profile: profiles[message.userId] ?? { about: null, avatar: null, banner: null },
     }));
     this.view.displayMessages(messagesWithProfiles);
+    this.view.scrollToBottom();
   };
 
   handleSendMessage = async (messageText: string, responsedToMessageId: string | null): Promise<void> => {

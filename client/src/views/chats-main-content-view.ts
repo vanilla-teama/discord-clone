@@ -84,6 +84,10 @@ class ChatsMainContentView extends View {
     });
   };
 
+  scrollToBottom(): void {
+    this.$messageList.scrollTo(0, this.$messageList.scrollHeight);
+  }
+
   editMessageContent($message: HTMLLIElement, message: RenderedPersonalMessage): void {
     const items = this.messagesMap.get($message);
     if (!items) {

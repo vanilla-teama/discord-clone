@@ -76,6 +76,7 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
       messagesWithProfiles.push({ ...message, profile: message.service ? null : user.profile });
     });
     this.view.displayMessages(messagesWithProfiles, invites);
+    this.view.scrollToBottom();
   };
 
   handleSendMessage = async (messageText: string, responsedToMessageId: string | null): Promise<void> => {
