@@ -7,6 +7,7 @@ import {
   ChannelMessage,
   Chat,
   ChatAvailabilitiesMap,
+  Lang,
   PersonalMessage,
   Profile,
   Server,
@@ -51,6 +52,8 @@ class AppStore {
   private _servers: Server[] = []; // Current user related servers
 
   private _allServers: Server[] = []; // All servers
+
+  private _lang: Lang = 'en';
 
   get isAuth(): boolean {
     return Boolean(this.user);
@@ -158,6 +161,18 @@ class AppStore {
 
   private set allServers(servers: Server[]) {
     this._allServers = servers;
+  }
+
+  get lang(): Lang {
+    return this._lang;
+  }
+
+  private set lang(lang: Lang) {
+    this._lang = lang;
+  }
+
+  setLang(lang: Lang): void {
+    this.lang = lang;
   }
 
   getServer(serverId: string): Server | null {
