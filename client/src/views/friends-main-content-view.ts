@@ -104,7 +104,7 @@ class FriendsMainContentView extends View {
   createFriendItem(user: User, status: 'invitedTo' | 'invitedFrom' | 'friend' = 'friend'): HTMLLIElement {
     const $item = $('li', 'friends__friend-list-item');
 
-    const $itemBox = $('div', 'user-item__boxx');
+    const $itemBox = $('div', 'user-item__box');
     const $itemAvatar = $('div', 'user-item__avatar');
     const $itemIcon = $('img', 'user-item__icon');
     const $itemStatus = $('div', ['user-item__status', `user-item__status_${user.availability}`]);

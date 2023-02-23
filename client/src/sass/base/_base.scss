@@ -44,6 +44,7 @@
   --icons-members: url('/src/assets/icons/members.svg');
   --icons-arrow: url('/src/assets/icons/arrow.svg');
   --icons-message: url('/src/assets/icons/message.svg');
+  --icons-esc: url('/src/assets/icons/esc.svg');
 }
 
 [light] {
@@ -90,6 +91,7 @@
   --icons-members: url('/src/assets/icons/members-light.svg');
   --icons-arrow: url('/src/assets/icons/arrow-light.svg');
   --icons-message: url('/src/assets/icons/message-light.svg');
+  --icons-esc: url('/src/assets/icons/esc-light.svg');
 }
 
 body {
@@ -100,7 +102,7 @@ body {
   box-sizing: border-box;
   color: var(--text-primary);
   font-family: 'Roboto', sans-serif;
-  background-color: var(--background-color-dark-grey);
+  background-color: var(--background-color-gray);
   overflow-x: hidden;
 }
 

@@ -118,6 +118,7 @@
 }
 
 @include media-md-down {
+  .servers-app-bar,
   .chats-app-bar {
     &__search {
       display: none;

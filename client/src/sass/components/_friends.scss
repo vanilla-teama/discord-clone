@@ -18,6 +18,14 @@
     transition: all 0.3s ease 0s;
     cursor: pointer;
 
+    .user-item__box {
+      flex: 1 1 auto;
+    }
+    .user-item__name {
+      flex: 1 1 auto;
+      flex-wrap: wrap;
+    }
+
     &:hover {
       background-color: var(--background-color-gray-hover);
       border-radius: 8px;

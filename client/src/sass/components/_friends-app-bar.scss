@@ -51,3 +51,16 @@
     }
   }
 }
+
+@include media-md-down {
+  .friends-app-bar__buttons-block {
+    gap: 10px;
+  }
+  .friends-app-bar__icons-block {
+    margin-right: 10px;
+  }
+  .friends__friend-list-item {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}
