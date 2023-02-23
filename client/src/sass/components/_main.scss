@@ -45,8 +45,8 @@ $infobar-width: 340px;
 .app-bar {
   background-color: var(--background-color-light-gray);
   border-bottom: 2px solid var(--background-color-light-gray-scroll);
-  padding-left: 0px;
-  //padding-left: 110px;
+  //padding-left: 0px;
+  padding-left: 110px;
   transition: 0.2s all linear;
 }
 
@@ -57,8 +57,8 @@ $infobar-width: 340px;
   background-color: var(--background-color-light-gray);
   //padding-left: 240px;
   margin-left: 0;
-  //padding-left: 110px;
-  padding-left: 0px;
+  padding-left: 110px;
+  //padding-left: 0px;
   transition: 0.2s all linear;
 
   animation-duration: 200ms;
@@ -146,7 +146,16 @@ $infobar-width: 340px;
   transition: 0.2s all linear;
 }
 
-@include media-md-down {
+@include media-lg-down {
+  .main-container {
+    padding-left: 0px;
+  }
+  .app-bar{
+    padding-left: 0px;
+  }
+}
+
+@include media-sm-down {
   .app-bar._active {
     .chats-app-bar__panel-container {
       display: flex;
@@ -159,14 +168,18 @@ $infobar-width: 340px;
     }
   }
 }
-@media (max-width: 420px){
+@media (max-width: 420px) {
   .app-bar._active {
-    .chats-app-bar__user-container {
+    .chats-app-bar__user-container,
+    .servers-app-bar__channel-container,
+    .servers-app-bar__panel-container{
       display: flex;
     }
   }
   .app-bar {
-    .chats-app-bar__user-container {
+    .chats-app-bar__user-container,
+    .servers-app-bar__channel-container,
+    .servers-app-bar__panel-container {
       display: none;
     }
   }

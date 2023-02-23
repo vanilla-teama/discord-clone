@@ -1,12 +1,33 @@
 
-.settings__sidebar {
-  background-color: var(--background-color-black-light);
 
-}
 
 .container-profile {
   gap: 35px;
   display: flex;
+}
+
+.btn-close-settings {
+  background: var(--icons-esc) center/ cover no-repeat;
+  width: 32px;
+  height: 32px;
+  opacity: 0.5;
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  //z-index: 90;
+  &:hover {
+    opacity: 1;
+  }
+  //cursor: pointer;
+  ////margin-top: 70px;
+  //margin-top: 20px;
+  //width: 40px;
+  //height: 40px;
+  //border-radius: 20px;
+  //border: 3px solid #ffffff;
+  //float: right;
 }
 .info-block {
   max-width: 350px;
@@ -119,21 +140,11 @@
   font-weight: 600;
 }
 
-.img-close-settings {
-  width: 40px;
-  fill: white;
-}
+//.img-close-settings {
+//  width: 40px;
+//  fill: white;
+//}
 
-.btn-close-settings {
-  cursor: pointer;
-  //margin-top: 70px;
-  margin-top: 20px;
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
-  border: 3px solid #ffffff;
-  float: right;
-}
 
 .container-profile {
   .chats-info-bar{
