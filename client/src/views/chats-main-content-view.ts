@@ -369,6 +369,9 @@ class ChatsMainContentView extends View {
     window.addEventListener(
       'keyup',
       (ChatsMainContentView.onReplyEscapeKeyup = (event) => {
+        if (!event.key) {
+          return;
+        }
         const key = event.key.toLowerCase();
         if (key === 'escape') {
           this.destroyReply($message);
