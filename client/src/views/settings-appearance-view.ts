@@ -50,7 +50,7 @@ class SettingsAppearanceView extends View {
       textContent: 'Синхронизация с компьютером',
     });
     $containerThemeSinhronization.append($inputThemeSinhronization, $labelThemeSinhronization);
-    $containerTheme.append($titleTheme, $containerThemeLight, $containerThemeDark, $containerThemeSinhronization);
+    $containerTheme.append($titleTheme, $containerThemeLight, $containerThemeDark);
     const $containerMessage = $('div', SettingsAppearanceView.classNames.container);
     const $titleMessage = Object.assign($('div', SettingsAppearanceView.classNames.titleChild), {
       textContent: 'Отображение сообщений',
@@ -94,7 +94,7 @@ class SettingsAppearanceView extends View {
 
     $containerMessCompact.append($inputMessCompact, $labelMessCompact);
     $containerMessage.append($titleMessage, $containerMessModern, $containerMessCompact);
-    $appcontainer.append($mainTitle, $containerTheme, $containerMessage);
+    $appcontainer.append($mainTitle, $containerTheme);
     this.$container.append($appcontainer);
   }
 }
