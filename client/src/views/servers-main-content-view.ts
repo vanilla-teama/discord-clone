@@ -148,6 +148,10 @@ class ServersMainContentView extends View {
     });
   };
 
+  scrollToBottom(): void {
+    this.$messageList.scrollTo(0, this.$messageList.scrollHeight);
+  }
+
   bindMessageEvent(handler: (messageText: string, responsedToMessageId: string | null) => Promise<void>) {
     this.$chatInput.addEventListener('keypress', async (event) => {
       if (event.key === 'Enter') {
