@@ -9,8 +9,10 @@ import Screen from './screen';
 import ServersScreen from './servers-screen';
 
 class SettingsSidebarComponent extends Controller<SettingsSidebarView> {
+  static instance: SettingsSidebarComponent;
   constructor() {
     super(new SettingsSidebarView());
+    SettingsSidebarComponent.instance = this;
   }
 
   async init(): Promise<void> {

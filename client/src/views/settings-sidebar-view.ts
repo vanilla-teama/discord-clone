@@ -1,6 +1,7 @@
 import Router, { RouteControllers, SettingsParams } from '../lib/router';
 import View from '../lib/view';
 import { $, isClosestElementOfCssClass } from '../utils/functions';
+import { translation } from '../utils/lang';
 import SettingsScreenView from './settings-screen-view';
 
 class SettingsSidebarView extends View {
@@ -23,19 +24,45 @@ class SettingsSidebarView extends View {
     this.$logOut = this.createLogOutItem();
   }
   async build(): Promise<void> {
+    // const $list = $('ul', SettingsSidebarView.classes.list);
+    // const $myAccount = $('li', SettingsSidebarView.classes.listItem);
+    // const $profiles = $('li', SettingsSidebarView.classes.listItem);
+    // const $appearance = $('li', SettingsSidebarView.classes.listItem);
+    // const $keybinds = $('li', SettingsSidebarView.classes.listItem);
+    // const $language = $('li', SettingsSidebarView.classes.listItem);
+    // $myAccount.textContent = 'My Account';
+    // $profiles.textContent = 'Profiles';
+    // $appearance.textContent = 'Appearance';
+    // $keybinds.textContent = 'Keybinds';
+    // $language.textContent = 'Language';
+    // $list.append($myAccount, $profiles, $appearance, $keybinds, $language, this.$logOut);
+    // this.$container.append($list);
+    // this.itemsMap.set($myAccount, SettingsParams.Account);
+    // this.itemsMap.set($profiles, SettingsParams.Profiles);
+    // this.itemsMap.set($appearance, SettingsParams.Appearance);
+    // this.itemsMap.set($keybinds, SettingsParams.Keybinds);
+    // this.itemsMap.set($language, SettingsParams.Language);
+    // this.bindItemClick();
+    this.$container.append(this.createContent());
+  }
+
+  createContent(): DocumentFragment {
+    const __ = translation();
+    const $fragment = document.createDocumentFragment();
     const $list = $('ul', SettingsSidebarView.classes.list);
     const $myAccount = $('li', SettingsSidebarView.classes.listItem);
     const $profiles = $('li', SettingsSidebarView.classes.listItem);
     const $appearance = $('li', SettingsSidebarView.classes.listItem);
     const $keybinds = $('li', SettingsSidebarView.classes.listItem);
     const $language = $('li', SettingsSidebarView.classes.listItem);
-    $myAccount.textContent = 'My Account';
-    $profiles.textContent = 'Profiles';
-    $appearance.textContent = 'Appearance';
-    $keybinds.textContent = 'Keybinds';
-    $language.textContent = 'Language';
+    $myAccount.textContent = __.settings.items.account;
+    $profiles.textContent = __.settings.items.profile;
+    $appearance.textContent = __.settings.items.appearance;
+    $keybinds.textContent = __.settings.items.keybinds;
+    $language.textContent = __.settings.items.language;
+    this.$logOut.textContent = __.settings.items.logout;
     $list.append($myAccount, $profiles, $appearance, $keybinds, $language, this.$logOut);
-    this.$container.append($list);
+    $fragment.append($list);
 
     this.itemsMap.set($myAccount, SettingsParams.Account);
     this.itemsMap.set($profiles, SettingsParams.Profiles);
@@ -44,6 +71,8 @@ class SettingsSidebarView extends View {
     this.itemsMap.set($language, SettingsParams.Language);
 
     this.bindItemClick();
+
+    return $fragment;
   }
 
   bindLogout(handler: EventListener) {
@@ -68,8 +97,9 @@ class SettingsSidebarView extends View {
   };
 
   private createLogOutItem(): HTMLLIElement {
+    const __ = translation();
     return Object.assign($('li', SettingsSidebarView.classes.listItem), {
-      textContent: 'Log Out',
+      textContent: __.settings.items.logout,
     });
   }
 

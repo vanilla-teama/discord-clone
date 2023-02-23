@@ -3,6 +3,7 @@ import { appStore } from '../store/app-store';
 import { Lang } from '../types/entities';
 import { getTypedStorageItem, setTypedStorageItem } from '../utils/local-storage';
 import SettingsLanguageView from '../views/settings-language-view';
+import SettingsSidebarComponent from './settings-sidebar';
 
 class SettingsLanguageComponent extends Controller<SettingsLanguageView> {
   constructor() {
@@ -31,7 +32,8 @@ class SettingsLanguageComponent extends Controller<SettingsLanguageView> {
   onLangChange = async (lang: Lang): Promise<void> => {
     this.setLang(lang);
     this.saveLang(lang);
-    await this.view.translate(lang);
+    await this.view.translate();
+    await SettingsSidebarComponent.instance.init();
   };
 }
 

@@ -4,6 +4,7 @@ import * as urlUkr from '../assets/flags/flag-ukr.png';
 import View from '../lib/view';
 import { Lang } from '../types/entities';
 import { $ } from '../utils/functions';
+import { translation } from '../utils/lang';
 import SettingsScreenView from './settings-screen-view';
 class SettingsLanguageView extends View {
   static readonly classNames = {
@@ -31,13 +32,15 @@ class SettingsLanguageView extends View {
 
   build(): void {}
 
-  createContent(lang: Lang): DocumentFragment {
-    console.log('translate', lang);
+  createContent(): DocumentFragment {
+    const __ = translation();
     const $container = document.createDocumentFragment();
     const $form = $('form', SettingsLanguageView.classNames.form);
-    const $langTitle = Object.assign($('div', SettingsLanguageView.classNames.title), { textContent: 'Язык' });
+    const $langTitle = Object.assign($('div', SettingsLanguageView.classNames.title), {
+      textContent: __.settings.language.heading,
+    });
     const $langTitleChoise = Object.assign($('div', SettingsLanguageView.classNames.choise), {
-      textContent: 'Выберите язык',
+      textContent: __.settings.language.subheading,
     });
     const $contInputEng = $('div');
     const $contEng = $('div', SettingsLanguageView.classNames.container);
@@ -89,8 +92,8 @@ class SettingsLanguageView extends View {
     }
   }
 
-  async translate(lang: Lang): Promise<void> {
-    this.$container.append(this.createContent(lang));
+  async translate(): Promise<void> {
+    this.$container.append(this.createContent());
     await this.render();
   }
 
