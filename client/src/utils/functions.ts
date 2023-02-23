@@ -57,3 +57,17 @@ export const readImage = (file: File, $image: HTMLImageElement) => {
 };
 
 export const base64Url = (base64: string) => `data:image/png;base64, ${base64}`;
+
+export function deepMergeObject(targetObject = {}, sourceObject = {}) {
+  const copyTargetObject = JSON.parse(JSON.stringify(targetObject));
+  const copySourceObject = JSON.parse(JSON.stringify(sourceObject));
+  Object.keys(copySourceObject).forEach((key) => {
+    if (typeof copySourceObject[key] === 'object' && !Array.isArray(copySourceObject[key])) {
+      copyTargetObject[key] = deepMergeObject(copyTargetObject[key], copySourceObject[key]);
+    } else {
+      copyTargetObject[key] = copySourceObject[key];
+    }
+  });
+
+  return copyTargetObject;
+}

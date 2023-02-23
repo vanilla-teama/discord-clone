@@ -7,6 +7,7 @@ import {
   ChannelMessage,
   Chat,
   ChatAvailabilitiesMap,
+  Lang,
   PersonalMessage,
   Profile,
   Server,
@@ -17,9 +18,15 @@ import { LoginError, RegisterError, RegisterErrorData } from '../types/http-erro
 import { AppOmit } from '../types/utils';
 import { RenderedPersonalMessage } from '../views/chats-main-content-view';
 import { RenderedChannelMessage } from '../views/servers-main-content-view';
+import en from '../lang/en';
+import ua from '../lang/ua';
+import ru from '../lang/ru';
+import { deepMergeObject } from '../utils/functions';
 
 export type IncomingPersonalMessage = AppOmit<PersonalMessage, 'id' | 'responsedToMessage'>;
 export type IncomingChannelMessage = AppOmit<ChannelMessage, 'id' | 'responsedToMessage'>;
+
+export type Translation = typeof en | typeof ua | typeof ru;
 
 class AppStore {
   private static instance: AppStore;
@@ -51,6 +58,10 @@ class AppStore {
   private _servers: Server[] = []; // Current user related servers
 
   private _allServers: Server[] = []; // All servers
+
+  private _lang: Lang = 'en';
+
+  private _translation: Translation = en;
 
   get isAuth(): boolean {
     return Boolean(this.user);
@@ -158,6 +169,42 @@ class AppStore {
 
   private set allServers(servers: Server[]) {
     this._allServers = servers;
+  }
+
+  get lang(): Lang {
+    return this._lang;
+  }
+
+  private set lang(lang: Lang) {
+    this._lang = lang;
+  }
+
+  translation(lang: Lang): Translation {
+    switch (lang) {
+      case 'en': {
+        return en;
+        break;
+      }
+      case 'ua': {
+        return ua;
+        break;
+      }
+      case 'ru': {
+        return ru;
+        break;
+      }
+    }
+  }
+
+  setLang(lang: Lang): void {
+    this.lang = lang;
+    // if (lang === 'en') {
+    //   this._translation = en;
+    // } else if (lang === 'ua') {
+    //   this._translation = ua;
+    // } else if (lang === 'ru') {
+    //   this._translation = ru;
+    // }
   }
 
   getServer(serverId: string): Server | null {
@@ -795,3 +842,9 @@ class AppStore {
 export default AppStore;
 
 export const appStore = AppStore.Instance;
+
+Object.defineProperty(exports, '__', {
+  get: function () {
+    return appStore.translation(appStore.lang);
+  },
+});

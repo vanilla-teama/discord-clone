@@ -5,6 +5,7 @@ import socket, { bindGlobalSocketEvents } from './lib/socket';
 import ChatsScreen from './components/chats-screen';
 import { appStore } from './store/app-store';
 import SettingsAppearanceComponent from './components/settings-appearance';
+import { getTypedStorageItem } from './utils/local-storage';
 /*
   This is for debugging
   We can use window.router to navigate through our app
@@ -22,6 +23,7 @@ bindGlobalSocketEvents();
 async function main() {
   // await http.test();
   SettingsAppearanceComponent.setTheme();
+  appStore.setLang(getTypedStorageItem('lang') || 'en');
   await App.run();
   socket.emit('run');
   ChatsScreen.bindRouteChanged();
