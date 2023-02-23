@@ -1,5 +1,7 @@
 import View from '../lib/view';
+import { Theme } from '../types/entities';
 import { $ } from '../utils/functions';
+import { getTypedStorageItem, setTypedStorageItem } from '../utils/local-storage';
 import MainView from './main-view';
 import SettingsScreenView from './settings-screen-view';
 
@@ -20,6 +22,7 @@ class SettingsAppearanceView extends View {
     super($root);
   }
   build(): void {
+    const savedTheme = this.getSavedTheme();
     const $appcontainer = $('div', SettingsAppearanceView.classNames.containerMain);
     const $mainTitle = Object.assign($('div', SettingsAppearanceView.classNames.title), { textContent: 'Внешний вид' });
     const $containerTheme = $('div', SettingsAppearanceView.classNames.container);
@@ -35,7 +38,6 @@ class SettingsAppearanceView extends View {
       id: 'dark',
       type: 'radio',
       name: 'radio-theme',
-      checked: true,
     });
     const $labelThemeDark = Object.assign($('label'), { htmlFor: 'dark', textContent: 'Темная' });
     $containerThemeDark.append($inputThemeDark, $labelThemeDark);
@@ -71,14 +73,28 @@ class SettingsAppearanceView extends View {
 
     const $body = document.body;
 
-    $inputThemeLight.addEventListener('change', (e: Event) => {
+    if (savedTheme === 'dark') {
+      $inputThemeDark.checked = true;
+      $inputThemeLight.checked = false;
+    } else {
+      $inputThemeDark.checked = false;
+      $inputThemeLight.checked = true;
+    }
+
+    $inputThemeLight.onchange = (e: Event) => {
       const target = e.target as HTMLInputElement;
-      if (target.checked) $body.setAttribute('light', '');
-    });
-    $inputThemeDark.addEventListener('change', (e: Event) => {
+      if (target.checked) {
+        SettingsAppearanceView.setTheme('light');
+        setTypedStorageItem('theme', 'light');
+      }
+    };
+    $inputThemeDark.onchange = (e: Event) => {
       const target = e.target as HTMLInputElement;
-      if (target.checked) $body.removeAttribute('light');
-    });
+      if (target.checked) {
+        SettingsAppearanceView.setTheme('dark');
+        setTypedStorageItem('theme', 'dark');
+      }
+    };
     $inputThemeSinhronization.addEventListener('change', (e: Event) => {
       const target = e.target as HTMLInputElement;
       if (target.checked) {
@@ -96,6 +112,14 @@ class SettingsAppearanceView extends View {
     $containerMessage.append($titleMessage, $containerMessModern, $containerMessCompact);
     $appcontainer.append($mainTitle, $containerTheme);
     this.$container.append($appcontainer);
+  }
+
+  static setTheme(theme: Theme) {
+    document.body.toggleAttribute('light', theme === 'light');
+  }
+
+  getSavedTheme(): Theme {
+    return getTypedStorageItem('theme') || 'dark';
   }
 }
 

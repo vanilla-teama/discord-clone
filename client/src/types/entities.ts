@@ -90,4 +90,8 @@ export enum ChannelInviteStatus {
   Accepted = 'accepted',
 }
 
+export type Lang = 'en' | 'ua' | 'ru';
+
+export type Theme = 'light' | 'dark';
+
 export type ChatAvailabilitiesMap = Map<Chat, Availability>;
