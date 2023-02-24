@@ -22,6 +22,12 @@ export default {
       about: 'About me',
       changesWarning: 'Careful - You have unsaved changes!',
     },
+    appearance: {
+      heading: 'Appearance',
+      theme: 'Theme',
+      dark: 'Dark',
+      light: 'Light',
+    },
     language: {
       heading: 'Language',
       subheading: 'Select Language',

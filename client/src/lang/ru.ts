@@ -22,6 +22,12 @@ export default {
       about: 'Обо мне',
       changesWarning: 'Осторожно - есть несохраненные изменения!',
     },
+    appearance: {
+      heading: 'Внешний вид',
+      theme: 'Тема',
+      dark: 'Темная',
+      light: 'Светлая',
+    },
     language: {
       heading: 'Язык',
       subheading: 'Выберите язык',

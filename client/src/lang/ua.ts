@@ -22,6 +22,12 @@ export default {
       about: 'Про мене',
       changesWarning: 'Обережно - є незбережені зміни!',
     },
+    appearance: {
+      heading: 'Зовнішній вигляд',
+      theme: 'Тема',
+      dark: 'Темна',
+      light: 'Світла',
+    },
     language: {
       heading: 'Мова',
       subheading: 'Оберіть мову',

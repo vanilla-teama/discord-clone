@@ -1,6 +1,7 @@
 import View from '../lib/view';
 import { Theme } from '../types/entities';
 import { $ } from '../utils/functions';
+import { translation } from '../utils/lang';
 import { getTypedStorageItem, setTypedStorageItem } from '../utils/local-storage';
 import MainView from './main-view';
 import SettingsScreenView from './settings-screen-view';
@@ -22,16 +23,19 @@ class SettingsAppearanceView extends View {
     super($root);
   }
   build(): void {
+    const __ = translation();
     const savedTheme = this.getSavedTheme();
     const $appcontainer = $('div', SettingsAppearanceView.classNames.containerMain);
-    const $mainTitle = Object.assign($('div', SettingsAppearanceView.classNames.title), { textContent: 'Внешний вид' });
+    const $mainTitle = Object.assign($('div', SettingsAppearanceView.classNames.title), {
+      textContent: __.settings.appearance.heading,
+    });
     const $containerTheme = $('div', SettingsAppearanceView.classNames.container);
     const $titleTheme = Object.assign($('div', SettingsAppearanceView.classNames.titleChild), {
-      textContent: 'Тема',
+      textContent: __.settings.appearance.theme,
     });
     const $containerThemeLight = $('div', SettingsAppearanceView.classNames.containerChild);
     const $inputThemeLight = Object.assign($('input'), { id: 'light', type: 'radio', name: 'radio-theme' });
-    const $labelThemeLight = Object.assign($('label'), { htmlFor: 'light', textContent: 'Светлая' });
+    const $labelThemeLight = Object.assign($('label'), { htmlFor: 'light', textContent: __.settings.appearance.light });
     $containerThemeLight.append($inputThemeLight, $labelThemeLight);
     const $containerThemeDark = $('div', SettingsAppearanceView.classNames.containerChild);
     const $inputThemeDark = Object.assign($('input'), {
@@ -39,7 +43,7 @@ class SettingsAppearanceView extends View {
       type: 'radio',
       name: 'radio-theme',
     });
-    const $labelThemeDark = Object.assign($('label'), { htmlFor: 'dark', textContent: 'Темная' });
+    const $labelThemeDark = Object.assign($('label'), { htmlFor: 'dark', textContent: __.settings.appearance.dark });
     $containerThemeDark.append($inputThemeDark, $labelThemeDark);
     const $containerThemeSinhronization = $('div', SettingsAppearanceView.classNames.containerChild);
     const $inputThemeSinhronization = Object.assign($('input'), {
