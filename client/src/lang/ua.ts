@@ -44,6 +44,10 @@ export default {
       russian: 'Російська',
     },
   },
+  startbar: {
+    personalMessages: 'Персональні повідомлення',
+    addServer: 'Додати сервер',
+  },
   common: {
     username: `ім'я користувача`,
     email: 'е-мейл',

@@ -44,6 +44,10 @@ export default {
       russian: 'Russian',
     },
   },
+  startbar: {
+    personalMessages: 'Personal messages',
+    addServer: 'Add server',
+  },
   common: {
     username: 'username',
     email: 'email',
