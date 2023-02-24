@@ -48,6 +48,11 @@ export default {
     personalMessages: 'Личные сообщения',
     addServer: 'Добавить сервер',
   },
+  serverForm: {
+    heading: 'Создайте сервер',
+    description: 'Персонализируйте свой новый сервер, выбрав ему название и значок.',
+    serverName: `Имя сервера`,
+  },
   common: {
     username: 'имя пользователя',
     email: 'е-мейл',
@@ -57,6 +62,7 @@ export default {
     delete: 'удалить',
     apply: 'принять',
     reset: 'сбросить',
+    create: 'создать',
     saveChanges: 'сохранить изменения',
     discordMemberSince: 'В числе участников Discord с',
   },

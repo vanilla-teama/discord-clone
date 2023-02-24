@@ -48,6 +48,11 @@ export default {
     personalMessages: 'Personal messages',
     addServer: 'Add server',
   },
+  serverForm: {
+    heading: 'Create your server',
+    description: 'Give your new server a personality with a name and an icon. You can always change it later.',
+    serverName: 'Server name',
+  },
   common: {
     username: 'username',
     email: 'email',
@@ -57,6 +62,7 @@ export default {
     delete: 'delete',
     apply: 'apply',
     reset: 'reset',
+    create: 'create',
     saveChanges: 'save changes',
     discordMemberSince: 'Discord member since',
   },
