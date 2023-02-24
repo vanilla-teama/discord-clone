@@ -28,6 +28,14 @@ export default {
       dark: 'Темна',
       light: 'Світла',
     },
+    keybinds: {
+      heading: 'Гарячі клавіші',
+      editMessage: 'Редагувати повідомлення',
+      deleteMessage: 'Видалити повідомлення',
+      reply: 'Відповісти',
+      navigationBetweenServers: 'Переміщення між серверами',
+      navigationBetweenChannels: 'Переміщенная між каналами',
+    },
     language: {
       heading: 'Мова',
       subheading: 'Оберіть мову',

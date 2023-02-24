@@ -28,6 +28,14 @@ export default {
       dark: 'Dark',
       light: 'Light',
     },
+    keybinds: {
+      heading: 'Keybinds',
+      editMessage: 'Edit message',
+      deleteMessage: 'Delete message',
+      reply: 'Reply',
+      navigationBetweenServers: 'Navigation between servers',
+      navigationBetweenChannels: 'Navigation between channels',
+    },
     language: {
       heading: 'Language',
       subheading: 'Select Language',
