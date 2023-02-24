@@ -1,12 +1,14 @@
 import View from '../lib/view';
 import { User } from '../types/entities';
 import { $ } from '../utils/functions';
+import { translation } from '../utils/lang';
 import PopupView from './popup-view';
 
 class ChatsCreateFormView extends View {
   static readonly classNames = {};
 
   $form: HTMLFormElement;
+  $submit: HTMLButtonElement;
   $friendList: HTMLUListElement;
 
   constructor($root: HTMLElement) {
@@ -15,6 +17,7 @@ class ChatsCreateFormView extends View {
     }
     super($root);
     this.$friendList = $('ul', 'form-create-chat__friend-list');
+    this.$submit = $('button', 'form-create-chat__submit');
     this.$form = this.createForm();
   }
   build(): void {
@@ -22,12 +25,13 @@ class ChatsCreateFormView extends View {
   }
 
   private createForm(): HTMLFormElement {
+    const __ = translation();
     const $form = $('form', 'form-create-chat');
     const $header = $('h3', 'form-create-chat__title');
-    const $submit = $('button', 'form-create-chat__submit');
-    $submit.textContent = 'Create DM';
+    const $submit = this.$submit;
+    $submit.textContent = __.sidebar.createDM;
     $submit.type = 'submit';
-    $header.textContent = 'Select Friends';
+    $header.textContent = __.sidebar.selectFriends;
     $form.append($header, this.$friendList, $submit);
 
     return $form;
@@ -68,12 +72,13 @@ class ChatsCreateFormView extends View {
   }
 
   createNoFriendsMessage() {
+    const __ = translation();
     const $message = $('p', 'form-create-chat__no-friends');
     const $friendsButton = $('button', 'form-create-chat__to-friends-btn');
-    $message.innerHTML = 'Your loneliness impresses.<br/> But you can go and find folks ';
+    $message.innerHTML = `${__.sidebar.noFriendsMessageOne}<br/>${__.sidebar.noFriendsMessageTwo} `;
     $message.append($friendsButton);
 
-    $friendsButton.textContent = 'here';
+    $friendsButton.textContent = __.common.here;
 
     $friendsButton.onclick = this.onNavigateToFriends;
 
@@ -86,8 +91,10 @@ class ChatsCreateFormView extends View {
       friends.forEach((friend) => {
         this.$friendList.append(this.createFriendListItem(friend));
       });
+      this.$submit.style.display = 'block';
     } else {
       this.$friendList.append(this.createNoFriendsMessage());
+      this.$submit.style.display = 'none';
     }
   }
 

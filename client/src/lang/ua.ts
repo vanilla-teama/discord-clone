@@ -53,6 +53,15 @@ export default {
     description: 'Персоналізуйте ваш сервер, надавши йому назву та іконку.',
     serverName: `Ім'я сервера`,
   },
+  sidebar: {
+    friends: 'Друзі',
+    selectFriends: 'Виберіть друзів',
+    noFriendsMessageOne: 'Ваша самотність вражає.',
+    noFriendsMessageTwo: 'Але ви можете піти та знайти друзів',
+    personalMessages: 'Персональні повідомлення',
+    createDM: 'Створіть персональне повідомлення',
+    userSettings: 'Налаштування користувача',
+  },
   common: {
     username: `ім'я користувача`,
     email: 'е-мейл',
@@ -65,5 +74,6 @@ export default {
     create: 'створити',
     saveChanges: 'зберегти зміни',
     discordMemberSince: 'У числі учасників Discord з',
+    here: 'тут',
   },
 } as const;

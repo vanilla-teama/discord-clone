@@ -53,6 +53,15 @@ export default {
     description: 'Give your new server a personality with a name and an icon. You can always change it later.',
     serverName: 'Server name',
   },
+  sidebar: {
+    friends: 'Friends',
+    selectFriends: 'Select friends',
+    noFriendsMessageOne: 'Your loneliness impresses.',
+    noFriendsMessageTwo: 'But you can go and find folks',
+    personalMessages: 'Personal messages',
+    createDM: 'Create DM',
+    userSettings: 'User settings',
+  },
   common: {
     username: 'username',
     email: 'email',
@@ -65,5 +74,6 @@ export default {
     create: 'create',
     saveChanges: 'save changes',
     discordMemberSince: 'Discord member since',
+    here: 'here',
   },
 } as const;
