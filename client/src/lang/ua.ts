@@ -61,6 +61,11 @@ export default {
     personalMessages: 'Персональні повідомлення',
     createDM: 'Створіть персональне повідомлення',
     userSettings: 'Налаштування користувача',
+    createChannel: 'Створіть канал',
+    createInvite: 'Створіть запрошення',
+    channelName: `Ім'я канала`,
+    inviteFormHeading: 'Запрошуйте ваших друзів до',
+    noFriendsToAdd: 'Усі ваші друзі вже тут!',
   },
   common: {
     username: `ім'я користувача`,
@@ -75,5 +80,11 @@ export default {
     saveChanges: 'зберегти зміни',
     discordMemberSince: 'У числі учасників Discord з',
     here: 'тут',
+    general: 'основний',
+    userIsLoading: 'користувач завантажується',
+    invite: 'запросити',
+    send: 'надіслати',
+    sending: 'надсилається',
+    sent: 'надіслано',
   },
 } as const;

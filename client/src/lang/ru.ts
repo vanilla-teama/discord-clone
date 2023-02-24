@@ -61,6 +61,11 @@ export default {
     personalMessages: 'Личные сообщения',
     createDM: 'Создайте ЛС',
     userSettings: 'Настройки пользователя',
+    createChannel: 'Создайте канал',
+    createInvite: 'Создайте приглашение',
+    channelName: 'Имя канала',
+    inviteFormHeading: 'Пригласите друзей на',
+    noFriendsToAdd: 'Все ваши друзья уже тут!',
   },
   common: {
     username: 'имя пользователя',
@@ -75,5 +80,11 @@ export default {
     saveChanges: 'сохранить изменения',
     discordMemberSince: 'В числе участников Discord с',
     here: 'здесь',
+    general: 'основной',
+    userIsLoading: 'пользователь загружается',
+    invite: 'пригласить',
+    send: 'отправить',
+    sending: 'отправляется',
+    sent: 'отправлено',
   },
 } as const;

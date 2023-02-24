@@ -61,6 +61,11 @@ export default {
     personalMessages: 'Personal messages',
     createDM: 'Create DM',
     userSettings: 'User settings',
+    createChannel: 'Create channel',
+    createInvite: 'Create invite',
+    channelName: 'Channel name',
+    inviteFormHeading: 'Invite friends to',
+    noFriendsToAdd: 'All your friends already here!',
   },
   common: {
     username: 'username',
@@ -75,5 +80,11 @@ export default {
     saveChanges: 'save changes',
     discordMemberSince: 'Discord member since',
     here: 'here',
+    general: 'general',
+    userIsLoading: 'user is loading',
+    invite: 'invite',
+    send: 'send',
+    sending: 'sending',
+    sent: 'sent',
   },
 } as const;

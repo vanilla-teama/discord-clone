@@ -1,6 +1,7 @@
 import View from '../lib/view';
 import { Availability, User } from '../types/entities';
-import { $ } from '../utils/functions';
+import { $, capitalize } from '../utils/functions';
+import { translation } from '../utils/lang';
 import ModalView from './modal-view';
 
 class ChannelsInviteFormView extends View {
@@ -32,15 +33,14 @@ class ChannelsInviteFormView extends View {
   };
 
   private createForm(): HTMLDivElement {
+    const __ = translation();
     const $form = Object.assign($('div', 'form-invite-to-server'), {
       enctype: 'multipart/form-data',
     });
     const $closeBtn = $('button', ['form-invite-to-server__close-btn']);
 
-    //this.$title.textContent = 'No Server';
-    //this.$subtitle.textContent = 'No Channel';
-    this.$title.textContent = `Invite friends to HLIB`;
-    this.$subtitle.textContent = 'TRSTSTTSo';
+    this.$title.textContent = __.sidebar.inviteFormHeading;
+    // this.$subtitle.textContent = '';
 
     $form.append($closeBtn, this.$title, this.$subtitle, this.$friendList);
 
@@ -48,11 +48,13 @@ class ChannelsInviteFormView extends View {
   }
 
   displayTitle(serverName: string, channelName: string) {
-    this.$title.textContent = `Invite friends to ${serverName}`;
+    const __ = translation();
+    this.$title.textContent = `${__.sidebar.inviteFormHeading} ${serverName}`;
     this.$subtitle.textContent = `${channelName}`;
   }
 
   displayFriendList(friends: User[]): void {
+    const __ = translation();
     this.$friendList.innerHTML = '';
 
     //const usersFake: User[] = [
@@ -116,7 +118,7 @@ class ChannelsInviteFormView extends View {
 
     if (friends.length === 0) {
       const $message = $('p', 'form-invite-to-server__not-found');
-      $message.textContent = 'All your friends already here!';
+      $message.textContent = __.sidebar.noFriendsToAdd;
       this.$friendList.append($message);
     }
     friends.forEach((friend) => {
@@ -125,12 +127,13 @@ class ChannelsInviteFormView extends View {
   }
 
   createFriendItem(friend: User): HTMLLIElement {
+    const __ = translation();
     const $item = $('li', 'form-invite-to-server__friend-list-item');
     const $friendName = $('span', 'form-invite-to-server__friend-list-name');
     const $inviteButton = $('button', 'form-invite-to-server__friend-list-invite');
 
     $friendName.textContent = friend.name;
-    $inviteButton.textContent = 'Invite';
+    $inviteButton.textContent = __.common.invite;
     $inviteButton.type = 'button';
     $item.append($friendName, $inviteButton);
 
@@ -147,14 +150,16 @@ class ChannelsInviteFormView extends View {
 
   bindInviteButtonClick($button: HTMLButtonElement, userId: string): void {
     $button.onclick = async () => {
+      const __ = translation();
       $button.disabled = true;
-      $button.textContent = 'sending...';
+      $button.textContent = `${__.common.sending}...`;
       await this.onInvite(userId, () => this.onInviteSuccess($button));
     };
   }
 
   onInviteSuccess = ($button: HTMLButtonElement): void => {
-    $button.textContent = 'sent';
+    const __ = translation();
+    $button.textContent = __.common.sent;
   };
 }
 

@@ -1,9 +1,10 @@
 import Router, { RouteControllers, SettingsParams } from '../lib/router';
 import View from '../lib/view';
 import { Channel, User } from '../types/entities';
-import { $, base64Url, isElementOfCssClass, replaceWith } from '../utils/functions';
+import { $, base64Url, capitalize, isElementOfCssClass, replaceWith } from '../utils/functions';
 import ScreenView from './screen-view';
 import * as discord from '../assets/icons/discord.svg';
+import { translation } from '../utils/lang';
 
 class ServersSideBarView extends View {
   static readonly classes = {
@@ -33,25 +34,21 @@ class ServersSideBarView extends View {
   build(): void {
     const $serversContainer = $('div', 'servers-sidebar__container');
 
-    // const $createContainer = $('div', 'servers-sidebar__create-container');
-    // const $createTitle = $('div', 'servers-sidebar__create-title');
-    // $createTitle.textContent = 'Create channel';
-
-    // $createContainer.append($createTitle, this.$showCreateChannel);
-
     $serversContainer.append(this.$createChannelContainer, this.$serverList, this.$userBar);
     this.$container.append($serversContainer);
   }
 
   private createShowCreateChannel(): HTMLSpanElement {
+    const __ = translation();
     const $directMessagesAddBtn = $('span', 'servers-sidebar__create-add');
-    $directMessagesAddBtn.dataset.name = 'Create channel';
+    $directMessagesAddBtn.dataset.name = __.sidebar.createChannel;
     return $directMessagesAddBtn;
   }
 
   displayCreateChannelContainer() {
+    const __ = translation();
     const $createTitle = $('div', 'servers-sidebar__create-title');
-    $createTitle.textContent = 'Create channel';
+    $createTitle.textContent = __.sidebar.createChannel;
     this.$createChannelContainer.innerHTML = '';
     this.$createChannelContainer.append($createTitle, this.$showCreateChannel);
   }
@@ -116,6 +113,7 @@ class ServersSideBarView extends View {
   }
 
   private createUserBar(user?: User): HTMLDivElement {
+    const __ = translation();
     const $userBar = $('div', 'chats-sidebar__user-bar');
     const $userContainer = $('div', 'chats-sidebar__user-container');
     const $userAvatar = $('div', 'user-item__avatar');
@@ -128,7 +126,7 @@ class ServersSideBarView extends View {
       $userStatus.classList.add(`user-item__status_${user.availability}`);
     }
     $userIcon.src = user?.profile?.avatar ? base64Url(user.profile.avatar) : discord.default;
-    $userName.textContent = user ? user.name : 'User is loading...';
+    $userName.textContent = user ? user.name : `${capitalize(__.common.userIsLoading)}...`;
     const $userSettings = $('span', 'chats-sidebar__user-settings');
     $userAvatar.append($userIcon, $userStatus);
     $userContainer.append($userAvatar, $userName);
@@ -138,13 +136,14 @@ class ServersSideBarView extends View {
     return $userBar;
   }
 
-  private createChannelItem({ name }: Channel): HTMLLIElement {
+  private createChannelItem({ name, general }: Channel): HTMLLIElement {
+    const __ = translation();
     const $item = $('li', ServersSideBarView.classes.channelItem);
     const $itemIcon = $('div', 'servers-sidebar__hash-icon');
     const $itemName = $('div', 'servers-sidebar__name');
     const $inviteButton = $('button', ['servers-sidebar__invite', 'tooltip']);
-    $itemName.textContent = `${name}`;
-    $inviteButton.dataset.text = 'Create invite';
+    $itemName.textContent = general ? __.common.general : `${name}`;
+    $inviteButton.dataset.text = __.sidebar.createInvite;
 
     $item.append($itemIcon, $itemName, $inviteButton);
 
