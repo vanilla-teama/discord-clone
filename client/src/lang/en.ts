@@ -14,6 +14,14 @@ export default {
       deleteAccount: 'Delete Account',
       deleteQuestion: 'Are you sure you want to delete your Account?',
     },
+    profile: {
+      heading: 'Profile',
+      avatar: 'Avatar',
+      changeAvatar: 'Change avatar',
+      bannerColor: 'Banner color',
+      about: 'About me',
+      changesWarning: 'Careful - You have unsaved changes!',
+    },
     language: {
       heading: 'Language',
       subheading: 'Select Language',
@@ -29,5 +37,9 @@ export default {
     cancel: 'cancel',
     edit: 'edit',
     delete: 'delete',
+    apply: 'apply',
+    reset: 'reset',
+    saveChanges: 'save changes',
+    discordMemberSince: 'Discord member since',
   },
 } as const;

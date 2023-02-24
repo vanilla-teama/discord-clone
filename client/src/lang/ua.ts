@@ -14,6 +14,14 @@ export default {
       deleteAccount: 'Видалити акаунт',
       deleteQuestion: 'Ви впевнені, що хочете видалити ваш акаунт?',
     },
+    profile: {
+      heading: 'Профіль',
+      avatar: 'Аватар',
+      changeAvatar: 'Змінити аватар',
+      bannerColor: 'Колір банера',
+      about: 'Про мене',
+      changesWarning: 'Обережно - є незбережені зміни!',
+    },
     language: {
       heading: 'Мова',
       subheading: 'Оберіть мову',
@@ -29,5 +37,9 @@ export default {
     cancel: 'відмінити',
     edit: 'редагувати',
     delete: 'видалити',
+    apply: 'прийняти',
+    reset: 'скинути',
+    saveChanges: 'зберегти зміни',
+    discordMemberSince: 'У числі учасників Discord з',
   },
 } as const;
