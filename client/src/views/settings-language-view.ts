@@ -42,17 +42,17 @@ class SettingsLanguageView extends View {
     const $langTitleChoise = Object.assign($('div', SettingsLanguageView.classNames.choise), {
       textContent: __.settings.language.subheading,
     });
-    const $contInputEng = $('div');
+    const $contInputEng = $('div', 'radio-button-container');
     const $contEng = $('div', SettingsLanguageView.classNames.container);
     const $inputEng = this.$enInput;
     const $labelEng = Object.assign($('label'), { htmlFor: 'english', textContent: 'English' });
     const $flagEng = Object.assign($('img', SettingsLanguageView.classNames.img), { src: urlEng.default });
-    const $contInputUkr = $('div');
+    const $contInputUkr = $('div', 'radio-button-container');
     const $contUkr = $('div', SettingsLanguageView.classNames.container);
     const $inputUkr = this.$uaInput;
     const $labelUkr = Object.assign($('label'), { htmlFor: 'ukraine', textContent: 'Українська' });
     const $flagUkr = Object.assign($('img', SettingsLanguageView.classNames.img), { src: urlUkr.default });
-    const $contInpuRus = $('div');
+    const $contInpuRus = $('div', 'radio-button-container');
     const $contRus = $('div', SettingsLanguageView.classNames.container);
     const $inputRus = this.$ruInput;
     const $labelRus = Object.assign($('label'), { htmlFor: 'rus', textContent: 'Русский' });
