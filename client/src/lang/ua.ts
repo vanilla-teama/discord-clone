@@ -93,6 +93,10 @@ export default {
     help: 'Довідка',
     noChat: 'Чат не вибрано',
     noChannel: 'Канал не вибрано',
+    noMutualServers: 'Немає спільних серверів',
+    xMutualServer: 'Спільний Сервер',
+    xMutualServers: 'Спільних Серверів',
+    serverOwner: 'Власник сервера',
   },
   availability: {
     online: 'в мережі',

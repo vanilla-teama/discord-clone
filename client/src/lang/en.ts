@@ -93,6 +93,10 @@ export default {
     help: 'Help',
     noChat: 'No chat selected',
     noChannel: 'No channel selected',
+    noMutualServers: 'No mutual servers',
+    xMutualServer: 'Mutual Server',
+    xMutualServers: 'Mutual Servers',
+    serverOwner: 'Server owner',
   },
   availability: {
     online: 'online',

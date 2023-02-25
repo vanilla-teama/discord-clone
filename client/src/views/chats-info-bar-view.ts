@@ -1,12 +1,13 @@
 import moment from '../lib/moment';
 import View from '../lib/view';
 import { Availability, Chat, Server } from '../types/entities';
-import { $, base64Url } from '../utils/functions';
+import { $, base64Url, getAvailability } from '../utils/functions';
 import InfoBarView from './info-bar-view';
 import MainView from './main-view';
 import * as urlEng from '../assets/flags/flag-eng.png';
 import * as discord from '../assets/icons/discord.svg';
 import { defaultBanner } from './settings-profiles-view';
+import { translation } from '../utils/lang';
 
 class ChatsInfoBarView extends View {
   static readonly classNames = {};
@@ -34,6 +35,7 @@ class ChatsInfoBarView extends View {
     this.$mutualServers = $('div', ['chats-info-bar__mutual-server', 'mutual-server']);
   }
   build(): void {
+    const __ = translation();
     if (this.chat) {
       InfoBarView.show();
       const $chatsInfoBar = $('div', 'chats-info-bar');
@@ -51,31 +53,25 @@ class ChatsInfoBarView extends View {
       $userName.textContent = `${this.chat.userName}`;
       const $sinceBlock = $('div', 'content-info__since-block');
       const $sinceTitle = $('div', 'content-info__since-title');
-      $sinceTitle.textContent = 'Discord Member Since';
+      $sinceTitle.textContent = __.common.discordMemberSince;
       const $sinceDate = $('div', 'content-info__since-date');
       $sinceDate.textContent = moment(this.chat.createdAt).format('MMMM D, YYYY').toUpperCase();
       const $about = this.createAboutContainer();
-      // const $noteTitle = $('div', 'content-info__note-title');
-      // $noteTitle.textContent = 'About me';
-      // const $noteInput = $('textarea', 'content-info__note-input');
-      // $noteInput.placeholder = 'Click to add a note';
 
       $sinceBlock.append($sinceTitle, $sinceDate);
-      // $about.append($noteTitle, $noteInput);
       $content.append($userName, $sinceBlock, $about);
 
       const $mutualServer = $('div', ['chats-info-bar__mutual-server', 'mutual-server']);
       const $mutualServerContainer = $('div', 'mutual-server__container');
       const $mutualServerTitle = $('div', 'mutual-server__title');
-      $mutualServerTitle.textContent = `1 Mutual Server`;
+      $mutualServerTitle.textContent = __.common.noMutualServers;
       const $mutualServerArrow = $('div', 'mutual-server__arrow');
 
       const $mutualServerList = $('ul', 'mutual-server__list');
-      const $mutualServerItem = $('li', 'mutual-server__item');
-      $mutualServerItem.textContent = 'SERVER NAME';
+      // const $mutualServerItem = $('li', 'mutual-server__item');
 
       $mutualServerContainer.append($mutualServerTitle, $mutualServerArrow);
-      $mutualServerList.append($mutualServerItem);
+      // $mutualServerList.append($mutualServerItem);
       $mutualServer.append($mutualServerContainer, $mutualServerList);
 
       $mutualServerContainer.addEventListener('click', () => {
@@ -86,15 +82,18 @@ class ChatsInfoBarView extends View {
       $chatsInfoBar.append($header, $content, this.$mutualServers);
       this.$container.append($chatsInfoBar);
     } else {
-      this.$container.append('NO CHAT FOR INFOBAR!');
+      const $notFound = $('div', 'chats-info-bar__not-found');
+      $notFound.textContent = __.common.noChat;
+      this.$container.append($notFound);
     }
   }
 
   createAboutContainer(): HTMLDivElement {
+    const __ = translation();
     const $aboutBlock = this.$aboutContainer;
     $aboutBlock.innerHTML = '';
     const $noteTitle = $('div', 'content-info__note-title');
-    $noteTitle.textContent = 'About me';
+    $noteTitle.textContent = __.settings.profile.about;
     const $about = this.$about;
 
     $aboutBlock.append($noteTitle, $about);
@@ -124,13 +123,14 @@ class ChatsInfoBarView extends View {
       [Availability.Online, Availability.Offline, Availability.Away, Availability.DoNotDisturb].forEach(
         (availability) => this.$status.classList.remove(getClass(availability))
       );
-      this.$status.dataset.text = availability;
+      this.$status.dataset.text = getAvailability(availability);
       this.$status.classList.add(getClass(availability));
       this.chat.availability = availability;
     }
   }
 
   displayMutualServers(servers: Server[]): void {
+    const __ = translation();
     const serversFake: Server[] = [
       {
         name: 'server2',
@@ -156,7 +156,8 @@ class ChatsInfoBarView extends View {
 
     const $mutualServerContainer = $('div', 'mutual-server__container');
     const $mutualServerTitle = $('div', 'mutual-server__title');
-    $mutualServerTitle.textContent = count === 1 ? `${count} Mutual Server` : `${count} Mutual Servers`;
+    $mutualServerTitle.textContent =
+      count === 1 ? `${count} ${__.common.xMutualServer}` : `${count} ${__.common.xMutualServers}`;
     const $mutualServerArrow = $('div', 'mutual-server__arrow');
     const $mutualServerList = $('ul', 'mutual-server__list');
 
