@@ -76,6 +76,17 @@ export default {
     addFriend: 'Add Friends',
     searchPlaceholder: 'Search by name or email',
   },
+  auth: {
+    welcome: 'Welcome Back!',
+    email: 'E-mail',
+    username: 'Username',
+    password: 'Password',
+    logIn: 'Log In',
+    needAccount: 'Need an account?',
+    register: 'Register',
+    createAccount: 'Create an account',
+    alreadyHaveAccount: 'Already have an account?',
+  },
   common: {
     username: 'username',
     email: 'email',

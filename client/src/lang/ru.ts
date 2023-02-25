@@ -76,6 +76,17 @@ export default {
     addFriend: 'Добавить друзей',
     searchPlaceholder: 'Искать по имени или емейл',
   },
+  auth: {
+    welcome: 'С возвращением!',
+    email: 'Е-мейл',
+    username: `Имя пользователя`,
+    password: 'Пароль',
+    logIn: 'Войти',
+    needAccount: 'Нужен аккаунт?',
+    register: 'Зарегистрироваться',
+    createAccount: 'Создать аккаунт',
+    alreadyHaveAccount: 'Уже есть аккаунт?',
+  },
   common: {
     username: 'имя пользователя',
     email: 'е-мейл',
