@@ -1,9 +1,10 @@
 import View from '../lib/view';
 import { Server } from '../types/entities';
-import { $ } from '../utils/functions';
+import { $, capitalize } from '../utils/functions';
 import ModalView from './modal-view';
 import * as upload from '../assets/icons/upload.svg';
 import * as plus from '../assets/icons/plus.svg';
+import { translation } from '../utils/lang';
 
 class ServersCreateFormView extends View {
   static readonly classNames = {};
@@ -28,17 +29,17 @@ class ServersCreateFormView extends View {
   };
 
   private createForm(): HTMLFormElement {
+    const __ = translation();
     const $form = Object.assign($('form', ['form-create-server', 'form', 'form_white']), {
       enctype: 'multipart/form-data',
     });
     const $closeBtn = $('button', ['form-create-server__close-btn']);
 
     const $title = $('h3', ['form__title', 'form-create-server__title']);
-    $title.textContent = 'Create your server';
+    $title.textContent = __.serverForm.heading;
 
     const $subtitle = $('div', ['form__subtitle', 'form-create-server__subtitle']);
-    $subtitle.textContent =
-      'Give your new server a personality with a name and an icon. You can always change it later.';
+    $subtitle.textContent = __.serverForm.description;
 
     const $imageInputContainer = $('div', ['form__image-input-container', 'form-create-server__image-input-container']);
     const $imageInput = Object.assign($('input', 'form-create-server__input-image'), {
@@ -57,14 +58,14 @@ class ServersCreateFormView extends View {
 
     const $inputContainer = $('div', ['form__input-container', 'form-create-server__input-container']);
     const $label = $('label', ['form__label', 'form-create-server__label']);
-    $label.textContent = 'Server name';
+    $label.textContent = __.serverForm.serverName;
     const $nameInput = Object.assign($('input', ['form__input', 'form-create-server__name']), {
       name: 'name',
     });
 
     const $button = Object.assign($('button', ['form__btn-submit', 'form-create-server__submit']), {
       type: 'submit',
-      textContent: 'Create',
+      textContent: capitalize(__.common.create),
     });
 
     $imageInputContainer.append($imageInput, $imageUpload);

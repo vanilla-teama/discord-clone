@@ -1,5 +1,6 @@
 import View from '../lib/view';
-import { $ } from '../utils/functions';
+import { $, capitalize } from '../utils/functions';
+import { translation } from '../utils/lang';
 import ModalView from './modal-view';
 
 class ChannelsCreateFormView extends View {
@@ -25,24 +26,25 @@ class ChannelsCreateFormView extends View {
   };
 
   private createForm(): HTMLFormElement {
+    const __ = translation();
     const $form = Object.assign($('form', ['form-create-server', 'form', 'form_white']), {
       enctype: 'multipart/form-data',
     });
     const $closeBtn = $('button', ['form-create-server__close-btn']);
 
     const $title = $('h3', ['form__title', 'form-create-server__title']);
-    $title.textContent = 'Create Channel';
+    $title.textContent = __.sidebar.createChannel;
 
     const $inputContainer = $('div', ['form__input-container', 'form-create-server__input-container']);
     const $label = $('label', ['form__label', 'form-create-server__label']);
-    $label.textContent = 'Channel name';
+    $label.textContent = __.sidebar.channelName;
     const $nameInput = Object.assign($('input', ['form__input', 'form-create-server__name']), {
       name: 'name',
     });
 
     const $button = Object.assign($('button', ['form__btn-submit', 'form-create-server__submit']), {
       type: 'submit',
-      textContent: 'Create',
+      textContent: capitalize(__.common.create),
     });
 
     $inputContainer.append($label, $nameInput);

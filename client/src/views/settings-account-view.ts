@@ -1,6 +1,7 @@
 import * as discord from '../assets/icons/discord.svg';
 import View from '../lib/view';
-import { $, base64Url } from '../utils/functions';
+import { $, base64Url, capitalize } from '../utils/functions';
+import { translation } from '../utils/lang';
 import ModalView from './modal-view';
 import { defaultBanner } from './settings-profiles-view';
 import SettingsScreenView from './settings-screen-view';
@@ -54,16 +55,17 @@ class SettingsAccountView extends View {
     this.$emailInput = $('input', SettingsAccountView.classNames.emailInput);
   }
   build(): void {
+    const __ = translation();
     const $mainBlock = $('div', SettingsAccountView.classNames.mainBlock);
     const $titleMain = Object.assign($('div', SettingsAccountView.classNames.titleMain), {
-      textContent: 'My Account',
+      textContent: __.settings.account.heading,
     });
     const $blocDelete = $('div');
     const $titlDelete = Object.assign($('div', SettingsAccountView.classNames.titleSettingsBody), {
-      textContent: 'Delete Account',
+      textContent: __.settings.account.deleteAccount,
     });
     const $buttonDelete = Object.assign($('button', SettingsAccountView.classNames.buttonDelete), {
-      textContent: 'Delete Account',
+      textContent: __.settings.account.deleteAccount,
     });
     $blocDelete.append($titlDelete, $buttonDelete);
     const $infoBlock = $('div', SettingsAccountView.classNames.infoBlock);
@@ -73,28 +75,28 @@ class SettingsAccountView extends View {
     const $blockBody = $('div', SettingsAccountView.classNames.blockBody);
     const $nickName = this.$headingNickname;
     const $buttonUserProf = Object.assign($('button', SettingsAccountView.classNames.buttonUserProf), {
-      textContent: 'Edit User Profile',
+      textContent: __.settings.account.editUserProfile,
     });
     const $nickNameContainer = $('div', SettingsAccountView.classNames.nickNameContainer);
     $nickNameContainer.append($nickName, $buttonUserProf);
     const $blockName = $('div', 'block-setting-account-container');
     const $blockSettingName = $('div', SettingsAccountView.classNames.blockSettingProfile);
     const $titleBodyName = Object.assign($('div', SettingsAccountView.classNames.titleSettingsBody), {
-      textContent: 'Username',
+      textContent: capitalize(__.common.username),
     });
     const $titleName = this.$name;
     $blockName.append($titleBodyName, $titleName);
     const $buttonName = $('button', SettingsAccountView.classNames.bodyButton);
-    $buttonName.textContent = 'Edit';
+    $buttonName.textContent = capitalize(__.common.edit);
     $blockSettingName.append($blockName, $buttonName);
     const $blockMail = $('div', 'block-setting-account-container');
     const $blockSettingMail = $('div', SettingsAccountView.classNames.blockSettingProfile);
     const $titleSettingsMail = Object.assign($('div', SettingsAccountView.classNames.titleSettingsBody), {
-      textContent: 'Email',
+      textContent: capitalize(__.common.email),
     });
     const $titleDesc = this.$email;
     const $buttonEmail = $('button', SettingsAccountView.classNames.bodyButton);
-    $buttonEmail.textContent = 'Edit';
+    $buttonEmail.textContent = capitalize(__.common.edit);
     $blockMail.append($titleSettingsMail, $titleDesc);
     $blockSettingMail.append($blockMail, $buttonEmail);
     $blockBody.append($blockSettingName, $blockSettingMail);
@@ -109,8 +111,8 @@ class SettingsAccountView extends View {
     $nameForm.append($nameInput, $nameButtons);
     $nameForm.style.display = 'none';
     $nameFormSubmitButton.type = 'submit';
-    $nameFormSubmitButton.textContent = 'Save';
-    $nameFormCancelButton.textContent = 'Cancel';
+    $nameFormSubmitButton.textContent = capitalize(__.common.save);
+    $nameFormCancelButton.textContent = capitalize(__.common.cancel);
 
     const $emailForm = $('form', SettingsAccountView.classNames.emailForm);
     const $emailInput = this.$emailInput;
@@ -120,10 +122,11 @@ class SettingsAccountView extends View {
     $emailInput.type = 'email';
     $emailButtons.append('escape to ', $emailFormCancelButton, ' • enter to ', $emailFormSubmitButton);
     $emailForm.append($emailInput, $emailButtons);
+
     $emailForm.style.display = 'none';
     $emailFormSubmitButton.type = 'submit';
-    $emailFormSubmitButton.textContent = 'Save';
-    $emailFormCancelButton.textContent = 'Cancel';
+    $emailFormSubmitButton.textContent = capitalize(__.common.save);
+    $emailFormCancelButton.textContent = capitalize(__.common.cancel);
 
     $blockName.append($nameForm);
     $blockMail.append($emailForm);
@@ -173,6 +176,7 @@ class SettingsAccountView extends View {
   }
 
   displayDeleteConfirmDialog($container: HTMLElement): void {
+    const __ = translation();
     const $deleteContainer = $('div', 'chat__delete-container');
     const $deleteContent = $('div', 'chat__delete-content');
     const $deleteTitle = $('div', 'chat__delete-title');
@@ -180,16 +184,15 @@ class SettingsAccountView extends View {
     const $info = $('div', ['chat__delete-info', 'personal-message__info']);
     const $messageItem = $('p', ['chat__delete-message-item', 'personal-message__message']);
 
-    $deleteTitle.textContent = `Delete Account.`;
-    // $deleteQuestion.textContent = `Are you sure you want to delete your Account?`;
-    $messageItem.textContent = `Are you sure you want to delete your Account?`;
+    $deleteTitle.textContent = __.settings.account.deleteAccount;
+    $messageItem.textContent = __.settings.account.deleteQuestion;
 
     const $deleteButtons = $('div', 'chat__delete-buttons');
     const $cancelButton = $('button', 'chat__delete-btn-cancel');
     const $confirmButton = $('button', 'chat__delete-btn-delete');
 
-    $cancelButton.textContent = 'Cancel';
-    $confirmButton.textContent = 'Delete';
+    $cancelButton.textContent = capitalize(__.common.cancel);
+    $confirmButton.textContent = capitalize(__.common.delete);
 
     $info.append($messageItem);
     $deleteContent.append($deleteTitle, $info);

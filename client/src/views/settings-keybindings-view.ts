@@ -1,5 +1,6 @@
 import View from '../lib/view';
 import { $ } from '../utils/functions';
+import { translation } from '../utils/lang';
 import MainView from './main-view';
 import SettingsScreenView from './settings-screen-view';
 
@@ -22,14 +23,15 @@ class SettingsKeybindingsView extends View {
     super($root);
   }
   build(): void {
+    const __ = translation();
     const $contKeybind = $('div', SettingsKeybindingsView.classNames.contKeybind);
     const $titleKeybind = Object.assign($('div', SettingsKeybindingsView.classNames.titleKeybind), {
-      textContent: 'Горячие клавиши',
+      textContent: __.settings.keybinds.heading,
     });
     const $listKey = $('ul', SettingsKeybindingsView.classNames.listKey);
     const $editMess = $('li', SettingsKeybindingsView.classNames.listItem);
     const $titleEditMess = Object.assign($('div', SettingsKeybindingsView.classNames.titleKey), {
-      textContent: 'Редактировать',
+      textContent: __.settings.keybinds.editMessage,
     });
     const $buttonEditMess = Object.assign($('button', SettingsKeybindingsView.classNames.buttonKey), {
       textContent: 'Е',
@@ -37,7 +39,7 @@ class SettingsKeybindingsView extends View {
     $editMess.append($titleEditMess, $buttonEditMess);
     const $deleteMess = $('li', SettingsKeybindingsView.classNames.listItem);
     const $titledeleteMess = Object.assign($('div', SettingsKeybindingsView.classNames.titleKey), {
-      textContent: 'Удалить сообщение',
+      textContent: __.settings.keybinds.deleteMessage,
     });
     const $buttondeleteMess = Object.assign($('button', SettingsKeybindingsView.classNames.buttonKey), {
       textContent: 'BACKSPACE',
@@ -45,7 +47,7 @@ class SettingsKeybindingsView extends View {
     $deleteMess.append($titledeleteMess, $buttondeleteMess);
     const $reply = $('li', SettingsKeybindingsView.classNames.listItem);
     const $titleReply = Object.assign($('div', SettingsKeybindingsView.classNames.titleKey), {
-      textContent: 'Ответить',
+      textContent: __.settings.keybinds.reply,
     });
     const $buttonReply = Object.assign($('button', SettingsKeybindingsView.classNames.buttonKey), {
       textContent: 'R',
@@ -53,7 +55,7 @@ class SettingsKeybindingsView extends View {
     $reply.append($titleReply, $buttonReply);
     const $navChats = $('li', SettingsKeybindingsView.classNames.listItem);
     const $titleNavChats = Object.assign($('div', SettingsKeybindingsView.classNames.titleKey), {
-      textContent: 'Перемещение между каналами',
+      textContent: __.settings.keybinds.navigationBetweenChannels,
     });
     const $conButtonsChats = $('div');
     const $conButtonsChatsOne = $('div', SettingsKeybindingsView.classNames.conButtons);
@@ -76,7 +78,7 @@ class SettingsKeybindingsView extends View {
     $navChats.append($titleNavChats, $conButtonsChats);
     const $navServer = $('li', SettingsKeybindingsView.classNames.listItem);
     const $titleNavServer = Object.assign($('div', SettingsKeybindingsView.classNames.titleKey), {
-      textContent: 'Перемещение между серверами',
+      textContent: __.settings.keybinds.navigationBetweenServers,
     });
     const $conButtonsServer = $('div');
     const $conButtonsServerOne = $('div', SettingsKeybindingsView.classNames.conButtons);

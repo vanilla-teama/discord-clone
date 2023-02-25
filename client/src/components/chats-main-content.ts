@@ -2,6 +2,7 @@ import Controller from '../lib/controller';
 import socket, { emitPersonalMessage } from '../lib/socket';
 import { IncomingPersonalMessage, appStore } from '../store/app-store';
 import { Chat } from '../types/entities';
+import { translation } from '../utils/lang';
 import ChatsMainContentView, { RenderedPersonalMessage } from '../views/chats-main-content-view';
 import ModalView from '../views/modal-view';
 import ChatsScreen from './chats-screen';
@@ -26,6 +27,7 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
     this.view.render();
 
     if (this.chat) {
+      this.displayChatInput();
       appStore.bindPersonalMessageListChanged(this.onMessageListChange);
       await this.fetchMessages();
       this.view.bindMessageEvent(this.handleSendMessage);
@@ -53,6 +55,14 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       return;
     }
     await appStore.fetchPersonalMessages(appStore.user.id, this.chat.userId);
+  }
+
+  displayChatInput() {
+    const __ = translation();
+    if (!appStore.user || !this.chat) {
+      return;
+    }
+    this.view.displayChatInput(`${__.common.messageTo} ${this.chat.userName}`);
   }
 
   onMessageListChange = async (messages: RenderedPersonalMessage[]): Promise<void> => {

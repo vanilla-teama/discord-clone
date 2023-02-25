@@ -3,6 +3,7 @@ import View from '../lib/view';
 import { $ } from '../utils/functions';
 import StartBarView from './start-bar-view';
 import * as discord from '../assets/icons/discord.svg';
+import { translation } from '../utils/lang';
 
 class ChatsBarView extends View {
   static readonly classes = {
@@ -22,12 +23,13 @@ class ChatsBarView extends View {
     this.$item = $('li', ChatsBarView.classes.listItem);
   }
   async build(): Promise<void> {
+    const __ = translation();
     const $topContainer = $('div', 'chats-bar__top-container');
     const $list = $('ul', ChatsBarView.classes.list);
     this.$item = $('li', ChatsBarView.classes.listItem);
     const $itemImg = $('img', 'chats-bar__img');
     const $itemName = $('div', 'chats-bar__name');
-    $itemName.textContent = 'Personal Messages';
+    $itemName.textContent = __.startbar.personalMessages;
     $itemImg.src = discord.default;
 
     this.$item.onclick = () => {

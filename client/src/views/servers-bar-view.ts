@@ -4,6 +4,7 @@ import { Server } from '../types/entities';
 import { $, base64Url } from '../utils/functions';
 import StartBarView from './start-bar-view';
 import * as upload from '../assets/flags/flag-eng.png';
+import { translation } from '../utils/lang';
 
 class ServersBarView extends View {
   static readonly classes = {
@@ -153,10 +154,11 @@ class ServersBarView extends View {
   }
 
   private createAddServerButton(): HTMLLIElement {
+    const __ = translation();
     const $item = $('li', ServersBarView.classes.addingServerItem);
     const $addingServerItemImg = $('span', 'servers-bar__img-add');
     const $addingServerItemName = $('span', 'servers-bar__name');
-    $addingServerItemName.textContent = `Add Server`;
+    $addingServerItemName.textContent = __.startbar.addServer;
 
     $item.append($addingServerItemImg, $addingServerItemName);
     return $item;
