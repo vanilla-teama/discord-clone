@@ -1,5 +1,7 @@
+import { Availability } from '../types/entities';
 import { CustomEventData, CustomEvents } from '../types/types';
 import { Construct } from '../types/utils';
+import { translation } from './lang';
 
 export const capitalize = (value: string): string => value.slice(0, 1).toUpperCase() + value.slice(1);
 
@@ -71,3 +73,14 @@ export function deepMergeObject(targetObject = {}, sourceObject = {}) {
 
   return copyTargetObject;
 }
+
+export const getAvailability = (availability: Availability): string => {
+  const __ = translation();
+  const data = {
+    [Availability.Online]: __.availability.online,
+    [Availability.Offline]: __.availability.offline,
+    [Availability.Away]: __.availability.away,
+    [Availability.DoNotDisturb]: __.availability.doNotDisturb,
+  };
+  return data[availability];
+};

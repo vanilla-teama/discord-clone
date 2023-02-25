@@ -86,5 +86,18 @@ export default {
     send: 'send',
     sending: 'sending',
     sent: 'sent',
+    showUserProfile: 'Show user profile',
+    hideUserProfile: 'Hide user profile',
+    showMemberList: 'Show member list',
+    hideMemberList: 'Hide member list',
+    help: 'Help',
+    noChat: 'No chat selected',
+    noChannel: 'No channel selected',
+  },
+  availability: {
+    online: 'online',
+    offline: 'offline',
+    away: 'away',
+    doNotDisturb: 'do not disturb',
   },
 } as const;

@@ -2,6 +2,7 @@ import View from '../lib/view';
 import { $ } from '../utils/functions';
 import MainView from './main-view';
 import { Channel } from '../types/entities';
+import { translation } from '../utils/lang';
 
 class ServersAppBarView extends View {
   static readonly classNames = {};
@@ -19,6 +20,7 @@ class ServersAppBarView extends View {
     this.$channelName = $('div', 'servers-app-bar__channel-name');
   }
   build(): void {
+    const __ = translation();
     const channelsFake: Channel[] = [
       {
         id: 'efef',
@@ -38,18 +40,21 @@ class ServersAppBarView extends View {
     const $channelContainer = $('div', 'servers-app-bar__channel-container');
     const $iconHash = $('div', 'servers-app-bar__hash-icon');
     const $channelName = this.$channelName;
-    $channelName.textContent = `No channel`;
+    $channelName.textContent = __.common.noChannel;
 
     const $panelContainer = $('div', 'servers-app-bar__panel-container');
     const $showInfoBar = this.$showInfoBar;
-    $showInfoBar.dataset.text = 'Show member list';
+    $showInfoBar.dataset.text = __.common.showMemberList;
 
     const $search = $('input', 'servers-app-bar__search');
     $search.type = 'text';
     $search.placeholder = 'Search';
+    $search.style.display = 'none';
 
-    const $helpBtn = $('button', ['servers-app-bar__help-btn', 'tooltip']);
-    $helpBtn.dataset.text = 'Help';
+    const $helpBtn = $('a', ['servers-app-bar__help-btn', 'tooltip']);
+    $helpBtn.dataset.text = __.common.help;
+    $helpBtn.href = 'https://support.discord.com/hc/en-us';
+    $helpBtn.target = '_blank';
 
     $panelContainer.append($showInfoBar, $search, $helpBtn);
     $channelContainer.append($iconHash, $channelName);
@@ -67,11 +72,13 @@ class ServersAppBarView extends View {
   };
 
   setShowInfoBarButtonShowTooltip = (): void => {
-    this.$showInfoBar.dataset.text = 'Show members list';
+    const __ = translation();
+    this.$showInfoBar.dataset.text = __.common.showMemberList;
   };
 
   setShowInfoBarButtonHideTooltip = (): void => {
-    this.$showInfoBar.dataset.text = 'Hide members list';
+    const __ = translation();
+    this.$showInfoBar.dataset.text = __.common.hideMemberList;
   };
 }
 

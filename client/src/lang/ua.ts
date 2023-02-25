@@ -86,5 +86,18 @@ export default {
     send: 'надіслати',
     sending: 'надсилається',
     sent: 'надіслано',
+    showUserProfile: 'Показати профіль користувача',
+    hideUserProfile: 'Сховати профіль користувача',
+    showMemberList: 'Показати список учасників',
+    hideMemberList: 'Сховати список учасників',
+    help: 'Довідка',
+    noChat: 'Чат не вибрано',
+    noChannel: 'Канал не вибрано',
+  },
+  availability: {
+    online: 'в мережі',
+    offline: 'не в мережі',
+    away: 'відійшов',
+    doNotDisturb: 'не турбувати',
   },
 } as const;

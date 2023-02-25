@@ -1,6 +1,7 @@
 import View from '../lib/view';
 import { Chat, Availability } from '../types/entities';
-import { $ } from '../utils/functions';
+import { $, getAvailability } from '../utils/functions';
+import { translation } from '../utils/lang';
 import MainView from './main-view';
 import ScreenView from './screen-view';
 
@@ -21,6 +22,7 @@ class ChatsAppBarView extends View {
     this.$showInfoBar = $('button', ['chats-app-bar__profile-btn', 'tooltip']);
   }
   build(): void {
+    const __ = translation();
     if (this.chat) {
       const $chatsAppBar = $('div', 'chats-app-bar');
       const $userContainer = $('div', 'chats-app-bar__user-container');
@@ -29,19 +31,22 @@ class ChatsAppBarView extends View {
       $userName.textContent = `${this.chat.userName}`;
 
       const $userStatus = this.$userStatus;
-      $userStatus.dataset.text = 'Online';
+      $userStatus.dataset.text = getAvailability(this.chat.availability);
       $userStatus.classList.add(`chats-app-bar__user-status_${this.chat.availability}`);
 
       const $panelContainer = $('div', 'chats-app-bar__panel-container');
       const $showInfoBar = this.$showInfoBar;
-      $showInfoBar.dataset.text = 'Show user profile';
+      $showInfoBar.dataset.text = __.common.showUserProfile;
 
       const $search = $('input', 'chats-app-bar__search');
       $search.type = 'text';
       $search.placeholder = 'Search';
+      $search.style.display = 'none';
 
-      const $helpBtn = $('button', ['chats-app-bar__help-btn', 'tooltip']);
-      $helpBtn.dataset.text = 'Help';
+      const $helpBtn = $('a', ['chats-app-bar__help-btn', 'tooltip']);
+      $helpBtn.dataset.text = __.common.help;
+      $helpBtn.href = 'https://support.discord.com/hc/en-us';
+      $helpBtn.target = '_blank';
 
       $userContainer.append($iconAt, $userName, $userStatus);
       $panelContainer.append($showInfoBar, $search, $helpBtn);
@@ -49,7 +54,9 @@ class ChatsAppBarView extends View {
 
       this.$container.append($chatsAppBar);
     } else {
-      this.$container.append('NO CHAT FOR APPBAR!');
+      const $notFound = $('div', 'chats-app-bar__not-found');
+      $notFound.textContent = __.common.noChat;
+      this.$container.append($notFound);
     }
   }
 
@@ -59,7 +66,7 @@ class ChatsAppBarView extends View {
       [Availability.Online, Availability.Offline, Availability.Away, Availability.DoNotDisturb].forEach(
         (availability) => this.$userStatus.classList.remove(getClass(availability))
       );
-      this.$userStatus.dataset.text = availability;
+      this.$userStatus.dataset.text = getAvailability(availability);
       this.$userStatus.classList.add(getClass(availability));
       this.chat.availability = availability;
     }
@@ -70,11 +77,13 @@ class ChatsAppBarView extends View {
   };
 
   setShowInfoBarButtonShowTooltip = (): void => {
-    this.$showInfoBar.dataset.text = 'Show user profile';
+    const __ = translation();
+    this.$showInfoBar.dataset.text = __.common.showUserProfile;
   };
 
   setShowInfoBarButtonHideTooltip = (): void => {
-    this.$showInfoBar.dataset.text = 'Hide user profile';
+    const __ = translation();
+    this.$showInfoBar.dataset.text = __.common.hideUserProfile;
   };
 }
 
