@@ -3,6 +3,7 @@ import { Availability, User } from '../types/entities';
 import { $, base64Url } from '../utils/functions';
 import MainView from './main-view';
 import * as discord from '../assets/icons/discord.svg';
+import { translation } from '../utils/lang';
 
 class FriendsMainContentView extends View {
   static readonly classNames = {};
@@ -24,6 +25,7 @@ class FriendsMainContentView extends View {
     this.$friendList = $('ul', 'friends__friend-list');
   }
   build(): void {
+    const __ = translation();
     const $container = $('div', 'friends');
 
     const $friendsContent = $('div', 'friends__friends');
@@ -36,8 +38,8 @@ class FriendsMainContentView extends View {
     const $addFriendTitle = $('div', 'friends__add-friend-title');
 
     const $searchInput = this.$searchInput;
-    $searchInput.placeholder = 'Search by e-mail or name';
-    $addFriendTitle.textContent = 'ADD FRIENDS';
+    $searchInput.placeholder = __.friends.searchPlaceholder;
+    $addFriendTitle.textContent = __.friends.addFriend;
 
     $addFriendContent.append($searchInput, this.$foundUserList);
     $friendsContent.append(this.$friendList);
@@ -102,6 +104,7 @@ class FriendsMainContentView extends View {
   }
 
   createFriendItem(user: User, status: 'invitedTo' | 'invitedFrom' | 'friend' = 'friend'): HTMLLIElement {
+    const __ = translation();
     const $item = $('li', 'friends__friend-list-item');
 
     const $itemBox = $('div', 'user-item__box');
@@ -124,10 +127,10 @@ class FriendsMainContentView extends View {
     const $status = $('div', 'friends__status');
     const $btnContainer = $('div', 'friends__btn-accept-cancel-container');
 
-    $acceptInvitationButton.textContent = 'accept';
-    $cancelInvitationButton.textContent = 'cancel';
+    $acceptInvitationButton.textContent = __.common.accept;
+    $cancelInvitationButton.textContent = __.common.cancel;
 
-    $status.append(status === 'invitedTo' ? 'invited' : status === 'invitedFrom' ? 'requested' : '');
+    $status.append(status === 'invitedTo' ? __.common.invited : status === 'invitedFrom' ? __.common.requested : '');
 
     if (status === 'invitedFrom') {
       $btnContainer.append($acceptInvitationButton);
@@ -166,6 +169,7 @@ class FriendsMainContentView extends View {
   }
 
   createFoundUserListItem(user: User, currentUser: User): HTMLLIElement {
+    const __ = translation();
     const $item = $('li', 'friends__found-user-list-item');
     const $inviteButton = $('button', 'friends__invite-user');
     const $itemBox = $('div', 'user-item__box');
@@ -182,14 +186,14 @@ class FriendsMainContentView extends View {
     const isInvited = currentUser.invitesTo?.includes(user.id);
 
     $item.append($itemBox, $inviteButton);
-    $inviteButton.textContent = isInvited ? 'sent' : 'invite';
+    $inviteButton.textContent = isInvited ? __.common.sent : __.common.invite;
     $inviteButton.disabled = isInvited;
 
     $inviteButton.onclick = async () => {
-      $inviteButton.textContent = 'sending...';
+      $inviteButton.textContent = `${__.common.sending}...`;
       $inviteButton.disabled = true;
       await this.onInvite(user.id);
-      $inviteButton.textContent = 'sent';
+      $inviteButton.textContent = __.common.sent;
     };
 
     return $item;

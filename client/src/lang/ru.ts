@@ -71,6 +71,11 @@ export default {
     heading: 'Удалить сообщение.',
     question: 'Вы уверены, что хотите удалить его?',
   },
+  friends: {
+    friends: 'Друзья',
+    addFriend: 'Добавить друзей',
+    searchPlaceholder: 'Искать по имени или емейл',
+  },
   common: {
     username: 'имя пользователя',
     email: 'е-мейл',
@@ -80,6 +85,7 @@ export default {
     reply: 'ответить',
     delete: 'удалить',
     apply: 'принять',
+    accept: 'принять',
     reset: 'сбросить',
     create: 'создать',
     saveChanges: 'сохранить изменения',
@@ -88,6 +94,8 @@ export default {
     general: 'основной',
     userIsLoading: 'пользователь загружается',
     invite: 'пригласить',
+    invited: 'приглашен',
+    requested: 'запрос',
     send: 'отправить',
     sending: 'отправляется',
     sent: 'отправлено',

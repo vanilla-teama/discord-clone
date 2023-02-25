@@ -1,5 +1,6 @@
 import View from '../lib/view';
 import { $ } from '../utils/functions';
+import { translation } from '../utils/lang';
 import MainView from './main-view';
 
 class FriendsAppBarView extends View {
@@ -16,6 +17,7 @@ class FriendsAppBarView extends View {
     this.$navAddFriend = $('button', 'friends-app-bar__add-btn');
   }
   async build(): Promise<void> {
+    const __ = translation();
     const $friendsContainer = $('div', 'friends-app-bar__container');
     const $friendsIconsBlock = $('div', 'friends-app-bar__icons-block');
     const $friendsIcon = $('div', 'friends-app-bar__icon');
@@ -33,8 +35,8 @@ class FriendsAppBarView extends View {
       this.showAddFriend();
     };
 
-    $navFriends.textContent = 'Friends';
-    $navAddFriend.textContent = 'Add Friend';
+    $navFriends.textContent = __.friends.friends;
+    $navAddFriend.textContent = __.friends.addFriend;
 
     $friendsIconsBlock.append($friendsIcon, $friendsTitle);
     $friendsBtnBlock.append($navFriends, $navAddFriend);

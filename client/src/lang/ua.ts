@@ -71,6 +71,11 @@ export default {
     heading: 'Видалити повідомлення.',
     question: 'Ви впевнені, що хочете видалити його?',
   },
+  friends: {
+    friends: 'Друзі',
+    addFriend: 'Додати друзів',
+    searchPlaceholder: 'Шукати по імені або емейл',
+  },
   common: {
     username: `ім'я користувача`,
     email: 'е-мейл',
@@ -80,6 +85,7 @@ export default {
     reply: 'відповісти',
     delete: 'видалити',
     apply: 'прийняти',
+    accept: 'прийняти',
     reset: 'скинути',
     create: 'створити',
     saveChanges: 'зберегти зміни',
@@ -88,6 +94,8 @@ export default {
     general: 'основний',
     userIsLoading: 'користувач завантажується',
     invite: 'запросити',
+    invited: 'запрошено',
+    requested: 'запит',
     send: 'надіслати',
     sending: 'надсилається',
     sent: 'надіслано',

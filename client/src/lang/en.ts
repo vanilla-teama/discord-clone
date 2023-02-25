@@ -71,6 +71,11 @@ export default {
     heading: 'Delete message.',
     question: 'Are you sure you want to delete this?',
   },
+  friends: {
+    friends: 'Friends',
+    addFriend: 'Add Friends',
+    searchPlaceholder: 'Search by name or email',
+  },
   common: {
     username: 'username',
     email: 'email',
@@ -80,6 +85,7 @@ export default {
     delete: 'delete',
     reply: 'reply',
     apply: 'apply',
+    accept: 'accept',
     reset: 'reset',
     create: 'create',
     saveChanges: 'save changes',
@@ -88,6 +94,8 @@ export default {
     general: 'general',
     userIsLoading: 'user is loading',
     invite: 'invite',
+    invited: 'invited',
+    requested: 'requested',
     send: 'send',
     sending: 'sending',
     sent: 'sent',
