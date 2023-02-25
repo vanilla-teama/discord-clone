@@ -1,6 +1,7 @@
 import { chats, users } from '../develop/data';
 import { ErrorStatusCode, http, isExpressError, multipartHeaders } from '../lib/http';
-import moment from '../lib/moment';
+// import moment from '../lib/moment';
+import moment, { Moment, MomentInput } from 'moment';
 import {
   Channel,
   ChannelInvite,
@@ -58,6 +59,8 @@ class AppStore {
   private _servers: Server[] = []; // Current user related servers
 
   private _allServers: Server[] = []; // All servers
+
+  private moment: typeof moment = moment;
 
   private _lang: Lang = 'en';
 
@@ -177,21 +180,22 @@ class AppStore {
 
   private set lang(lang: Lang) {
     this._lang = lang;
+    this.moment.locale(lang);
   }
 
   translation(lang: Lang): Translation {
     switch (lang) {
       case 'en': {
         return en;
-        break;
       }
       case 'ua': {
         return ua;
-        break;
       }
       case 'ru': {
         return ru;
-        break;
+      }
+      default: {
+        return en;
       }
     }
   }

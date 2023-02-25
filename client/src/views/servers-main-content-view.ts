@@ -1,8 +1,9 @@
 import View from '../lib/view';
-import { $, base64Url, isClosestElementOfCssClass } from '../utils/functions';
+import { $, base64Url, capitalize, isClosestElementOfCssClass } from '../utils/functions';
 import MainView from './main-view';
 import * as userIcon from '../assets/icons/discord.svg';
 import { Channel, ChannelInvite, MongoObjectId, Profile } from '../types/entities';
+import { translation } from '../utils/lang';
 
 export type RenderedChannelMessage = {
   id: MongoObjectId;
@@ -52,6 +53,7 @@ class ServersMainContentView extends View {
     this.editedMessageContent = '';
   }
   build(): void {
+    const __ = translation();
     const $container = $('div', 'chat');
     const $inputContainer = $('div', 'chat__input-container');
 
@@ -89,7 +91,9 @@ class ServersMainContentView extends View {
       $inputContainer.append(this.$replyContainer, this.$chatInput);
       $container.append(this.$messageList, $inputContainer);
     } else {
-      $container.append('Channels NOT FOUND!');
+      const $notFound = $('div', 'chat__not-found');
+      $notFound.textContent = __.common.noChat;
+      $container.append($notFound);
     }
 
     this.$container.append($container);
@@ -138,6 +142,10 @@ class ServersMainContentView extends View {
     this.messagesMap.set($item, { $fastMenu, $menu, $editFormContainer, $messageContent: $message, message: message_ });
 
     return $item;
+  }
+
+  displayChatInput(placeholder: string) {
+    this.$chatInput.placeholder = placeholder;
   }
 
   displayMessages = (messages: (RenderedChannelMessage & { profile: Profile | null })[], invites: ChannelInvite[]) => {
@@ -283,6 +291,7 @@ class ServersMainContentView extends View {
   }
 
   displayDeleteConfirmDialog($container: HTMLElement, event: MouseEvent): void {
+    const __ = translation();
     if (!isClosestElementOfCssClass(event.target, 'channel-message')) {
       return;
     }
@@ -303,8 +312,8 @@ class ServersMainContentView extends View {
     const $messageDate = $('span', 'channel-message__date');
     const $messageItem = $('p', ['chat__delete-message-item', 'channel-message__message']);
 
-    $deleteTitle.textContent = `Delete message.`;
-    $deleteQuestion.textContent = `Are you sure you want to delete this?`;
+    $deleteTitle.textContent = __.deleteMessageDialog.heading;
+    $deleteQuestion.textContent = __.deleteMessageDialog.question;
     $userName.textContent = `${items.message.username}`;
     $messageDate.textContent = `${items.message.date}`;
     $messageItem.textContent = items.message.message;
@@ -313,8 +322,8 @@ class ServersMainContentView extends View {
     const $cancelButton = $('button', 'chat__delete-btn-cancel');
     const $confirmButton = $('button', 'chat__delete-btn-delete');
 
-    $cancelButton.textContent = 'Cancel';
-    $confirmButton.textContent = 'Delete';
+    $cancelButton.textContent = capitalize(__.common.cancel);
+    $confirmButton.textContent = capitalize(__.common.delete);
 
     $info.append($userName, $messageDate, $messageItem);
     $deleteContent.append($deleteTitle, $deleteQuestion, $info);
@@ -370,12 +379,13 @@ class ServersMainContentView extends View {
   }
 
   createReplyNotification($message: HTMLLIElement, username: string): HTMLDivElement {
+    const __ = translation();
     const $notification = $('div', 'chat__reply-notification');
     const $notifMessageContainer = $('div', 'chat__reply-notification-message-container');
     const $notifMessageText = $('span', 'chat__reply-notification-message-text');
     const $notifMessageUser = $('span', 'chat__reply-notification-message-user');
     //$notifMessage.innerHTML = `Replying to <strong>${username}</strong>`;
-    $notifMessageText.textContent = 'Replying to';
+    $notifMessageText.textContent = __.common.replyingTo;
     $notifMessageUser.textContent = username;
     const $destroyButton = $('button', 'chat__reply-notification-message-destroy');
 
@@ -389,6 +399,7 @@ class ServersMainContentView extends View {
   }
 
   createEditMessageForm($message: HTMLLIElement, message: RenderedChannelMessage): HTMLFormElement {
+    const __ = translation();
     const $form = $('form', 'channel-message__edit-form');
     const $messageContainer = $('div', 'channel-message__edit-form-container');
     const $messageInput = $('input', 'channel-message__edit-form-input');
@@ -410,13 +421,13 @@ class ServersMainContentView extends View {
     $replyIdInput.value = this.getReplyId() || '';
 
     $saveControl.type = 'submit';
-    $saveControl.textContent = 'save';
+    $saveControl.textContent = __.common.save;
 
     $cancelControl.type = 'button';
-    $cancelControl.textContent = 'cancel';
+    $cancelControl.textContent = __.common.cancel;
 
     $messageContainer.append($messageInput);
-    $controlsContainer.append('escape to ', $cancelControl, ' • enter to ', $saveControl);
+    $controlsContainer.append(`${__.common.escapeTo} `, $cancelControl, ` • ${__.common.enterTo} `, $saveControl);
     $form.append($messageContainer, $controlsContainer, $messageIdInput);
 
     $form.onsubmit = async (event) => {

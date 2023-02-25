@@ -67,6 +67,10 @@ export default {
     inviteFormHeading: 'Invite friends to',
     noFriendsToAdd: 'All your friends already here!',
   },
+  deleteMessageDialog: {
+    heading: 'Delete message.',
+    question: 'Are you sure you want to delete this?',
+  },
   common: {
     username: 'username',
     email: 'email',
@@ -74,6 +78,7 @@ export default {
     cancel: 'cancel',
     edit: 'edit',
     delete: 'delete',
+    reply: 'reply',
     apply: 'apply',
     reset: 'reset',
     create: 'create',
@@ -97,6 +102,10 @@ export default {
     xMutualServer: 'Mutual Server',
     xMutualServers: 'Mutual Servers',
     serverOwner: 'Server owner',
+    messageTo: 'Message',
+    enterTo: 'enter to',
+    escapeTo: 'escape to',
+    replyingTo: 'Replying to',
   },
   availability: {
     online: 'online',

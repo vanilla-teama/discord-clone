@@ -67,12 +67,17 @@ export default {
     inviteFormHeading: 'Пригласите друзей на',
     noFriendsToAdd: 'Все ваши друзья уже тут!',
   },
+  deleteMessageDialog: {
+    heading: 'Удалить сообщение.',
+    question: 'Вы уверены, что хотите удалить его?',
+  },
   common: {
     username: 'имя пользователя',
     email: 'е-мейл',
     save: 'сохранить',
     cancel: 'отменить',
     edit: 'редактировать',
+    reply: 'ответить',
     delete: 'удалить',
     apply: 'принять',
     reset: 'сбросить',
@@ -97,6 +102,10 @@ export default {
     xMutualServer: 'Общий Сервер',
     xMutualServers: 'Общих Серверов',
     serverOwner: 'Владелец сервера',
+    messageTo: 'Написать в',
+    enterTo: 'enter, чтобы',
+    escapeTo: 'escape, чтобы',
+    replyingTo: 'Отвечает на',
   },
   availability: {
     online: 'в сети',

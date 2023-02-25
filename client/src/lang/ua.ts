@@ -67,12 +67,17 @@ export default {
     inviteFormHeading: 'Запрошуйте ваших друзів до',
     noFriendsToAdd: 'Усі ваші друзі вже тут!',
   },
+  deleteMessageDialog: {
+    heading: 'Видалити повідомлення.',
+    question: 'Ви впевнені, що хочете видалити його?',
+  },
   common: {
     username: `ім'я користувача`,
     email: 'е-мейл',
     save: 'зберегти',
     cancel: 'відмінити',
     edit: 'редагувати',
+    reply: 'відповісти',
     delete: 'видалити',
     apply: 'прийняти',
     reset: 'скинути',
@@ -97,6 +102,10 @@ export default {
     xMutualServer: 'Спільний Сервер',
     xMutualServers: 'Спільних Серверів',
     serverOwner: 'Власник сервера',
+    messageTo: 'Написати у',
+    enterTo: 'enter, щоб',
+    escapeTo: 'escape, щоб',
+    replyingTo: 'Відповідає на',
   },
   availability: {
     online: 'в мережі',

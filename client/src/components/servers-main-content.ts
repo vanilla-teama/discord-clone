@@ -3,6 +3,7 @@ import socket from '../lib/socket';
 import { IncomingChannelMessage, appStore } from '../store/app-store';
 import { Channel, ChannelInvite, Profile, Server } from '../types/entities';
 import { ServerToClientEvents } from '../types/socket';
+import { translation } from '../utils/lang';
 import ModalView from '../views/modal-view';
 import ServersMainContentView, { RenderedChannelMessage } from '../views/servers-main-content-view';
 import MessageFastMenu from './message-fast-menu';
@@ -28,6 +29,7 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
 
     this.view.render();
     if (this.channel) {
+      this.displayChatInput();
       appStore.bindChannelMessageListChanged(this.onMessageListChange);
       await this.fetchData();
       this.view.bindMessageEvent(this.handleSendMessage);
@@ -61,6 +63,16 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
       return;
     }
     await appStore.fetchChannelMessages(this.channel.id);
+  }
+
+  displayChatInput() {
+    const __ = translation();
+    if (!appStore.user || !this.channel) {
+      return;
+    }
+    this.view.displayChatInput(
+      `${__.common.messageTo} #${this.channel.general ? __.common.general : this.channel.name}`
+    );
   }
 
   onMessageListChange = async (messages: RenderedChannelMessage[], invites: ChannelInvite[]): Promise<void> => {
