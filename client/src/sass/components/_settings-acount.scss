@@ -1,21 +1,21 @@
-.info-block-header-acoun {
+.info-block-header-account {
   height: 50px;
-  background-color: blue;
+  background-color: var(--background-color-blue);
   border-radius: 10px 10px 0px 0px;
 }
 
-.info-block-acount {
+.info-block-account {
   border-radius: 10px;
-  max-width: 700px;
+  max-width: 720px;
   background-color: var(--background-color-black);
-  padding-bottom: 10px;
+  padding-bottom: 1px;
   margin-bottom: 50px;
 }
 
-.avatar-block-header-acoun {
+.avatar-block-header-account {
   position: relative;
   border-radius: 40px;
-  border: 5px solid black;
+  border: 5px solid var(--background-color-black);
   background: url('/src/assets/icons/discord.svg') center no-repeat;
   background-size: cover;
   height: 70px;
@@ -23,65 +23,156 @@
   top: 25px;
   left: 11px;
 }
-.nick-name-container-acoun {
+.nick-name-container-account {
   font-size: 25px;
   padding: 30px 10px 10px 105px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
 }
-.block-body-acoun {
+.block-body-account {
   border-radius: 10px;
   margin: 10px;
   background-color: var(--background-color-light-gray);
 }
-.nick-name-acoun {
+.nick-name-account {
+  font-size: 20px;
   width: 300px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.block-setting-account {
+  padding: 15px 10px 20px 10px;
+  display: flex;
+}
+.title-setting-body-account {
+  font-size: 12px;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+.block-setting-account-container {
+  flex: 1 1 auto;
+  gap: 5px;
+  position: relative;
+}
+.form-account-name,
+.form-account-email {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  top: 20px;
+  left: -5px;
+  &__buttons {
+    margin-left: 5px;
+    display: flex;
+    //gap: 5px;
+    align-items: center;
+    font-size: 12px;
+    width: 100%;
+  }
+  &__input {
+    //max-width: 250px;
+    width: 100%;
+    background-color: var(--background-color-gray-hover);
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    border-radius: 8px;
+    padding: 10px 10px;
+  }
+  &__submit,
+  &__cancel {
+    color: var(--background-color-blue-light);
+    border: none;
+    background-color: transparent;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+
+    &:hover {
+      text-transform: underline;
+    }
+  }
+}
+.body-button-account {
+  color: var(--text-button);
+  border-radius: 3px;
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--background-color-white-dark1);
+  margin-top: 20px;
+  height: 32px;
+  width: 60px;
+  border: none;
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  margin-left: auto;
+
+  &:hover {
+    background-color: var(--background-color-white-dark2);
+  }
+}
+.btn-user-account {
+  color: var(--text-button);
+  background-color: var(--background-color-blue);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.3s ease 0s;
+  width: 130px;
+  height: 32px;
+
+  &:hover {
+    background-color: var(--background-color-blue-dark);
+  }
+}
+.title-body-account {
+  width: 200px;
+  color: var(--text-secondary);
   @extend .text-ellipsis;
 }
-.block-setting-acoun {
-  padding: 10px;
-  margin-top: 30px;
-  display: flex;
-  justify-content: space-between;
-}
-.title-setting-body-acoun {
-  margin-bottom: 20px;
-}
-.body-button-acoun {
-  color: var(--text-secondary);
-  border-radius: 10px;
-  background-color: var(--background-color-gray);
-  margin-top: 20px;
-  height: 40px;
-  border: none;
-}
-.btn-user-acoun {
-  color: var(--text-secondary);
-  background-color: rgb(102, 102, 235);
-  border-radius: 10px;
-}
-.main-title-acount {
+.main-title-account {
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 20px;
 }
-.button-delete-acount {
+.button-delete-account {
   color: var(--text-secondary);
   background: none;
   height: 35px;
-  border: 2px solid red;
-  border-radius: 10px;
+  width: 120px;
+  border: 2px solid var(--background-color-red);
+  border-radius: 3px;
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--background-color-red);
+  }
 }
 
 @include media-lg-down {
-  .nick-name-container-acoun {
+  .nick-name-container-account {
     padding: 60px 10px 10px 5px;
     gap: 10px;
   }
 }
 
 @include media-sm-down {
-  .nick-name-container-acoun {
+  .nick-name-container-account {
     flex-direction: column;
+    align-items: flex-start;
+    padding-left: 10px;
+  }
+  .form-account-name {
+    flex-direction: column;
+    align-items: start;
+  }
+}
+
+@media (max-width: 450px) {
+  .form-account-name__input,
+  .form-account-email__input {
+    max-width: 170px;
   }
 }

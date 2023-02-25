@@ -8,20 +8,20 @@ import SettingsScreenView from './settings-screen-view';
 
 class SettingsAccountView extends View {
   static readonly classNames = {
-    infoBlock: 'info-block-acount',
-    infoBlockHeader: 'info-block-header-acoun',
-    avatarBlockHeader: 'avatar-block-header-acoun',
-    blockBody: 'block-body-acoun',
-    titleBody: 'title-body-acoun',
-    blockSettingProfile: 'block-setting-acoun',
-    titleSettingsBody: 'title-setting-body-acoun',
-    bodyButton: 'body-button-acoun',
-    nickName: 'nick-name-acoun',
-    buttonUserProf: 'btn-user-acoun',
-    nickNameContainer: 'nick-name-container-acoun',
+    infoBlock: 'info-block-account',
+    infoBlockHeader: 'info-block-header-account',
+    avatarBlockHeader: 'avatar-block-header-account',
+    blockBody: 'block-body-account',
+    titleBody: 'title-body-account',
+    blockSettingProfile: 'block-setting-account',
+    titleSettingsBody: 'title-setting-body-account',
+    bodyButton: 'body-button-account',
+    nickName: 'nick-name-account',
+    buttonUserProf: 'btn-user-account',
+    nickNameContainer: 'nick-name-container-account',
     mainBlock: 'main-block-account',
-    titleMain: 'main-title-acount',
-    buttonDelete: 'button-delete-acount',
+    titleMain: 'main-title-account',
+    buttonDelete: 'button-delete-account',
     nameForm: 'form-account-name',
     nameFormSubmit: 'form-account-name__submit',
     nameFormCancel: 'form-account-name__cancel',
@@ -79,7 +79,7 @@ class SettingsAccountView extends View {
     });
     const $nickNameContainer = $('div', SettingsAccountView.classNames.nickNameContainer);
     $nickNameContainer.append($nickName, $buttonUserProf);
-    const $blockName = $('div');
+    const $blockName = $('div', 'block-setting-account-container');
     const $blockSettingName = $('div', SettingsAccountView.classNames.blockSettingProfile);
     const $titleBodyName = Object.assign($('div', SettingsAccountView.classNames.titleSettingsBody), {
       textContent: capitalize(__.common.username),
@@ -89,7 +89,7 @@ class SettingsAccountView extends View {
     const $buttonName = $('button', SettingsAccountView.classNames.bodyButton);
     $buttonName.textContent = capitalize(__.common.edit);
     $blockSettingName.append($blockName, $buttonName);
-    const $blockMail = $('div');
+    const $blockMail = $('div', 'block-setting-account-container');
     const $blockSettingMail = $('div', SettingsAccountView.classNames.blockSettingProfile);
     const $titleSettingsMail = Object.assign($('div', SettingsAccountView.classNames.titleSettingsBody), {
       textContent: capitalize(__.common.email),
@@ -104,9 +104,11 @@ class SettingsAccountView extends View {
 
     const $nameForm = $('form', SettingsAccountView.classNames.nameForm);
     const $nameInput = this.$nameInput;
+    const $nameButtons = $('div', 'form-account-name__buttons');
     const $nameFormSubmitButton = $('button', SettingsAccountView.classNames.nameFormSubmit);
     const $nameFormCancelButton = $('button', SettingsAccountView.classNames.nameFormCancel);
-    $nameForm.append($nameInput, $nameFormSubmitButton, $nameFormCancelButton);
+    $nameButtons.append('escape to ', $nameFormCancelButton, ' • enter to ', $nameFormSubmitButton);
+    $nameForm.append($nameInput, $nameButtons);
     $nameForm.style.display = 'none';
     $nameFormSubmitButton.type = 'submit';
     $nameFormSubmitButton.textContent = capitalize(__.common.save);
@@ -114,10 +116,13 @@ class SettingsAccountView extends View {
 
     const $emailForm = $('form', SettingsAccountView.classNames.emailForm);
     const $emailInput = this.$emailInput;
+    const $emailButtons = $('div', 'form-account-name__buttons');
     const $emailFormSubmitButton = $('button', SettingsAccountView.classNames.emailFormSubmit);
     const $emailFormCancelButton = $('button', SettingsAccountView.classNames.emailFormCancel);
-    $emailInput.type = capitalize(__.common.email);
-    $emailForm.append($emailInput, $emailFormSubmitButton, $emailFormCancelButton);
+    $emailInput.type = 'email';
+    $emailButtons.append('escape to ', $emailFormCancelButton, ' • enter to ', $emailFormSubmitButton);
+    $emailForm.append($emailInput, $emailButtons);
+
     $emailForm.style.display = 'none';
     $emailFormSubmitButton.type = 'submit';
     $emailFormSubmitButton.textContent = capitalize(__.common.save);
@@ -206,11 +211,13 @@ class SettingsAccountView extends View {
   }
 
   showForm($form: HTMLFormElement): void {
-    $form.style.display = 'block';
+    $form.style.display = 'flex';
+    $form.classList.add('form_show');
   }
 
   hideForm($form: HTMLFormElement): void {
     $form.style.display = 'none';
+    $form.classList.remove('form_show');
   }
 
   cancelDeleteConfirmDialog() {

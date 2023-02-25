@@ -11,6 +11,7 @@
   line-height: 20px;
   display: inline-block;
   color: #666;
+  width: 100%;
 }
 [type='radio']:checked + label:before,
 [type='radio']:not(:checked) + label:before {
@@ -55,7 +56,7 @@
   margin-top: 20px;
   width: 90%;
   display: flex;
-  justify-content: space-between;
+  //justify-content: space-between;
   align-items: center;
   height: 30px;
   background: var(--background-color-gray);
@@ -64,6 +65,9 @@
     background: var(--background-color-gray-hover);
   }
 }
+.radio-button-container {
+  flex: 1 1 auto;
+}
 
 
 .lang-title-choise {
@@ -71,5 +75,6 @@
 }
 
 .lang-title {
-  font-size: 30px;
+  font-size: 20px;
+  font-weight: 600;
 }
