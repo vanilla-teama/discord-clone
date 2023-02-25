@@ -24,25 +24,6 @@ class SettingsSidebarView extends View {
     this.$logOut = this.createLogOutItem();
   }
   async build(): Promise<void> {
-    // const $list = $('ul', SettingsSidebarView.classes.list);
-    // const $myAccount = $('li', SettingsSidebarView.classes.listItem);
-    // const $profiles = $('li', SettingsSidebarView.classes.listItem);
-    // const $appearance = $('li', SettingsSidebarView.classes.listItem);
-    // const $keybinds = $('li', SettingsSidebarView.classes.listItem);
-    // const $language = $('li', SettingsSidebarView.classes.listItem);
-    // $myAccount.textContent = 'My Account';
-    // $profiles.textContent = 'Profiles';
-    // $appearance.textContent = 'Appearance';
-    // $keybinds.textContent = 'Keybinds';
-    // $language.textContent = 'Language';
-    // $list.append($myAccount, $profiles, $appearance, $keybinds, $language, this.$logOut);
-    // this.$container.append($list);
-    // this.itemsMap.set($myAccount, SettingsParams.Account);
-    // this.itemsMap.set($profiles, SettingsParams.Profiles);
-    // this.itemsMap.set($appearance, SettingsParams.Appearance);
-    // this.itemsMap.set($keybinds, SettingsParams.Keybinds);
-    // this.itemsMap.set($language, SettingsParams.Language);
-    // this.bindItemClick();
     this.$container.append(this.createContent());
   }
 

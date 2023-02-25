@@ -1,7 +1,8 @@
 import * as userIcon from '../assets/icons/discord.svg';
 import View from '../lib/view';
 import { Chat, MongoObjectId, Profile } from '../types/entities';
-import { $, base64Url, isClosestElementOfCssClass } from '../utils/functions';
+import { $, base64Url, capitalize, isClosestElementOfCssClass } from '../utils/functions';
+import { translation } from '../utils/lang';
 import MainView from './main-view';
 
 export type RenderedPersonalMessage = {
@@ -52,6 +53,7 @@ class ChatsMainContentView extends View {
   }
 
   build(): void {
+    const __ = translation();
     const $container = $('div', 'chat');
     const $inputContainer = $('div', 'chat__input-container');
 
@@ -59,9 +61,15 @@ class ChatsMainContentView extends View {
       $inputContainer.append(this.$replyContainer, this.$chatInput);
       $container.append(this.$messageList, $inputContainer);
     } else {
-      $container.append('CHATS NOT FOUND!');
+      const $notFound = $('div', 'chat__not-found');
+      $notFound.textContent = __.common.noChat;
+      $container.append($notFound);
     }
     this.$container.append($container);
+  }
+
+  displayChatInput(placeholder: string) {
+    this.$chatInput.placeholder = placeholder;
   }
 
   bindMessageEvent(handler: (messageText: string, responsedToMessageId: string | null) => Promise<void>) {
@@ -213,6 +221,7 @@ class ChatsMainContentView extends View {
   destroyFastMenu = (): void => {};
 
   createEditMessageForm($message: HTMLLIElement, message: RenderedPersonalMessage): HTMLFormElement {
+    const __ = translation();
     const $form = $('form', 'personal-message__edit-form');
     const $messageContainer = $('div', 'personal-message__edit-form-container');
     const $messageInput = $('input', 'personal-message__edit-form-input');
@@ -234,13 +243,13 @@ class ChatsMainContentView extends View {
     $replyIdInput.value = this.getReplyId() || '';
 
     $saveControl.type = 'submit';
-    $saveControl.textContent = 'save';
+    $saveControl.textContent = __.common.save;
 
     $cancelControl.type = 'button';
-    $cancelControl.textContent = 'cancel';
+    $cancelControl.textContent = __.common.cancel;
 
     $messageContainer.append($messageInput);
-    $controlsContainer.append('escape to ', $cancelControl, ' • enter to ', $saveControl);
+    $controlsContainer.append(`${__.common.escapeTo} `, $cancelControl, ` • ${__.common.enterTo} `, $saveControl);
     $form.append($messageContainer, $controlsContainer, $messageIdInput);
 
     $form.onsubmit = async (event) => {
@@ -300,6 +309,7 @@ class ChatsMainContentView extends View {
   }
 
   displayDeleteConfirmDialog($container: HTMLElement, event: MouseEvent): void {
+    const __ = translation();
     if (!isClosestElementOfCssClass(event.target, 'personal-message')) {
       return;
     }
@@ -320,8 +330,8 @@ class ChatsMainContentView extends View {
     const $messageDate = $('span', 'personal-message__date');
     const $messageItem = $('p', ['chat__delete-message-item', 'personal-message__message']);
 
-    $deleteTitle.textContent = `Delete message.`;
-    $deleteQuestion.textContent = `Are you sure you want to delete this?`;
+    $deleteTitle.textContent = __.deleteMessageDialog.heading;
+    $deleteQuestion.textContent = __.deleteMessageDialog.question;
     $userName.textContent = `${items.message.username}`;
     $messageDate.textContent = `${items.message.date}`;
     $messageItem.textContent = items.message.message;
@@ -330,8 +340,8 @@ class ChatsMainContentView extends View {
     const $cancelButton = $('button', 'chat__delete-btn-cancel');
     const $confirmButton = $('button', 'chat__delete-btn-delete');
 
-    $cancelButton.textContent = 'Cancel';
-    $confirmButton.textContent = 'Delete';
+    $cancelButton.textContent = capitalize(__.common.cancel);
+    $confirmButton.textContent = capitalize(__.common.delete);
 
     $info.append($userName, $messageDate, $messageItem);
     $deleteContent.append($deleteTitle, $deleteQuestion, $info);
@@ -390,12 +400,13 @@ class ChatsMainContentView extends View {
   }
 
   createReplyNotification($message: HTMLLIElement, username: string): HTMLDivElement {
+    const __ = translation();
     const $notification = $('div', 'chat__reply-notification');
     const $notifMessageContainer = $('div', 'chat__reply-notification-message-container');
     const $notifMessageText = $('span', 'chat__reply-notification-message-text');
     const $notifMessageUser = $('span', 'chat__reply-notification-message-user');
     //$notifMessage.innerHTML = `Replying to <strong>${username}</strong>`;
-    $notifMessageText.textContent = 'Replying to';
+    $notifMessageText.textContent = __.common.replyingTo;
     $notifMessageUser.textContent = username;
     const $destroyButton = $('button', 'chat__reply-notification-message-destroy');
 

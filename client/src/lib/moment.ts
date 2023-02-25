@@ -1,5 +1,5 @@
 import momentLib from 'moment';
 
-momentLib.locale('ru');
+momentLib.locale('en');
 
 export default momentLib;

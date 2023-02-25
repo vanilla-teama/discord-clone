@@ -1,6 +1,7 @@
 import View from '../lib/view';
 import { appStore } from '../store/app-store';
-import { $ } from '../utils/functions';
+import { $, capitalize } from '../utils/functions';
+import { translation } from '../utils/lang';
 import { RenderedPersonalMessage } from './chats-main-content-view';
 import { RenderedChannelMessage } from './servers-main-content-view';
 
@@ -33,6 +34,7 @@ class MessageFastMenuView extends View {
     this.replyOrEdit = replyOrEdit;
   }
   async build(): Promise<void> {
+    const __ = translation();
     const $container = document.createDocumentFragment();
 
     // if (this.replyOrEdit === 'edit') {
@@ -45,12 +47,12 @@ class MessageFastMenuView extends View {
     // }
     if (!('service' in this.message) || !this.message.service) {
       $container.append(this.$replyButton);
-      this.$replyButton.dataset.text = 'Reply';
+      this.$replyButton.dataset.text = capitalize(__.common.reply);
 
       if (this.message.userId === appStore.user?.id) {
         $container.append(this.$editButton, this.$deleteButton);
-        this.$editButton.dataset.text = 'Edit';
-        this.$deleteButton.dataset.text = 'Delete';
+        this.$editButton.dataset.text = capitalize(__.common.edit);
+        this.$deleteButton.dataset.text = capitalize(__.common.delete);
       }
     }
 

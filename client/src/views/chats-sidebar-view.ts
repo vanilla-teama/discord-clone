@@ -5,6 +5,7 @@ import { $, base64Url, isElementOfCssClass, replaceWith } from '../utils/functio
 import PopupView, { PopupCoords } from './popup-view';
 import ScreenView from './screen-view';
 import * as discord from '../assets/icons/discord.svg';
+import { translation } from '../utils/lang';
 
 export type ChatWithAvatar = Chat & { avatar?: string };
 
@@ -37,17 +38,18 @@ class ChatsSideBarView extends View {
   $friendsContainer: HTMLDivElement;
 
   build(): void {
+    const __ = translation();
     const $chatsContainer = $('div', 'chats-sidebar__container');
     const $friendsContainer = this.$friendsContainer;
     const $friendsIcon = $('div', 'chats-sidebar__friends-icon');
 
-    this.$friendsButton.textContent = 'Friends';
+    this.$friendsButton.textContent = __.sidebar.friends;
 
     $friendsContainer.append($friendsIcon, this.$friendsButton, this.$friendsInvites);
 
     const $directMessagesContainer = $('div', 'chats-sidebar__dm-container');
     const $directMessagesTitle = $('div', 'chats-sidebar__dm-title');
-    $directMessagesTitle.textContent = 'Direct messages';
+    $directMessagesTitle.textContent = __.sidebar.personalMessages;
 
     $directMessagesContainer.append($directMessagesTitle, this.$showCreateChat);
 
@@ -58,8 +60,9 @@ class ChatsSideBarView extends View {
   }
 
   private createShowCreateChatElement(): HTMLSpanElement {
+    const __ = translation();
     const $directMessagesAddBtn = $('span', ['chats-sidebar__dm-add', 'tooltip']);
-    $directMessagesAddBtn.dataset.text = 'Create DM';
+    $directMessagesAddBtn.dataset.text = __.sidebar.createDM;
     return $directMessagesAddBtn;
   }
 
@@ -125,6 +128,7 @@ class ChatsSideBarView extends View {
   }
 
   private createUserBar(user?: User): HTMLDivElement {
+    const __ = translation();
     const $userBar = $('div', 'chats-sidebar__user-bar');
     const $userContainer = $('div', 'chats-sidebar__user-container');
     const $userAvatar = $('div', 'user-item__avatar');
@@ -140,7 +144,7 @@ class ChatsSideBarView extends View {
     $userName.textContent = user ? user.name : 'User is loading...';
     $userIcon.src = user?.profile?.avatar ? base64Url(user.profile.avatar) : discord.default;
     const $userSettings = $('span', ['chats-sidebar__user-settings', 'tooltip']);
-    $userSettings.dataset.text = 'User Settings';
+    $userSettings.dataset.text = __.sidebar.userSettings;
     $userAvatar.append($userIcon, $userStatus);
     $userContainer.append($userAvatar, $userName);
     $userBar.append($userContainer, $userSettings);

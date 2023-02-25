@@ -1,8 +1,9 @@
 import View from '../lib/view';
 import { Availability, ServerOwner, User } from '../types/entities';
-import { $, base64Url } from '../utils/functions';
+import { $, base64Url, capitalize, getAvailability } from '../utils/functions';
 import MainView from './main-view';
 import * as discord from '../assets/icons/discord.svg';
+import { translation } from '../utils/lang';
 
 class ServersInfoBarView extends View {
   static readonly classes = {
@@ -85,6 +86,7 @@ class ServersInfoBarView extends View {
   }
 
   private createChatItem({ name, availability, profile }: User, isOwner: boolean): HTMLLIElement {
+    const __ = translation();
     const $item = $('li', ServersInfoBarView.classes.userItem);
     const $itemBox = $('div', 'user-item__box');
     const $itemAvatar = $('div', 'user-item__avatar');
@@ -93,7 +95,7 @@ class ServersInfoBarView extends View {
     const $itemName = $('div', 'user-item__name');
     $itemName.textContent = `${name}`;
     const $iconCrown = $('div', ['servers-info-bar__icon-crown', 'tooltip']);
-    $iconCrown.dataset.text = 'Server owner';
+    $iconCrown.dataset.text = __.common.serverOwner;
 
     $itemIcon.src = profile?.avatar ? base64Url(profile.avatar) : discord.default;
 
@@ -122,19 +124,23 @@ class ServersInfoBarView extends View {
     this.$membersListOffline.innerHTML = '';
 
     if (onlineCount > 0) {
-      this.$membersListOnlineHeading.textContent = `Online - ${onlineCount}`;
+      this.$membersListOnlineHeading.textContent = `${capitalize(
+        getAvailability(Availability.Online)
+      )} - ${onlineCount}`;
     }
     if (offlineCount > 0) {
-      this.$membersListOfflineHeading.textContent = `Offline - ${offlineCount}`;
+      this.$membersListOfflineHeading.textContent = `${capitalize(
+        getAvailability(Availability.Offline)
+      )} - ${offlineCount}`;
     }
 
     members.forEach((user) => {
-      if (user.availability === 'online') {
+      if (user.availability === Availability.Online) {
         const $item = this.createChatItem(user, user.id === owner?.id);
         $item.classList.add(ServersInfoBarView.classes.userItemActive);
         this.$membersListOnline.append($item);
       }
-      if (user.availability === 'offline') {
+      if (user.availability === Availability.Offline) {
         const $item = this.createChatItem(user, user.id === owner?.id);
         this.$membersListOffline.append($item);
       }

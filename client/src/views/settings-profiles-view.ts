@@ -2,10 +2,11 @@ import * as plus from '../assets/icons/plus.svg';
 import * as upload from '../assets/icons/upload.svg';
 import * as discord from '../assets/icons/discord.svg';
 import View from '../lib/view';
-import { $, base64Url, readImage } from '../utils/functions';
+import { $, base64Url, capitalize, readImage } from '../utils/functions';
 import ModalView from './modal-view';
 import SettingsScreenView from './settings-screen-view';
 import { Profile } from '../types/entities';
+import { translation } from '../utils/lang';
 
 export interface ProfileChanges {
   avatar: File | null | undefined;
@@ -84,23 +85,24 @@ class SettingsProfilesView extends View {
     this.name = '';
   }
   build(): void {
+    const __ = translation();
     const $containerProfile = $('div', SettingsProfilesView.classNames.containerProfile);
     const $titleMain = Object.assign($('div', SettingsProfilesView.classNames.titleMain), {
-      textContent: 'Profiles',
+      textContent: __.settings.profile.heading,
     });
     const $leftSection = $('div', SettingsProfilesView.classNames.leftSection);
     const $profileExample = this.$profileExample;
     const $sectionAvatarChange = $('div', SettingsProfilesView.classNames.customizeSection);
     const $titleAvatar = Object.assign($('div', SettingsProfilesView.classNames.titleAvatar), {
-      textContent: 'Avatar',
+      textContent: __.settings.profile.avatar,
     });
     const $buttonAvatar = Object.assign($('button', SettingsProfilesView.classNames.buttonAvatar), {
-      textContent: 'Change Avatar',
+      textContent: __.settings.profile.changeAvatar,
     });
     $sectionAvatarChange.append($titleAvatar, $buttonAvatar);
     const $sectionColorChange = $('div', SettingsProfilesView.classNames.sectionColorChange);
     const $titleColor = Object.assign($('div', SettingsProfilesView.classNames.titleColor), {
-      textContent: 'Banner color',
+      textContent: __.settings.profile.bannerColor,
     });
     const $inputColor = this.$bannerInput;
     $inputColor.type = 'color';
@@ -110,7 +112,7 @@ class SettingsProfilesView extends View {
     const $sectionAboutChange = $('div', 'settings-profile__about-change-container');
     const $aboutTitle = $('div', 'settings-profile__about-change-title');
     const $aboutInput = this.$aboutInput;
-    $aboutTitle.textContent = 'About me';
+    $aboutTitle.textContent = __.settings.profile.about;
 
     $sectionAboutChange.append($aboutTitle, $aboutInput);
 
@@ -132,6 +134,7 @@ class SettingsProfilesView extends View {
   }
 
   createProfileExample(): HTMLDivElement {
+    const __ = translation();
     const $chatsInfoBar = $('div', 'chats-info-bar');
     const $bannerExample = this.$bannerExample;
     const $avatar = this.$avatarExample;
@@ -146,7 +149,7 @@ class SettingsProfilesView extends View {
     const $userName = this.$nameExample;
     const $sinceBlock = $('div', 'content-info__since-block');
     const $sinceTitle = $('div', 'content-info__since-title');
-    $sinceTitle.textContent = 'Discord Member Since';
+    $sinceTitle.textContent = __.common.discordMemberSince;
     const $sinceDate = $('div', 'content-info__since-date');
     $sinceDate.textContent = 'MMMM D, YYYY';
     const $aboutBlock = this.createAboutExample();
@@ -159,10 +162,11 @@ class SettingsProfilesView extends View {
   }
 
   createAboutExample(): HTMLDivElement {
+    const __ = translation();
     const $aboutBlock = this.$aboutExampleContainer;
     $aboutBlock.innerHTML = '';
     const $noteTitle = $('div', 'content-info__note-title');
-    $noteTitle.textContent = 'About me';
+    $noteTitle.textContent = __.settings.profile.about;
     const $aboutExample = this.$aboutExample;
 
     $aboutBlock.append($noteTitle, $aboutExample);
@@ -170,6 +174,7 @@ class SettingsProfilesView extends View {
   }
 
   createAvatarForm(): HTMLFormElement {
+    const __ = translation();
     const $form = $('form', 'form-avatar');
     const $fileInput = $('input');
     const $applyButton = $('button', 'form-avatar__submit');
@@ -180,7 +185,7 @@ class SettingsProfilesView extends View {
     $fileInput.name = 'avatar';
     $fileInput.style.display = 'none';
 
-    $applyButton.textContent = 'Apply';
+    $applyButton.textContent = capitalize(__.common.apply);
     $applyButton.type = 'submit';
 
     const $imageInputContainer = $('div', ['form__image-input-container', 'form-avatar__image-input-container']);
@@ -235,14 +240,15 @@ class SettingsProfilesView extends View {
   }
 
   displayChangeControl() {
+    const __ = translation();
     const $container = $('div', 'change-control__container');
     const $resetButton = $('button', 'change-control__reset');
     const $saveButton = $('button', 'change-control__save');
     const $message = $('p', 'change-control__message');
 
-    $resetButton.textContent = 'Reset';
-    $saveButton.textContent = 'Save Changes';
-    $message.textContent = 'Careful - You have unsaved changes!';
+    $resetButton.textContent = capitalize(__.common.reset);
+    $saveButton.textContent = capitalize(__.common.saveChanges);
+    $message.textContent = __.settings.profile.changesWarning;
 
     $container.append($message, $resetButton, $saveButton);
 

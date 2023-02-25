@@ -1,5 +1,6 @@
 import Controller from '../lib/controller';
 import { Channel, Server } from '../types/entities';
+import { translation } from '../utils/lang';
 import MainView from '../views/main-view';
 import ServersAppBarView from '../views/servers-app-bar-view';
 import ServersScreen from './servers-screen';
@@ -18,9 +19,17 @@ class ServersAppBarComponent extends Controller<ServersAppBarView> {
   async init(): Promise<void> {
     this.view.render();
     if (this.channel) {
-      this.view.displayChannelName(this.channel.name);
+      this.displayChannelName();
     }
     this.bindShowInfoBarClick();
+  }
+
+  displayChannelName() {
+    const __ = translation();
+    if (!this.channel) {
+      return;
+    }
+    this.view.displayChannelName(this.channel.general ? __.common.general : this.channel.name);
   }
 
   bindShowInfoBarClick = (): void => {

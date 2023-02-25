@@ -51,6 +51,7 @@ const createChannel: Handler = (req, res, next) => {
   const channel = new Channel({
     serverId: req.body.serverId,
     name: req.body.name,
+    general: req.body.general,
   });
 
   channel
