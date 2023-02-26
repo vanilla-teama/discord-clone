@@ -30,11 +30,7 @@ const whitelist = ['http://localhost:3000', 'http://localhost:8005'];
 
 mongoose.set('strictQuery', true);
 
-const isLocalConnection = true;
-
-const mongooseUrl = isLocalConnection
-  ? `mongodb://localhost:27017/discord`
-  : 'mongodb+srv://superconscience:QrtczmnqiciavAoI@node.wiauk.mongodb.net/?retryWrites=true&w=majority';
+const mongooseUrl = 'mongodb+srv://superconscience:QrtczmnqiciavAoI@node.wiauk.mongodb.net/discord?retryWrites=true&w=majority';
 
 type AppClients = Record<string, AppSocket>;
 
@@ -76,9 +72,9 @@ export class App {
       session({
         resave: true,
         saveUninitialized: true,
-        secret: env.SESSION_SECRET,
+        secret: 'sessionsecret',
         store: new MongoStore({
-          mongoUrl: env.MONGO_URI_LOCAL,
+          mongoUrl: mongooseUrl,
           mongoOptions: {
             connectTimeoutMS: 10000,
           },
@@ -127,7 +123,8 @@ export class App {
       return;
     }
     mongoose
-      .connect(env.MONGO_URI_LOCAL)
+      // .connect(env.MONGO_URI_LOCAL)
+      .connect(mongooseUrl)
       .then((result) => {
         // serversController.seedServers();
         this.server.listen(this.port, () => {
@@ -154,4 +151,4 @@ export class App {
   }
 }
 
-new App(env.PORT).Start();
+new App(Number(process.env.PORT ?? 8000)).Start();
