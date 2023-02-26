@@ -107,7 +107,12 @@ class SettingsAccountView extends View {
     const $nameButtons = $('div', 'form-account-name__buttons');
     const $nameFormSubmitButton = $('button', SettingsAccountView.classNames.nameFormSubmit);
     const $nameFormCancelButton = $('button', SettingsAccountView.classNames.nameFormCancel);
-    $nameButtons.append('escape to ', $nameFormCancelButton, ' • enter to ', $nameFormSubmitButton);
+    $nameButtons.append(
+      `${__.common.escapeTo} `,
+      $nameFormCancelButton,
+      ` • ${__.common.enterTo} `,
+      $nameFormSubmitButton
+    );
     $nameForm.append($nameInput, $nameButtons);
     $nameForm.style.display = 'none';
     $nameFormSubmitButton.type = 'submit';
@@ -120,7 +125,12 @@ class SettingsAccountView extends View {
     const $emailFormSubmitButton = $('button', SettingsAccountView.classNames.emailFormSubmit);
     const $emailFormCancelButton = $('button', SettingsAccountView.classNames.emailFormCancel);
     $emailInput.type = 'email';
-    $emailButtons.append('escape to ', $emailFormCancelButton, ' • enter to ', $emailFormSubmitButton);
+    $emailButtons.append(
+      `${__.common.escapeTo} `,
+      $emailFormCancelButton,
+      ` • ${__.common.enterTo} `,
+      $emailFormSubmitButton
+    );
     $emailForm.append($emailInput, $emailButtons);
 
     $emailForm.style.display = 'none';
@@ -137,6 +147,9 @@ class SettingsAccountView extends View {
     this.bindShowFormButtonClick($buttonEmail, $emailForm);
     this.bindHideFormButtonClick($nameFormCancelButton, $nameForm);
     this.bindHideFormButtonClick($emailFormCancelButton, $emailForm);
+
+    this.bindInputEscapeKey($nameInput, $nameForm);
+    this.bindInputEscapeKey($emailInput, $emailForm);
 
     this.bindNameFormSubmit($nameForm);
     this.bindEmailFormSubmit($emailForm);
@@ -233,6 +246,14 @@ class SettingsAccountView extends View {
   bindHideFormButtonClick($button: HTMLButtonElement, $form: HTMLFormElement): void {
     $button.onclick = () => {
       this.hideForm($form);
+    };
+  }
+
+  bindInputEscapeKey($input: HTMLInputElement, $form: HTMLFormElement): void {
+    $input.onkeyup = (event) => {
+      if (event.key && event.key.toLowerCase() === 'escape') {
+        this.hideForm($form);
+      }
     };
   }
 
