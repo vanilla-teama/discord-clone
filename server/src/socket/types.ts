@@ -9,7 +9,7 @@ export interface ServerToClientEvents {
   withAck: (d: string, callback: (e: number) => void) => void;
   id: (id: string) => void;
   removeClient: (id: string) => void;
-  userChangedAvailability: (data: { userId: string }) => void;
+  userChangedAvailability: (data: { userId: string, availability: Availability }) => void;
   userLoggedOut: (userId: string) => void;
   personalMessage: (data: { fromUserId: string; toUserId: string }) => void;
   personalMessageUpdated: (data: { messageId: string }) => void;

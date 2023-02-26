@@ -18,11 +18,11 @@ export const bindSocketEvents = (
   });
 
   socket.on('userLoggedIn', ({ userId }) => {
-    socket.broadcast.emit('userChangedAvailability', { userId });
+    socket.broadcast.emit('userChangedAvailability', { userId, availability: Availability.Online });
   });
 
   socket.on('userLoggedOut', ({ userId }) => {
-    socket.broadcast.emit('userChangedAvailability', { userId });
+    socket.broadcast.emit('userChangedAvailability', { userId, availability: Availability.Offline });
   });
 
   socket.on('personalMessage', (data) => {
