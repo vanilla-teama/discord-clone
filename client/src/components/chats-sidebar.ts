@@ -151,6 +151,17 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
         this.view.displayFriendsBlockStatus(appStore.user.invitesFrom.length);
       })
     );
+
+    socket.removeListener('personalMessage', ChatsSideBarComponent.onSocketPersonalMessage);
+    socket.on(
+      'personalMessage',
+      (ChatsSideBarComponent.onSocketPersonalMessage = async ({ fromUserId, toUserId }) => {
+        if (!appStore.user || toUserId !== appStore.user.id) {
+          return;
+        }
+        await appStore.createChat([fromUserId]);
+      })
+    );
   }
 
   static onSocketUserAvailabilityChangedServer = async ({
@@ -174,6 +185,8 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
   static onSocketFriendInvitationCanceled: ServerToClientEvents['friendInvitationCanceled'] = () => {};
 
   static onSocketFriendDeleted: ServerToClientEvents['friendDeleted'] = () => {};
+
+  static onSocketPersonalMessage: ServerToClientEvents['personalMessage'] = () => {};
 
   static onRouteChanged: EventListener = () => {};
 }
