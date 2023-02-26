@@ -4,6 +4,7 @@ import { appStore } from '../store/app-store';
 import ModalView from '../views/modal-view';
 import SettingsAccountView from '../views/settings-account-view';
 import ModalComponent from './modal';
+import SettingsSidebarComponent from './settings-sidebar';
 
 class SettingsAccountComponent extends Controller<SettingsAccountView> {
   constructor() {
@@ -48,6 +49,7 @@ class SettingsAccountComponent extends Controller<SettingsAccountView> {
 
   deleteAccount = async (): Promise<void> => {
     await appStore.deleteCurrentUser();
+    SettingsSidebarComponent.clearComponentsData();
     Router.push(RouteControllers.Start);
   };
 
