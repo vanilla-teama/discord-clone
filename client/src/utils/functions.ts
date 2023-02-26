@@ -46,12 +46,15 @@ export const getTypedCustomEvent = <K extends CustomEvents>(name: K, event: Even
   return event as unknown as CustomEvent<CustomEventData[K]>;
 };
 
-export const readImage = (file: File, $image: HTMLImageElement) => {
+export const readImage = (file: File, $image: HTMLImageElement, callback?: () => void) => {
   const reader = new FileReader();
 
   reader.onload = function (e) {
     if (e.target) {
       $image.src = e.target.result as string;
+      if (callback) {
+        callback();
+      }
     }
   };
 

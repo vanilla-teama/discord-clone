@@ -1,6 +1,6 @@
 import View from '../lib/view';
 import { Server } from '../types/entities';
-import { $, capitalize } from '../utils/functions';
+import { $, capitalize, readImage } from '../utils/functions';
 import ModalView from './modal-view';
 import * as upload from '../assets/icons/upload.svg';
 import * as plus from '../assets/icons/plus.svg';
@@ -49,12 +49,12 @@ class ServersCreateFormView extends View {
     const $imageUpload = $('img', ['form-create-server__image-upload', 'form__image']);
     $imageUpload.src = upload.default;
 
-    $imageInput.onclick = (e: Event) => {
-      const target = e.target as HTMLInputElement;
-      if (target.value) {
-        $imageUpload.src = plus.default;
-      }
-    };
+    // $imageInput.onclick = (e: Event) => {
+    //   const target = e.target as HTMLInputElement;
+    //   if (target.value) {
+    //     $imageUpload.src = plus.default;
+    //   }
+    // };
 
     const $inputContainer = $('div', ['form__input-container', 'form-create-server__input-container']);
     const $label = $('label', ['form__label', 'form-create-server__label']);
@@ -72,6 +72,8 @@ class ServersCreateFormView extends View {
     $inputContainer.append($label, $nameInput);
     $form.append($closeBtn, $title, $subtitle, $imageInputContainer, $inputContainer, $button);
 
+    this.bindImageChange($imageInput, $form, $imageUpload);
+
     return $form;
   }
 
@@ -82,6 +84,22 @@ class ServersCreateFormView extends View {
       await handler(formData);
       ModalView.hide();
     });
+  }
+
+  bindImageChange($input: HTMLInputElement, $form: HTMLFormElement, $container: HTMLImageElement): void {
+    $input.onchange = (event) => {
+      event.preventDefault();
+      const formData = new FormData($form);
+      const image = formData.get('image');
+      if (image instanceof File && image.size > 0) {
+        readImage(image, $container, () => {
+          $container.classList.add('selected');
+        });
+      } else {
+        $container.classList.remove('selected');
+        $container.src = upload.default;
+      }
+    };
   }
 }
 
