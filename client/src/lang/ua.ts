@@ -31,6 +31,7 @@ export default {
     },
     keybinds: {
       heading: 'Гарячі клавіші',
+      closePopup: 'Закрити попап',
       editMessage: 'Редагувати повідомлення',
       deleteMessage: 'Видалити повідомлення',
       reply: 'Відповісти',

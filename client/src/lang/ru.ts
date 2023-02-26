@@ -31,6 +31,7 @@ export default {
     },
     keybinds: {
       heading: 'Горячие клавиши',
+      closePopup: 'Закрыть попап',
       editMessage: 'Редактировать сообщение',
       deleteMessage: 'Удалить сообщение',
       reply: 'Ответить',

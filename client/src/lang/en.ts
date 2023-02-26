@@ -31,6 +31,7 @@ export default {
     },
     keybinds: {
       heading: 'Keybinds',
+      closePopup: 'Close popup',
       editMessage: 'Edit message',
       deleteMessage: 'Delete message',
       reply: 'Reply',
