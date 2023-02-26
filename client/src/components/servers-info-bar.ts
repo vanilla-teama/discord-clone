@@ -4,6 +4,8 @@ import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
 import { Channel } from '../types/entities';
 import { ServerToClientEvents } from '../types/socket';
+import { CustomEvents } from '../types/types';
+import { getTypedCustomEvent } from '../utils/functions';
 import ChatsInfoBarView from '../views/chats-info-bar-view';
 import ServersInfoBarView from '../views/servers-info-bar-view';
 
@@ -21,6 +23,7 @@ class ServersInfoBarComponent extends Controller<ServersInfoBarView> {
       this.displayMembers();
     }
     this.bindSocketEvents();
+    this.bindAccountUpdated();
   }
 
   displayMembers() {
@@ -35,6 +38,22 @@ class ServersInfoBarComponent extends Controller<ServersInfoBarView> {
     return appStore.getChannel(channelId);
   }
 
+  bindAccountUpdated() {
+    document.removeEventListener(CustomEvents.ACCOUNTUPDATED, ServersInfoBarComponent.onAccountUpdated);
+    document.addEventListener(
+      CustomEvents.ACCOUNTUPDATED,
+      (ServersInfoBarComponent.onAccountUpdated = async (event) => {
+        const {
+          detail: { user },
+        } = getTypedCustomEvent(CustomEvents.ACCOUNTUPDATED, event);
+        if (!user) {
+          return;
+        }
+        this.displayMembers();
+      })
+    );
+  }
+
   bindSocketEvents() {
     socket.removeListener('userInvitedToChannel', ServersInfoBarComponent.onSocketUserInvitedToChannel);
     socket.on(
@@ -46,9 +65,26 @@ class ServersInfoBarComponent extends Controller<ServersInfoBarView> {
         this.displayMembers();
       })
     );
+
+    socket.removeListener('userChangedAvailability', ServersInfoBarComponent.onSocketUserChangedAvailability);
+    socket.on(
+      'userChangedAvailability',
+      (ServersInfoBarComponent.onSocketUserChangedAvailability = async ({ userId }) => {
+        if (!appStore.user) {
+          return;
+        }
+        console.log('changed availability', userId);
+        await appStore.fetchUser(userId);
+        this.displayMembers();
+      })
+    );
   }
 
   static onSocketUserInvitedToChannel: ServerToClientEvents['userInvitedToChannel'] = () => {};
+
+  static onSocketUserChangedAvailability: ServerToClientEvents['userChangedAvailability'] = () => {};
+
+  static onAccountUpdated: EventListener = () => {};
 }
 
 export default ServersInfoBarComponent;

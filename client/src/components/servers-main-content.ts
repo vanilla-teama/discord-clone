@@ -3,6 +3,8 @@ import socket from '../lib/socket';
 import { IncomingChannelMessage, appStore } from '../store/app-store';
 import { Channel, ChannelInvite, Profile, Server } from '../types/entities';
 import { ServerToClientEvents } from '../types/socket';
+import { CustomEvents } from '../types/types';
+import { getTypedCustomEvent } from '../utils/functions';
 import { translation } from '../utils/lang';
 import ModalView from '../views/modal-view';
 import ServersMainContentView, { RenderedChannelMessage } from '../views/servers-main-content-view';
@@ -34,6 +36,7 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
       await this.fetchData();
       this.view.bindMessageEvent(this.handleSendMessage);
       this.bindSocketEvents();
+      this.bindAccountUpdated();
       this.view.bindOnMessageHoverKey(this.onMessageHoverKey);
       this.view.bindMessageHover(this.showFastMenu);
 
@@ -249,6 +252,24 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
     }
   };
 
+  bindAccountUpdated() {
+    document.removeEventListener(CustomEvents.ACCOUNTUPDATED, ServersMainContentComponent.onAccountUpdated);
+    document.addEventListener(
+      CustomEvents.ACCOUNTUPDATED,
+      (ServersMainContentComponent.onAccountUpdated = async (event) => {
+        const {
+          detail: { user },
+        } = getTypedCustomEvent(CustomEvents.ACCOUNTUPDATED, event);
+        if (!user) {
+          return;
+        }
+        if (this.channel) {
+          this.onMessageListChange(appStore.getFormattedRenderedChannelMessages(), []);
+        }
+      })
+    );
+  }
+
   static onSocketChannelMessage: ServerToClientEvents['channelMessage'] = () => {};
 
   static onSocketChannelMessageUpdated: ServerToClientEvents['channelMessageUpdated'] = () => {};
@@ -256,6 +277,8 @@ class ServersMainContentComponent extends Controller<ServersMainContentView> {
   static onSocketChannelMessageDeleted: ServerToClientEvents['channelMessageDeleted'] = () => {};
 
   static onSocketUserInvitedToChannel: ServerToClientEvents['userInvitedToChannel'] = () => {};
+
+  static onAccountUpdated: EventListener = () => {};
 }
 
 export default ServersMainContentComponent;
