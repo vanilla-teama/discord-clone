@@ -147,6 +147,7 @@
   }
   .chats-info-bar__avatar {
     margin-top: 15px;
+    border: 7px solid var(--background-color-black-light);
   }
   .content-info {
     width: 240px;
@@ -195,12 +196,12 @@
     border: none;
     opacity: 0.5;
     transition: all 0.3s ease 0s;
-    &:hover{
+    &:hover {
       opacity: 1;
     }
   }
   &__title {
-    color: var(--background-color-black);
+    color: var(--text-black);
   }
   &__subtitle {
     color: var(--background-color-gray);
@@ -213,12 +214,12 @@
     position: relative;
     width: 90px;
     height: 90px;
-    margin: 15px 0; 
+    margin: 15px 0;
     border-radius: 50%;
   }
 
   &__image-upload {
-    //background: url('/src/assets/icons/upload.svg') 
+    //background: url('/src/assets/icons/upload.svg')
     width: 80px;
     height: 80px;
     cursor: pointer;
@@ -249,6 +250,63 @@
     align-self: flex-end;
   }
 }
+.settings-content {
+  position: relative;
+}
+.change-control {
+  //padding-top: 10px;
+  //display: none;
+  position: absolute;
+  bottom: 10px;
+  //left: 0;
+  //max-width: 740px;
+  //width: 100%;
+  //padding: 0 20px 20px;
+  z-index: 2;
+  &__container {
+    width: 137%;
+    background-color: var(--background-color-black);
+    padding: 10px;
+    overflow: hidden;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  &__buttons {
+  }
+  &__message {
+    color: var(--text-primary);
+  }
+  &__reset {
+    bottom: 0;
+    background-color: transparent;
+    color: var(--text-primary);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+
+    &:hover{
+      text-decoration: underline
+    }
+  }
+  &__save {
+    color: var(--text-button);
+    height: 32px;
+    min-width: 60px;
+    padding: 3px 16px;
+    border: none;
+    border-radius: 3px;
+    font-size: 14px;
+    background-color: var(--background-color-green);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    
+    &:hover{
+      background-color: var(--background-color-green-dark);
+    }
+  }
+}
 
 @include media-md-down {
   .container-profile {
@@ -262,9 +320,6 @@
   }
   .left-section {
     display: flex;
-    //flex-direction: column;
-    //justify-content: space-between;
-    //align-items: center;
     flex-wrap: wrap;
     column-gap: 30px;
   }
@@ -292,6 +347,9 @@
       margin-top: -20px;
     }
   }
+  .change-control__container {
+    width: 110%;
+  }
 }
 @include media-sm-down {
   .body-button-profile {
@@ -300,7 +358,23 @@
   .title-color {
     margin-top: 0px;
   }
-  .settings-profile__about-input {
+  .container-profile .settings-profile__about-input {
     height: 100px;
+    width: 290px;
+  }
+  .change-control__buttons {
+   align-self: flex-end;
+  }
+  .change-control__container {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .change-control__container {
+    width: 137%;
+  }
+}
+@media (max-width: 480px){
+  .change-control__container {
+    width: 110%;
   }
 }

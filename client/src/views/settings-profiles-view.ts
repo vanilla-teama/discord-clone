@@ -239,15 +239,17 @@ class SettingsProfilesView extends View {
   displayChangeControl() {
     const __ = translation();
     const $container = $('div', 'change-control__container');
+    const $buttons = $('div', 'change-control__buttons');
     const $resetButton = $('button', 'change-control__reset');
     const $saveButton = $('button', 'change-control__save');
-    const $message = $('p', 'change-control__message');
+    const $message = $('div', 'change-control__message');
 
     $resetButton.textContent = capitalize(__.common.reset);
     $saveButton.textContent = capitalize(__.common.saveChanges);
     $message.textContent = __.settings.profile.changesWarning;
 
-    $container.append($message, $resetButton, $saveButton);
+    $buttons.append($resetButton, $saveButton);
+    $container.append($message, $buttons);
 
     $resetButton.onclick = () => {
       this.resetChanges();

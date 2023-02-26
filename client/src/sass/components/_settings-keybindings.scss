@@ -4,7 +4,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 2px solid rgb(47, 43, 43);
+  border-top: 2px solid var(--background-color-black-light);
 }
 
 .list-key-bind {
@@ -16,7 +16,7 @@
 }
 
 .list-key-bind:last-child {
-  border-bottom: 2px solid rgb(47, 43, 43);
+  border-bottom: 2px solid var(--background-color-black-light);
 }
 
 .button-key {
@@ -83,8 +83,13 @@
   }
 }
 @include media-md-down {
-
   .settings__content {
-    padding-top: 30px;
+    padding-top: 20px;
   }
 }
+@media (max-width: 390px) {
+  .settings__content {
+    margin-left: 0;
+  }
+}
+

@@ -36,6 +36,7 @@
   background-color: var(--background-color-light-gray);
 }
 .nick-name-account {
+  margin-left: 10px;
   font-size: 20px;
   width: 300px;
   font-weight: 600;
@@ -43,7 +44,7 @@
   text-overflow: ellipsis;
 }
 .block-setting-account {
-  padding: 15px 10px 20px 10px;
+  padding: 15px 10px 30px 10px;
   display: flex;
 }
 .title-setting-body-account {
@@ -62,8 +63,9 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  gap: 3px;
   top: 20px;
-  left: -5px;
+  left: 0px;
   &__buttons {
     margin-left: 5px;
     display: flex;
@@ -92,7 +94,7 @@
     transition: all 0.3s ease 0s;
 
     &:hover {
-      text-transform: underline;
+      text-decoration: underline
     }
   }
 }
@@ -102,8 +104,8 @@
   font-family: 'Roboto', sans-serif;
   background-color: var(--background-color-white-dark1);
   margin-top: 20px;
-  height: 32px;
-  width: 60px;
+  min-height: 32px;
+  padding: 3px 16px;
   border: none;
   transition: all 0.3s ease 0s;
   cursor: pointer;
@@ -117,10 +119,12 @@
   color: var(--text-button);
   background-color: var(--background-color-blue);
   border-radius: 3px;
+  padding: 3px 15px;
   cursor: pointer;
+  font-size: 14px;
   transition: all 0.3s ease 0s;
-  width: 130px;
-  height: 32px;
+  //white-space: nowrap;
+  min-height: 32px;
 
   &:hover {
     background-color: var(--background-color-blue-dark);
@@ -136,6 +140,9 @@
   font-weight: 600;
   margin-bottom: 20px;
 }
+.title-setting-body-account {
+  margin-bottom: 10px;
+}
 .button-delete-account {
   color: var(--text-secondary);
   background: none;
@@ -145,6 +152,7 @@
   border-radius: 3px;
   transition: all 0.3s ease 0s;
   cursor: pointer;
+  white-space: nowrap;
 
   &:hover {
     background-color: var(--background-color-red);
@@ -159,6 +167,9 @@
 }
 
 @include media-sm-down {
+  .nick-name-account {
+    margin-left: 0px;
+  }
   .nick-name-container-account {
     flex-direction: column;
     align-items: flex-start;
@@ -168,11 +179,47 @@
     flex-direction: column;
     align-items: start;
   }
-}
-
-@media (max-width: 450px) {
+  .block-setting-account {
+    position: relative;
+  }
+  .body-button-account {
+    font-size: 12px;
+    padding: 3px 5px;
+    position: absolute;
+    right: 5px;
+    top: 16px;
+  }
   .form-account-name__input,
   .form-account-email__input {
-    max-width: 170px;
+    max-width: 200px;
+  }
+  .info-block-account {
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 470px) {
+  .form-account-name__input,
+  .form-account-email__input {
+    max-width: 160px;
+  }
+  .btn-user-account {
+    padding: 3px 10px;
+    font-size: 13px;
+  } 
+}
+@media (max-width: 390px) {
+  .form-account-name__input,
+  .form-account-email__input {
+    max-width: 140px;
+  }
+  .form-account-name__buttons {
+    font-size: 11px;
+  }
+  .form-account-email__cancel,
+  .form-account-email__submit,
+  .form-account-name__cancel,
+  .form-account-name__submit {
+    font-size: 11px;
   }
 }

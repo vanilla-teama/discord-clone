@@ -134,6 +134,7 @@ $infobar-width: 340px;
   //position: absolute;
   right: -$infobar-width;
   //top: 55px;
+  //height: calc(100% - 106px);
   height: calc(100% - 62px);
 
   animation-duration: 200ms;
