@@ -11,7 +11,7 @@
   --background-color-gray-hover: #42464D;
   --background-color-green: #3ba55d;
   --background-color-green-dark: #226737;
-  --background-color-black: #000000;
+  --background-color-black: #0e0e0e;
   --background-color-black-light: #202225;
   --background-color-blue: #5865F2;
   --background-color-blue-dark: #3d4bea;
@@ -28,6 +28,7 @@
   --text-secondary: #FFFFFF;
   --text-button: #FFFFFF;
   --text-gray: #D2D3D5;
+  --text-black: #060607;
   --text-gray-dark: #4F5660;
   
   --icons-friends: url('/src/assets/icons/friends.svg');
@@ -69,13 +70,14 @@
   --background-color-white-dark1: #808080;
   --background-color-white-dark2: #6f6f6f;
   --background-color-orange: #FAA61A;
-  --background-color-red: #ED4545
+  --background-color-red: #ED4545;
   --background-color-red-dark: #a72626;
   --background-color-orange-light: #584D3D;
   --text-primary: #4E5058;
   --text-secondary: #060607;
   --text-button: #FFFFFF;
   --text-gray: #060607;
+  --text-black: #060607;
   --text-gray-dark: #4F5660;
 
   --icons-friends: url('/src/assets/icons/friends-light.svg');
@@ -110,6 +112,7 @@ body {
 
 button {
   border: none;
+  outline: none;
 }
 
 ul {
@@ -126,7 +129,7 @@ ul {
   display: flex;
   //min-height: 100%;
   width: 100%;
-  position: relative;
+  //position: relative;
 }
 
 .form {
@@ -252,6 +255,7 @@ ul {
   }
 }
 
+
 .form-create-chat {
   .user-item__status {
     // I hide this element as we don't have time to implement status updates
@@ -268,6 +272,7 @@ ul {
     position: absolute;
     top: 30px;
     left: 50%;
+    font-size: 14px;
     transform: translateX(-50%);
     color: var(--text-primary);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);

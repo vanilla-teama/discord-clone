@@ -298,3 +298,10 @@
     background: var(--icons-trash) center no-repeat;
   }
 }
+
+@include media-sm-down {
+  .chat__delete-container, 
+  .servers-chat__delete-container {
+    width: 340px;
+  }
+}
