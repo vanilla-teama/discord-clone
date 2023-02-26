@@ -118,6 +118,7 @@ const register = async (req: Request, res: Response, next: NextFunction): Promis
     email: req.body.email,
     password: req.body.password,
     name: req.body.name,
+    availability: Availability.Online,
   });
 
   User.findOne({ email: req.body.email }, (err: NativeError, existingUser: UserDocument) => {

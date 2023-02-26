@@ -27,13 +27,13 @@ class SettingsSidebarComponent extends Controller<SettingsSidebarView> {
       await appStore.logOut();
       if (!appStore.isAuth) {
         socket.emit('userLoggedOut', { userId });
-        this.clearComponentsData();
+        SettingsSidebarComponent.clearComponentsData();
         Router.push(RouteControllers.Start);
       }
     }
   };
 
-  clearComponentsData() {
+  static clearComponentsData() {
     ChatsScreen.chat = null;
     ServersScreen.server = null;
     ServersScreen.channel = null;

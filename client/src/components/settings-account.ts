@@ -1,9 +1,11 @@
 import Controller from '../lib/controller';
 import Router, { RouteControllers, SettingsParams } from '../lib/router';
+import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
 import ModalView from '../views/modal-view';
 import SettingsAccountView from '../views/settings-account-view';
 import ModalComponent from './modal';
+import SettingsSidebarComponent from './settings-sidebar';
 
 class SettingsAccountComponent extends Controller<SettingsAccountView> {
   constructor() {
@@ -37,6 +39,7 @@ class SettingsAccountComponent extends Controller<SettingsAccountView> {
       return;
     }
     await appStore.updateUser(appStore.user.id, { name });
+    socket.emit('accountUpdated', { userId: appStore.user.id });
   };
 
   updateEmail = async (email: string): Promise<void> => {
@@ -44,10 +47,12 @@ class SettingsAccountComponent extends Controller<SettingsAccountView> {
       return;
     }
     await appStore.updateUser(appStore.user.id, { email });
+    socket.emit('accountUpdated', { userId: appStore.user.id });
   };
 
   deleteAccount = async (): Promise<void> => {
     await appStore.deleteCurrentUser();
+    SettingsSidebarComponent.clearComponentsData();
     Router.push(RouteControllers.Start);
   };
 

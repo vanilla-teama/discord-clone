@@ -17,12 +17,20 @@ export const bindSocketEvents = (
     }
   });
 
+  socket.on('userRegistered', (data) => {
+    io.emit('userRegistered', data);
+  });
+
   socket.on('userLoggedIn', ({ userId }) => {
-    socket.broadcast.emit('userChangedAvailability', { userId });
+    socket.broadcast.emit('userChangedAvailability', { userId, availability: Availability.Online });
   });
 
   socket.on('userLoggedOut', ({ userId }) => {
-    socket.broadcast.emit('userChangedAvailability', { userId });
+    socket.broadcast.emit('userChangedAvailability', { userId, availability: Availability.Offline });
+  });
+
+  socket.on('accountUpdated', (data) => {
+    socket.broadcast.emit('accountUpdated', data);
   });
 
   socket.on('personalMessage', (data) => {

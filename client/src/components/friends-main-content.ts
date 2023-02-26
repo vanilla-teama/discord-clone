@@ -82,6 +82,21 @@ class FriendsMainContentComponent extends Controller<FriendsMainContentView> {
         this.displayAllFriends();
       })
     );
+
+    socket.removeListener('userChangedAvailability', FriendsMainContentComponent.onSocketUserChangedAvailability);
+    socket.on(
+      'userChangedAvailability',
+      (FriendsMainContentComponent.onSocketUserChangedAvailability = async ({ userId, availability }) => {
+        if (!appStore.user) {
+          return;
+        }
+        const friend = appStore.friends.find((f) => f.id === userId);
+        if (friend) {
+          friend.availability = availability;
+        }
+        this.displayAllFriends();
+      })
+    );
   }
 
   onSearch = async (value: string) => {
@@ -193,6 +208,8 @@ class FriendsMainContentComponent extends Controller<FriendsMainContentView> {
   static onSocketFriendInvitationCanceled: ServerToClientEvents['friendInvitationCanceled'] = () => {};
 
   static onSocketFriendDeleted: ServerToClientEvents['friendDeleted'] = () => {};
+
+  static onSocketUserChangedAvailability: ServerToClientEvents['userChangedAvailability'] = () => {};
 }
 
 export default FriendsMainContentComponent;

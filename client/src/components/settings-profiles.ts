@@ -1,4 +1,5 @@
 import Controller from '../lib/controller';
+import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
 import { Profile } from '../types/entities';
 import ModalView from '../views/modal-view';
@@ -44,6 +45,7 @@ class SettingsProfilesComponent extends Controller<SettingsProfilesView> {
     if (appStore.user) {
       this.profile = appStore.user.profile;
       this.displayProfileData();
+      socket.emit('accountUpdated', { userId: appStore.user.id });
     }
   };
 }

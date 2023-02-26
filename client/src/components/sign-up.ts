@@ -1,5 +1,6 @@
 import Controller from '../lib/controller';
 import Router, { RouteControllers } from '../lib/router';
+import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
 import { Dispatch } from '../types/types';
 import SignUpView from '../views/sign-up-view';
@@ -34,7 +35,9 @@ class SignUpComponent extends Controller<SignUpView> {
     ) {
       await appStore.register(
         { email, password, name },
-        () => {
+        (userId) => {
+          socket.emit('userRegistered', { userId });
+          // Router.push(RouteControllers.Friends, '', ['addfriend']);
           Router.push(RouteControllers.Chats);
         },
         (error) => {
