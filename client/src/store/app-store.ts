@@ -23,6 +23,8 @@ import en from '../lang/en';
 import ua from '../lang/ua';
 import ru from '../lang/ru';
 import { deepMergeObject } from '../utils/functions';
+import { ServerToClientEvents } from '../types/socket';
+import socket from '../lib/socket';
 
 export type IncomingPersonalMessage = AppOmit<PersonalMessage, 'id' | 'responsedToMessage'>;
 export type IncomingChannelMessage = AppOmit<ChannelMessage, 'id' | 'responsedToMessage'>;
@@ -473,7 +475,7 @@ class AppStore {
 
   async register(
     { email, password, name }: { email: string; password: string; name: string },
-    onSuccess: () => void,
+    onSuccess: (userId: string) => void,
     onUnauthorized: (error: RegisterError) => void
   ): Promise<void> {
     const response = await http
@@ -489,7 +491,7 @@ class AppStore {
       });
     if (response) {
       this.user = response.data.user;
-      onSuccess();
+      onSuccess(response.data.user.id);
     }
   }
 
@@ -831,8 +833,18 @@ class AppStore {
     };
   }
 
+  static onSocketUserRegistered: ServerToClientEvents['userRegistered'] = () => {};
+
   private constructor() {
     AppStore.instance = this;
+
+    socket.removeListener('userRegistered', AppStore.onSocketUserRegistered);
+    socket.on(
+      'userRegistered',
+      (AppStore.onSocketUserRegistered = async ({ userId }) => {
+        await this.fetchUsers();
+      })
+    );
   }
 
   static get Instance() {

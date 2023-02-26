@@ -90,7 +90,6 @@ class FriendsMainContentComponent extends Controller<FriendsMainContentView> {
         if (!appStore.user) {
           return;
         }
-        console.log('useravaialibity', userId, availability);
         const friend = appStore.friends.find((f) => f.id === userId);
         if (friend) {
           friend.availability = availability;

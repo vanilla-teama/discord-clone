@@ -17,6 +17,10 @@ export const bindSocketEvents = (
     }
   });
 
+  socket.on('userRegistered', (data) => {
+    socket.broadcast.emit('userRegistered', data);
+  });
+
   socket.on('userLoggedIn', ({ userId }) => {
     socket.broadcast.emit('userChangedAvailability', { userId, availability: Availability.Online });
   });
