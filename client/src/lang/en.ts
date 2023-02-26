@@ -21,6 +21,7 @@ export default {
       bannerColor: 'Banner color',
       about: 'About me',
       changesWarning: 'Careful - You have unsaved changes!',
+      uploadImage: 'Upload image',
     },
     appearance: {
       heading: 'Appearance',
@@ -30,6 +31,7 @@ export default {
     },
     keybinds: {
       heading: 'Keybinds',
+      closePopup: 'Close popup',
       editMessage: 'Edit message',
       deleteMessage: 'Delete message',
       reply: 'Reply',

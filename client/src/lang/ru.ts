@@ -21,6 +21,7 @@ export default {
       bannerColor: 'Цвет баннера',
       about: 'Обо мне',
       changesWarning: 'Осторожно - есть несохраненные изменения!',
+      uploadImage: 'Загрузите изображение',
     },
     appearance: {
       heading: 'Внешний вид',
@@ -30,6 +31,7 @@ export default {
     },
     keybinds: {
       heading: 'Горячие клавиши',
+      closePopup: 'Закрыть попап',
       editMessage: 'Редактировать сообщение',
       deleteMessage: 'Удалить сообщение',
       reply: 'Ответить',

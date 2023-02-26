@@ -29,6 +29,14 @@ class SettingsKeybindingsView extends View {
       textContent: __.settings.keybinds.heading,
     });
     const $listKey = $('ul', SettingsKeybindingsView.classNames.listKey);
+    const $closePopup = $('li', SettingsKeybindingsView.classNames.listItem);
+    const $titleClosePopup = Object.assign($('div', SettingsKeybindingsView.classNames.titleKey), {
+      textContent: __.settings.keybinds.closePopup,
+    });
+    const $buttonClosePopup = Object.assign($('button', SettingsKeybindingsView.classNames.buttonKey), {
+      textContent: 'Escape',
+    });
+    $closePopup.append($titleClosePopup, $buttonClosePopup);
     const $editMess = $('li', SettingsKeybindingsView.classNames.listItem);
     const $titleEditMess = Object.assign($('div', SettingsKeybindingsView.classNames.titleKey), {
       textContent: __.settings.keybinds.editMessage,
@@ -105,7 +113,7 @@ class SettingsKeybindingsView extends View {
     $conButtonsServerTwo.append($buttonNavServerCtrlTwo, $buttonNavServerThree, $buttonNavServerFour);
     $conButtonsServer.append($conButtonsServerOne, $conButtonsServerTwo);
     $navServer.append($titleNavServer, $conButtonsServer);
-    $listKey.append($editMess, $deleteMess, $reply, $navChats, $navServer);
+    $listKey.append($closePopup, $editMess, $deleteMess, $reply, $navChats, $navServer);
     $contKeybind.append($titleKeybind, $listKey);
     this.$container.append($contKeybind);
   }

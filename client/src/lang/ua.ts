@@ -21,6 +21,7 @@ export default {
       bannerColor: 'Колір банера',
       about: 'Про мене',
       changesWarning: 'Обережно - є незбережені зміни!',
+      uploadImage: 'Завантажте зображення',
     },
     appearance: {
       heading: 'Зовнішній вигляд',
@@ -30,6 +31,7 @@ export default {
     },
     keybinds: {
       heading: 'Гарячі клавіші',
+      closePopup: 'Закрити попап',
       editMessage: 'Редагувати повідомлення',
       deleteMessage: 'Видалити повідомлення',
       reply: 'Відповісти',

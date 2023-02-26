@@ -175,11 +175,14 @@ class SettingsProfilesView extends View {
 
   createAvatarForm(): HTMLFormElement {
     const __ = translation();
-    const $form = $('form', 'form-avatar');
+    const $form = $('form', ['form-avatar', 'form', 'form_white']);
     const $fileInput = $('input');
     const $applyButton = $('button', 'form-avatar__submit');
 
     $form.enctype = 'multipart/form-data';
+
+    const $title = $('h3', ['form__title', 'form-avatar__title']);
+    $title.textContent = __.settings.profile.uploadImage;
 
     $fileInput.type = 'file';
     $fileInput.name = 'avatar';
@@ -196,17 +199,11 @@ class SettingsProfilesView extends View {
     const $imageUpload = $('img', ['form-avatar__image-upload', 'form__image']);
     $imageUpload.src = upload.default;
 
-    $imageInput.onclick = () => {
-      if ($imageInput.value) {
-        $imageUpload.src = plus.default;
-      }
-    };
-
     $imageInputContainer.append($imageInput, $imageUpload);
 
     this.bindAvatarChange($imageInput, $form, this.$avatarExample);
 
-    $form.append($imageInputContainer);
+    $form.append($title, $imageInputContainer);
 
     return $form;
   }
