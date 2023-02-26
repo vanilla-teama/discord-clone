@@ -2,6 +2,8 @@ import Controller from '../lib/controller';
 import socket, { emitPersonalMessage } from '../lib/socket';
 import { IncomingPersonalMessage, appStore } from '../store/app-store';
 import { Chat } from '../types/entities';
+import { CustomEvents } from '../types/types';
+import { getTypedCustomEvent } from '../utils/functions';
 import { translation } from '../utils/lang';
 import ChatsMainContentView, { RenderedPersonalMessage } from '../views/chats-main-content-view';
 import ModalView from '../views/modal-view';
@@ -34,6 +36,7 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       this.onSocketPersonalMessage();
       this.onSocketPersonalMessageUpdated();
       this.onSocketPersonalMessageDeleted();
+      this.bindAccountUpdated();
       this.view.bindOnMessageHoverKey(this.onMessageHoverKey);
       this.view.bindMessageHover(this.showFastMenu);
       MessageFastMenu.bindDisplayEditMessageForm(this.displayEditMessageForm);
@@ -222,6 +225,31 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
   cancelDeleteConfirmDialog = () => {
     ModalView.hide();
   };
+
+  bindAccountUpdated() {
+    document.removeEventListener(CustomEvents.ACCOUNTUPDATED, ChatsMainContentComponent.onAccountUpdated);
+    document.addEventListener(
+      CustomEvents.ACCOUNTUPDATED,
+      (ChatsMainContentComponent.onAccountUpdated = (event) => {
+        const {
+          detail: { user },
+        } = getTypedCustomEvent(CustomEvents.ACCOUNTUPDATED, event);
+        if (!user) {
+          return;
+        }
+        if (!this.chat || this.chat.userId !== user.id) {
+          return;
+        }
+        const chat = appStore.chats.find((c) => c.userId === user.id);
+        if (chat) {
+          this.chat = chat;
+          this.onMessageListChange(appStore.getFormattedRenderedPersonalMessages());
+        }
+      })
+    );
+  }
+
+  static onAccountUpdated: EventListener = () => {};
 }
 
 export default ChatsMainContentComponent;

@@ -33,6 +33,7 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
     this.onInit(appStore.user);
     this.onChatListChanged(appStore.chats);
     this.bindRouteChanged();
+    this.bindAccountUpdated();
     ChatsScreen.bindChatUpdate('sidebar', this.onChatUpdate);
     this.bindSocketEvents();
     this.view.displayFriendsBlockStatus(appStore.user.invitesFrom.length);
@@ -96,6 +97,26 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
           detail: { controller, params },
         } = getTypedCustomEvent(CustomEvents.AFTERROUTERPUSH, event);
         this.toggleActiveStatus();
+      })
+    );
+  }
+
+  bindAccountUpdated() {
+    document.removeEventListener(CustomEvents.ACCOUNTUPDATED, ChatsSideBarComponent.onAccountUpdated);
+    document.addEventListener(
+      CustomEvents.ACCOUNTUPDATED,
+      (ChatsSideBarComponent.onAccountUpdated = (event) => {
+        const {
+          detail: { user },
+        } = getTypedCustomEvent(CustomEvents.ACCOUNTUPDATED, event);
+        if (!user) {
+          return;
+        }
+        const chat = appStore.chats.find((c) => c.userId === user.id);
+        if (chat) {
+          this.view.updateChat({ ...chat, avatar: user.profile?.avatar || undefined });
+          this.toggleActiveStatus();
+        }
       })
     );
   }
@@ -189,6 +210,8 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
   static onSocketPersonalMessage: ServerToClientEvents['personalMessage'] = () => {};
 
   static onRouteChanged: EventListener = () => {};
+
+  static onAccountUpdated: EventListener = () => {};
 }
 
 export default ChatsSideBarComponent;

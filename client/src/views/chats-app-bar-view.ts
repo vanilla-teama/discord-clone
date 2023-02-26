@@ -8,6 +8,7 @@ import ScreenView from './screen-view';
 class ChatsAppBarView extends View {
   static readonly classNames = {};
   chat: Chat | null;
+  $userName: HTMLDivElement;
   $userStatus: HTMLDivElement;
   $showInfoBar: HTMLButtonElement;
 
@@ -18,6 +19,7 @@ class ChatsAppBarView extends View {
     }
     super($root);
     this.chat = chat;
+    this.$userName = $('div', 'chats-app-bar__user-name');
     this.$userStatus = $('div', ['chats-app-bar__user-status', 'tooltip']);
     this.$showInfoBar = $('button', ['chats-app-bar__profile-btn', 'tooltip']);
   }
@@ -27,7 +29,7 @@ class ChatsAppBarView extends View {
       const $chatsAppBar = $('div', 'chats-app-bar');
       const $userContainer = $('div', 'chats-app-bar__user-container');
       const $iconAt = $('div', 'chats-app-bar__user-atIcon');
-      const $userName = $('div', 'chats-app-bar__user-name');
+      const $userName = this.$userName;
       $userName.textContent = `${this.chat.userName}`;
 
       const $userStatus = this.$userStatus;
@@ -58,6 +60,10 @@ class ChatsAppBarView extends View {
       $notFound.textContent = __.common.noChat;
       this.$container.append($notFound);
     }
+  }
+
+  displayUsername(name: string) {
+    this.$userName.textContent = name;
   }
 
   displayStatus(availability: Availability) {

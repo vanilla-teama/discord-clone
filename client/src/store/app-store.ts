@@ -25,6 +25,7 @@ import ru from '../lang/ru';
 import { deepMergeObject } from '../utils/functions';
 import { ServerToClientEvents } from '../types/socket';
 import socket from '../lib/socket';
+import { CustomEventData, CustomEvents } from '../types/types';
 
 export type IncomingPersonalMessage = AppOmit<PersonalMessage, 'id' | 'responsedToMessage'>;
 export type IncomingChannelMessage = AppOmit<ChannelMessage, 'id' | 'responsedToMessage'>;
@@ -295,6 +296,16 @@ class AppStore {
     const response = await http.get<{ user: User }>(`/users/${this.user.id}`).catch((err) => console.error(err));
     if (response) {
       this.user = response.data.user;
+    }
+  }
+
+  async fetchUser(userId: string): Promise<void> {
+    const response = await http.get<{ user: User }>(`/users/${userId}`).catch((err) => console.error(err));
+    if (response) {
+      const userIdx = this.users.findIndex((u) => u.id === userId);
+      if (userIdx !== -1) {
+        this.users = [...this.users.slice(0, userIdx), response.data.user, ...this.users.slice(userIdx + 1)];
+      }
     }
   }
 
@@ -835,6 +846,8 @@ class AppStore {
 
   static onSocketUserRegistered: ServerToClientEvents['userRegistered'] = () => {};
 
+  static onSocketAccountUpdated: ServerToClientEvents['accountUpdated'] = () => {};
+
   private constructor() {
     AppStore.instance = this;
 
@@ -843,6 +856,23 @@ class AppStore {
       'userRegistered',
       (AppStore.onSocketUserRegistered = async ({ userId }) => {
         await this.fetchUsers();
+      })
+    );
+
+    socket.removeListener('accountUpdated', AppStore.onSocketAccountUpdated);
+    socket.on(
+      'accountUpdated',
+      (AppStore.onSocketAccountUpdated = async ({ userId }) => {
+        Promise.all([await this.fetchUser(userId), this.user ? await this.fetchChat(this.user.id, userId) : null]);
+
+        const user = this.users.find((u) => u.id === userId);
+        if (user) {
+          const event = new CustomEvent<CustomEventData[CustomEvents.ACCOUNTUPDATED]>(CustomEvents.ACCOUNTUPDATED, {
+            detail: { user },
+            bubbles: true,
+          });
+          document.dispatchEvent(event);
+        }
       })
     );
   }

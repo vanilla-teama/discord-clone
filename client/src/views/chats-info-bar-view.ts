@@ -13,6 +13,7 @@ class ChatsInfoBarView extends View {
   static readonly classNames = {};
 
   chat: Chat | null;
+  $username: HTMLDivElement;
   $status: HTMLSpanElement;
   $avatar: HTMLImageElement;
   $banner: HTMLDivElement;
@@ -27,6 +28,7 @@ class ChatsInfoBarView extends View {
     }
     super($root);
     this.chat = chat;
+    this.$username = $('div', 'content-info__user-name');
     this.$status = $('span', 'chats-info-bar__status');
     this.$avatar = $('img', 'chats-info-bar__avatar');
     this.$banner = $('div', 'chats-info-bar__header');
@@ -49,7 +51,7 @@ class ChatsInfoBarView extends View {
       $avatar.src = discord.default;
 
       const $content = $('div', ['chats-info-bar__content', 'content-info']);
-      const $userName = $('div', 'content-info__user-name');
+      const $userName = this.$username;
       $userName.textContent = `${this.chat.userName}`;
       const $sinceBlock = $('div', 'content-info__since-block');
       const $sinceTitle = $('div', 'content-info__since-title');
@@ -98,6 +100,10 @@ class ChatsInfoBarView extends View {
 
     $aboutBlock.append($noteTitle, $about);
     return $aboutBlock;
+  }
+
+  displayUsername(name: string): void {
+    this.$username.textContent = name;
   }
 
   displayAvatar(avatar: string | null): void {
