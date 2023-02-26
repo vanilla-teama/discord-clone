@@ -66,7 +66,7 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
     if (appStore.chats.length) {
       Router.push(RouteControllers.Chats, '', [appStore.chats[0].userId]);
     } else {
-      Router.push(RouteControllers.Chats);
+      Router.push(RouteControllers.Friends);
     }
   };
 
