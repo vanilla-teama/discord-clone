@@ -3,6 +3,8 @@ import Router, { RouteControllers } from '../lib/router';
 import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
 import { ServerToClientEvents } from '../types/socket';
+import { CustomEvents } from '../types/types';
+import { getTypedCustomEvent } from '../utils/functions';
 import FriendsMainContentView from '../views/friends-main-content-view';
 
 class FriendsMainContentComponent extends Controller<FriendsMainContentView> {
@@ -14,6 +16,7 @@ class FriendsMainContentComponent extends Controller<FriendsMainContentView> {
 
   async init(): Promise<void> {
     await this.fetchAllFriends();
+    this.bindAccountUpdated();
     this.view.bindOnSearch(this.onSearch);
     this.view.bindOnInvite(this.onInvite);
     this.view.bindOnSendMessage(this.onSendMessage);
@@ -44,6 +47,23 @@ class FriendsMainContentComponent extends Controller<FriendsMainContentView> {
     FriendsMainContentComponent.instance.resetAddFriendContent();
     FriendsMainContentView.showAddFriendContent();
   };
+
+  bindAccountUpdated() {
+    document.removeEventListener(CustomEvents.ACCOUNTUPDATED, FriendsMainContentComponent.onAccountUpdated);
+    document.addEventListener(
+      CustomEvents.ACCOUNTUPDATED,
+      (FriendsMainContentComponent.onAccountUpdated = async (event) => {
+        const {
+          detail: { user },
+        } = getTypedCustomEvent(CustomEvents.ACCOUNTUPDATED, event);
+        if (!user) {
+          return;
+        }
+        await this.fetchAllFriends();
+        this.displayAllFriends();
+      })
+    );
+  }
 
   bindSocketEvents() {
     socket.removeListener('userInvitedToFriends', FriendsMainContentComponent.onSocketUserInvitedToFriends);
@@ -210,6 +230,8 @@ class FriendsMainContentComponent extends Controller<FriendsMainContentView> {
   static onSocketFriendDeleted: ServerToClientEvents['friendDeleted'] = () => {};
 
   static onSocketUserChangedAvailability: ServerToClientEvents['userChangedAvailability'] = () => {};
+
+  static onAccountUpdated: EventListener = () => {};
 }
 
 export default FriendsMainContentComponent;
