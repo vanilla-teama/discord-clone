@@ -18,7 +18,7 @@ export const bindSocketEvents = (
   });
 
   socket.on('userRegistered', (data) => {
-    socket.broadcast.emit('userRegistered', data);
+    io.emit('userRegistered', data);
   });
 
   socket.on('userLoggedIn', ({ userId }) => {

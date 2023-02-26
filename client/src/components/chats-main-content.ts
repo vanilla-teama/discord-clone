@@ -66,12 +66,10 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
   }
 
   onMessageListChange = async (messages: RenderedPersonalMessage[]): Promise<void> => {
-    console.log('message list changed 1');
     if (!this.chat || !appStore.user) {
       return;
     }
     const opponent = appStore.users.find((user) => user.id === this.chat?.userId);
-    console.log('message list changed 2', opponent);
     if (!opponent) {
       return;
     }
@@ -79,7 +77,6 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       [appStore.user.id]: appStore.user.profile,
       [opponent.id]: opponent.profile,
     };
-    console.log('message list changed 3', profiles);
     const messagesWithProfiles = messages.map((message) => ({
       ...message,
       profile: profiles[message.userId] ?? { about: null, avatar: null, banner: null },

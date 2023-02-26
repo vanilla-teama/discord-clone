@@ -27,7 +27,7 @@ class ServersScreen extends Controller<ServersScreenView> {
       await appStore.fetchAllServers(),
       await appStore.fetchUserRelatedServers(appStore.user.id),
     ]);
-    this.bindRouteChanged();
+    // this.bindRouteChanged();
 
     // Render Layout
     await new Screen().init();
@@ -38,22 +38,26 @@ class ServersScreen extends Controller<ServersScreenView> {
   }
 
   bindRouteChanged() {
-    const handler = async (event: Event): Promise<void> => {
-      const {
-        detail: { controller, params },
-      } = getTypedCustomEvent(CustomEvents.AFTERROUTERPUSH, event);
+    document.removeEventListener(CustomEvents.AFTERROUTERPUSH, ServersScreen.onRouteChanged);
+    document.addEventListener(
+      CustomEvents.AFTERROUTERPUSH,
+      (ServersScreen.onRouteChanged = async (event: Event): Promise<void> => {
+        const {
+          detail: { controller, params },
+        } = getTypedCustomEvent(CustomEvents.AFTERROUTERPUSH, event);
 
-      if (controller === RouteControllers.Servers && params.length === 1) {
-        await this.onUrlChanged();
-      }
-    };
-    document.removeEventListener(CustomEvents.AFTERROUTERPUSH, handler);
-    document.addEventListener(CustomEvents.AFTERROUTERPUSH, handler);
+        if (controller === RouteControllers.Servers && params.length === 1) {
+          await this.onUrlChanged();
+        }
+      })
+    );
   }
 
   async onUrlChanged(): Promise<void> {
     await new ServersSideBarComponent().init();
   }
+
+  static onRouteChanged = async (event: Event): Promise<void> => {};
 }
 
 export default ServersScreen;
