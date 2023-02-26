@@ -21,6 +21,7 @@ export default {
       bannerColor: 'Banner color',
       about: 'About me',
       changesWarning: 'Careful - You have unsaved changes!',
+      uploadImage: 'Upload image',
     },
     appearance: {
       heading: 'Appearance',

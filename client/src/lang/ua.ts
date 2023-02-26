@@ -21,6 +21,7 @@ export default {
       bannerColor: 'Колір банера',
       about: 'Про мене',
       changesWarning: 'Обережно - є незбережені зміни!',
+      uploadImage: 'Завантажте зображення',
     },
     appearance: {
       heading: 'Зовнішній вигляд',

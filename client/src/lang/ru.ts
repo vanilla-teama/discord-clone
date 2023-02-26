@@ -21,6 +21,7 @@ export default {
       bannerColor: 'Цвет баннера',
       about: 'Обо мне',
       changesWarning: 'Осторожно - есть несохраненные изменения!',
+      uploadImage: 'Загрузите изображение',
     },
     appearance: {
       heading: 'Внешний вид',
