@@ -29,6 +29,10 @@ export const bindSocketEvents = (
     socket.broadcast.emit('userChangedAvailability', { userId, availability: Availability.Offline });
   });
 
+  socket.on('accountUpdated', (data) => {
+    socket.broadcast.emit('accountUpdated', data);
+  });
+
   socket.on('personalMessage', (data) => {
     io.emit('personalMessage', data);
   });

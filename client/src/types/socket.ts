@@ -21,6 +21,7 @@ export interface ServerToClientEvents {
   friendDeleted: (data: { userId: string; friendId: string }) => void;
   userInvitedToChannel: (data: { userId: string; channelId: string }) => void;
   serverAdded: (data: { serverId: string; userId: string }) => void;
+  accountUpdated: (data: { userId: string }) => void;
 }
 
 export interface ClientToServerEvents {
@@ -39,5 +40,6 @@ export interface ClientToServerEvents {
   friendDeleted: (data: { userId: string; friendId: string }) => void;
   userInvitedToChannel: (data: { userId: string; channelId: string }) => void;
   serverAdded: (data: { serverId: string; userId: string }) => void;
+  accountUpdated: (data: { userId: string }) => void;
   run: () => void;
 }
