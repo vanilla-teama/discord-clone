@@ -4,6 +4,7 @@ import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
 import { LoginError } from '../types/http-errors';
 import { Dispatch } from '../types/types';
+import { translation } from '../utils/lang';
 import SignInView from '../views/sign-in-view';
 import { StartScreenComponentState } from './start-screen';
 
@@ -49,7 +50,15 @@ class SignInComponent extends Controller<SignInView> {
   }
 
   onUnauthorized = async (error: LoginError): Promise<void> => {
-    this.view.displayError(error.data.message);
+    const __ = translation();
+    const errorMessage = error.data.message;
+    let message = error.data.message;
+    if (/^invalid[.]*/i.test(errorMessage)) {
+      message = __.auth.invalidEmailOrPassword;
+    } else if (/^email[.]*/i.test(errorMessage)) {
+      message = __.auth.emailNotFound;
+    }
+    this.view.displayError(message);
   };
 }
 
