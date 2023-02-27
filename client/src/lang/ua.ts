@@ -77,6 +77,8 @@ export default {
     friends: 'Друзі',
     addFriend: 'Додати друзів',
     searchPlaceholder: 'Шукати по імені або емейл',
+    notFound: 'Користувачів не знайдено',
+    noFriends: 'Немає друзів',
   },
   auth: {
     welcome: 'З поверненням!',

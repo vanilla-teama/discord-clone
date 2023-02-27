@@ -102,7 +102,7 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
 
     if (controller === RouteControllers.Servers) {
       if (params.length === 1) {
-        await ServersSideBarComponent.onUrlServerIdChanged(params[0]);
+        // await ServersSideBarComponent.onUrlServerIdChanged(params[0]);
       } else if (params.length >= 2) {
         await ServersSideBarComponent.onUrlChannelIdChanged(params[1]);
       }
