@@ -5,6 +5,7 @@ import { $, base64Url, capitalize, isClosestElementOfCssClass } from '../utils/f
 import { translation } from '../utils/lang';
 import MainView from './main-view';
 
+
 export type RenderedPersonalMessage = {
   id: MongoObjectId;
   userId: MongoObjectId;
@@ -58,6 +59,17 @@ class ChatsMainContentView extends View {
     const $inputContainer = $('div', 'chat__input-container');
 
     if (this.chat) {
+
+      //const messagesWithProfiles = personalMessages.map((message) => ({
+      //  ...message,
+      //  profile: { about: null, avatar: null, banner: null },
+      //}));
+
+      //this.messagesMap = new Map();
+      //messagesWithProfiles.forEach((message) => {
+      //  this.$messageList.append(this.createMessageItem(message));
+      //});
+
       $inputContainer.append(this.$replyContainer, this.$chatInput);
       $container.append(this.$messageList, $inputContainer);
     } else {
@@ -86,6 +98,7 @@ class ChatsMainContentView extends View {
 
   displayMessages = (messages: (RenderedPersonalMessage & { profile: Profile })[]) => {
     this.$messageList.innerHTML = '';
+
     this.messagesMap = new Map();
     messages.forEach((message) => {
       this.$messageList.append(this.createMessageItem(message));
@@ -142,6 +155,7 @@ class ChatsMainContentView extends View {
       $repliedInfo.textContent = `${responsedToMessage.username} | ${responsedToMessage.message}`;
       $repliedInfo.dataset.scrollTo = `#personal-message-${responsedToMessage.id}`;
       $messageBlock.prepend($repliedInfo);
+      $item.classList.add('replied');
     }
 
     $item.id = `personal-message-${id}`;

@@ -131,6 +131,7 @@ $infobar-width: 340px;
   width: 340px;
   //flex: 0 0 $infobar-width;
   position: fixed;
+  z-index: 100;
   //position: absolute;
   right: -$infobar-width;
   //top: 55px;
