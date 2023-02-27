@@ -5,7 +5,6 @@ import { $, base64Url, capitalize, isClosestElementOfCssClass } from '../utils/f
 import { translation } from '../utils/lang';
 import MainView from './main-view';
 
-
 export type RenderedPersonalMessage = {
   id: MongoObjectId;
   userId: MongoObjectId;
@@ -59,7 +58,6 @@ class ChatsMainContentView extends View {
     const $inputContainer = $('div', 'chat__input-container');
 
     if (this.chat) {
-
       //const messagesWithProfiles = personalMessages.map((message) => ({
       //  ...message,
       //  profile: { about: null, avatar: null, banner: null },
