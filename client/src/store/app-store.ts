@@ -666,7 +666,7 @@ class AppStore {
     }
     const response = await http
       .post<Partial<Server<'formData'>>, { data: { server: Server } }>('/servers', server, {
-        headers: multipartHeaders,
+        // headers: multipartHeaders,
       })
       .catch((error) => console.error(error));
     if (response) {

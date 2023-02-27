@@ -39,11 +39,11 @@ class ServerCreateFormComponent extends Controller<ServersCreateFormView> {
   private extractServer = (formData: FormData): Partial<Server<'formData'>> => {
     const server: Partial<Server<'formData'>> = {};
     const name = formData.get('name');
-    const image = formData.get('image');
+    // const image = formData.get('image');
 
-    if (typeof name === 'string' && image instanceof File) {
+    if (typeof name === 'string') {
       server.name = name.trim();
-      server.image = image;
+      // server.image = image;
       server.owner = appStore.user?.id;
     }
 
