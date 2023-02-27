@@ -59,17 +59,6 @@ class ChatsMainContentView extends View {
     const $inputContainer = $('div', 'chat__input-container');
 
     if (this.chat) {
-
-      //const messagesWithProfiles = personalMessages.map((message) => ({
-      //  ...message,
-      //  profile: { about: null, avatar: null, banner: null },
-      //}));
-
-      //this.messagesMap = new Map();
-      //messagesWithProfiles.forEach((message) => {
-      //  this.$messageList.append(this.createMessageItem(message));
-      //});
-
       $inputContainer.append(this.$replyContainer, this.$chatInput);
       $container.append(this.$messageList, $inputContainer);
     } else {

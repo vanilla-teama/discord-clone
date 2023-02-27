@@ -56,21 +56,6 @@ class ServersSideBarView extends View {
   displayChannels(channels: Channel[]): void {
     this.$serverList.innerHTML = '';
 
-    const channelsFake: Channel[] = [
-      {
-        id: 'efef',
-        serverId: '12',
-        name: 'RS',
-        general: false,
-      },
-      {
-        id: 'efef',
-        serverId: '45',
-        name: 'SCSS',
-        general: false,
-      },
-    ];
-
     channels.forEach((channel) => {
       const $item = this.createChannelItem(channel);
       this.$serverList.append($item);
@@ -120,14 +105,14 @@ class ServersSideBarView extends View {
     const $userIcon = $('img', 'user-item__icon');
     const $userStatus = $('div', 'user-item__status');
     const $userName = $('div', 'user-item__name');
-    //const $userIcon = $('div', 'chats-sidebar__user-icon');
-    //const $userName = $('div', 'chats-sidebar__user-name');
+
     if (user) {
       $userStatus.classList.add(`user-item__status_${user.availability}`);
     }
     $userIcon.src = user?.profile?.avatar ? base64Url(user.profile.avatar) : discord.default;
     $userName.textContent = user ? user.name : `${capitalize(__.common.userIsLoading)}...`;
-    const $userSettings = $('span', 'chats-sidebar__user-settings');
+    const $userSettings = $('span', ['chats-sidebar__user-settings', 'tooltip']);
+    $userSettings.dataset.text = __.sidebar.userSettings;
     $userAvatar.append($userIcon, $userStatus);
     $userContainer.append($userAvatar, $userName);
     $userBar.append($userContainer, $userSettings);

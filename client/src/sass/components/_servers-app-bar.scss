@@ -27,6 +27,10 @@
     opacity: 0.5;
     transition: all 0.3s ease 0s;
     cursor: pointer;
+    &.tooltip::after {
+      left: -50px;
+      top: 45px;
+    }
     &:hover {
       opacity: 1;
     }
@@ -34,12 +38,14 @@
   &__profile-btn {
     &.tooltip::after {
       left: -50px;
+      top: 45px;
     }
     background: var(--icons-user-profile) center / cover no-repeat;
   }
   &__help-btn {
     &.tooltip::after {
       left: -10px;
+      top: 45px;
     }
     background: var(--icons-help) center / cover no-repeat;
     position: relative;
@@ -69,4 +75,3 @@
     }
   }
 }
-

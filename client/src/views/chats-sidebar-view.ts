@@ -132,12 +132,10 @@ class ChatsSideBarView extends View {
     const $userBar = $('div', 'chats-sidebar__user-bar');
     const $userContainer = $('div', 'chats-sidebar__user-container');
     const $userAvatar = $('div', 'user-item__avatar');
-    // const $userIcon = $('div', 'user-item__icon');
     const $userIcon = $('img', 'user-item__icon');
     const $userStatus = $('div', 'user-item__status');
     const $userName = $('div', 'user-item__name');
-    //const $userIcon = $('div', 'chats-sidebar__user-icon');
-    //const $userName = $('div', 'chats-sidebar__user-name');
+
     if (user) {
       $userStatus.classList.add(`user-item__status_${user.availability}`);
     }

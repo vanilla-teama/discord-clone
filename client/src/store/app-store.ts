@@ -480,7 +480,7 @@ class AppStore {
       this.user = response.data.user;
     } else {
       // TODO: REMOVE THIS LINE BEFORE PRODUCTION!
-      // this.user = users.find((user) => email === user.email) || users[0];
+       this.user = users.find((user) => email === user.email) || users[0];
     }
   }
 

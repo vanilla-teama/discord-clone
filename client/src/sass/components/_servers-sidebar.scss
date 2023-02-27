@@ -22,7 +22,7 @@
     opacity: 0.5;
     transition: all 0.3s ease 0s;
 
-    &:hover{
+    &:hover {
       opacity: 1;
     }
   }
@@ -34,8 +34,8 @@
     transition: all 0.3s ease 0s;
     border-radius: 7px;
     cursor: pointer;
-        
-    &:hover{
+
+    &:hover {
       opacity: 1;
     }
   }
@@ -75,7 +75,7 @@
       transition: all 0.3s ease 0s;
     }
 
-    &_active { 
+    &_active {
       background-color: var(--background-color-gray-hover);
       cursor: pointer;
 
@@ -84,7 +84,7 @@
       }
     }
 
-    &:hover { 
+    &:hover {
       background-color: var(--background-color-gray-hover);
       cursor: pointer;
     }
@@ -93,7 +93,7 @@
     background: var(--icons-hash) center no-repeat;
     width: 20px;
     height: 20px;
-    opacity: .5;
+    opacity: 0.5;
   }
   &__name {
     color: var(--text-primary);
@@ -109,12 +109,23 @@
     border: none;
     cursor: pointer;
     transition: all 0.3s ease 0s;
-    
+
     &.tooltip::after {
       top: -25px;
+      //white-space: white-space: normal;
     }
     &:hover {
       opacity: 1;
+    }
+  }
+}
+
+@include media-lg-down {
+  .servers-sidebar {
+    &__invite {
+      &.tooltip::after {
+        display: none;
+      }
     }
   }
 }

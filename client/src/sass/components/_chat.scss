@@ -5,6 +5,8 @@
   display: flex;
   flex-direction: column;
   background-color: var(--background-color-light-gray);
+  position: relative;
+  z-index: 9;
 
   &__messages-list {
     flex: 1 1 auto;
