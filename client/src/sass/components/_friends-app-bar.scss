@@ -30,16 +30,12 @@
   &__add-btn {
     border: none;
     background-color: var(--background-color-green);
-    color: var(--text-primary);
+    color: var(--text-button);
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
-
-    &__friends-btn {
-
-    }
 
     &:hover{
       color: var(--background-color-green);

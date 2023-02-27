@@ -45,7 +45,6 @@ $infobar-width: 340px;
 .app-bar {
   background-color: var(--background-color-light-gray);
   border-bottom: 2px solid var(--background-color-light-gray-scroll);
-  //padding-left: 0px;
   padding-left: 110px;
   transition: 0.2s all linear;
 }
@@ -53,12 +52,9 @@ $infobar-width: 340px;
 .main-container {
   display: flex;
   height: calc(100% - 60px);
-  //height: 100%;
   background-color: var(--background-color-light-gray);
-  //padding-left: 240px;
   margin-left: 0;
   padding-left: 110px;
-  //padding-left: 0px;
   transition: 0.2s all linear;
 
   animation-duration: 200ms;
@@ -129,13 +125,9 @@ $infobar-width: 340px;
 
 .info-bar {
   width: 340px;
-  //flex: 0 0 $infobar-width;
   position: fixed;
-  z-index: 100;
-  //position: absolute;
+  z-index: 10;
   right: -$infobar-width;
-  //top: 55px;
-  //height: calc(100% - 106px);
   height: calc(100% - 62px);
 
   animation-duration: 200ms;

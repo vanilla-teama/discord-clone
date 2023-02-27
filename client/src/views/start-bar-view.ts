@@ -51,13 +51,6 @@ class StartBarView extends View {
     );
     this.$container.append($startBarContainer);
 
-    //this.$container.append(
-    //  StartBarView.$burgerBtn,
-    //  $separatorUp,
-    //  StartBarView.$chatBar,
-    //  $separator,
-    //  StartBarView.$serversBar
-    //);
   }
 
   bindShowSideBarClick = (handler: EventListener): void => {
