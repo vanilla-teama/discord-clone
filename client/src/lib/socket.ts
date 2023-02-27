@@ -2,6 +2,7 @@ import { SocketOptions } from 'engine.io-client';
 import { ManagerOptions, Socket, io } from 'socket.io-client';
 import { IncomingPersonalMessage } from '../store/app-store';
 import { ClientToServerEvents, ServerToClientEvents } from '../types/socket';
+import { PROD_API_URL } from '../constants';
 
 const socketOptions: Partial<ManagerOptions & SocketOptions> | undefined = {
   // reconnection: false,
@@ -10,7 +11,12 @@ const socketOptions: Partial<ManagerOptions & SocketOptions> | undefined = {
   port: 3000,
 };
 
-const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(socketOptions);
+const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io('https://server-production-b796.up.railway.app', {
+  withCredentials: true,
+  extraHeaders: {
+    'Access-Control-Allow-Origin': '*',
+  },
+});
 
 export const createSocketEvent = <K extends keyof ClientToServerEvents>(
   name: K,

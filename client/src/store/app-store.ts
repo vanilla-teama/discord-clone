@@ -507,7 +507,10 @@ class AppStore {
   }
 
   async logOut(): Promise<void> {
-    const response = await http.get('/users/logout').catch((err) => console.error(err));
+    if (!this.user) {
+      return;
+    }
+    const response = await http.get(`/users/logout/${this.user.id}`).catch((err) => console.error(err));
     if (response) {
       this.user = null;
     } else {
