@@ -10,6 +10,7 @@ class SignInView extends View {
   $signUpButton: HTMLButtonElement;
   $form: HTMLFormElement;
   $errorContainer: HTMLDivElement;
+  $footer: HTMLElement;
 
   constructor() {
     const $root = document.getElementById('root');
@@ -20,6 +21,7 @@ class SignInView extends View {
     this.$form = $('form', 'sign-in__form');
     this.$signUpButton = $('button', 'btn btn-auth');
     this.$errorContainer = $('div', 'sign-in__error-container');
+    this.$footer = this.createFooter();
   }
 
   build(): void {
@@ -49,7 +51,42 @@ class SignInView extends View {
 
     $box.append($title, this.$errorContainer, this.$form, $btnSignUpBox);
     $container.append($box);
-    this.$container.append($container);
+    this.$container.append($container, this.$footer);
+  }
+
+  private createFooter(): HTMLElement {
+    const $footer = $('footer', 'footer');
+    const $footerContainer = $('div', 'footer__container');
+    const $develops = $('div', 'footer__develops');
+
+    const $develop1 = $('a', 'footer__develop-1');
+    $develop1.textContent = 'superconscience';
+    $develop1.href = 'https://github.com/superconscience';
+    $develop1.target = '_blank';
+    const $develop2 = $('a', 'footer__develop-2');
+    $develop2.textContent = 'alex89198900';
+    $develop2.href = 'https://github.com/Alex89198900';
+    $develop2.target = '_blank';
+    const $develop3 = $('a', 'footer__develop-3');
+    $develop3.textContent = 'akiroi';
+    $develop3.href = 'https://github.com/akiroi';
+    $develop3.target = '_blank';
+
+    const $courseContainer = $('div', 'footer__course-container');
+    const $year = $('div', 'footer__year');
+    $year.textContent = '©2023';
+    const $courseLink = $('a', 'footer__course-link');
+    $courseLink.href = 'https://rs.school/js/';
+    $courseLink.target = '_blank';
+    const $courseIcon = $('span', 'footer__course-icon');
+
+    $courseLink.append($courseIcon);
+    $courseContainer.append($courseLink, $year);
+    $develops.append($develop1, $develop2, $develop3);
+    $footerContainer.append($courseContainer, $develops);
+    $footer.append($footerContainer);
+
+    return $footer;
   }
 
   bindControllerState(handler: Dispatch<StartScreenComponentState>) {

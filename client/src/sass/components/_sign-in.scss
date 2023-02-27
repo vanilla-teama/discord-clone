@@ -2,6 +2,8 @@
 .sign-up {
   width: 100vw;
   background: url('/src/assets/bg/register-bg.png') center / cover no-repeat;
+  //display: flex;
+  //flex-direction: column;
 
   &__box {
     padding: 32px;
