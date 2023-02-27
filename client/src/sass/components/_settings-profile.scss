@@ -13,18 +13,9 @@
   position: absolute;
   top: 20px;
   right: 20px;
-  //z-index: 90;
   &:hover {
     opacity: 1;
   }
-  //cursor: pointer;
-  ////margin-top: 70px;
-  //margin-top: 20px;
-  //width: 40px;
-  //height: 40px;
-  //border-radius: 20px;
-  //border: 3px solid #ffffff;
-  //float: right;
 }
 .info-block {
   max-width: 350px;
@@ -40,7 +31,6 @@
   position: relative;
   border-radius: 30px;
   border: 5px solid black;
-  // background: url('/src/assets/icons/discord.svg') center no-repeat;
   background-size: cover;
   height: 50px;
   width: 50px;
@@ -93,7 +83,6 @@
 }
 
 .button-avatar {
-  //margin-top: 20px;
   border-radius: 3px;
   color: white;
   border: none;
@@ -219,7 +208,6 @@
   }
 
   &__image-upload {
-    //background: url('/src/assets/icons/upload.svg')
     width: 80px;
     height: 80px;
     cursor: pointer;
@@ -254,14 +242,8 @@
   position: relative;
 }
 .change-control {
-  //padding-top: 10px;
-  //display: none;
   position: absolute;
   bottom: 10px;
-  //left: 0;
-  //max-width: 740px;
-  //width: 100%;
-  //padding: 0 20px 20px;
   z-index: 2;
   &__container {
     width: 137%;
@@ -312,8 +294,6 @@
   .container-profile {
     gap: 15px;
     flex-direction: column;
-    //margin: 0 auto;
-    //justify-content: start;
   }
   .title-main-profile {
     margin-bottom: 15px;
@@ -337,7 +317,6 @@
       margin-bottom: 0;
       border-top: none;
       border-bottom: none;
-      //margin: 0 10px;
     }
     .customize-section {
       border-top: none;

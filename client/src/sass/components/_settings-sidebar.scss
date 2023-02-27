@@ -51,15 +51,9 @@
   flex: 1 1 65%;
   align-items: flex-start;
   padding: 60px 40px 80px;
-  //padding-top: 60px;
-  //margin-left: 5%;
-  //width: 100%;
-  //width: 60%;
-  //background: var(--background-color-gray);
 }
 
 .container-close-btn {
-  //background: var(--background-color-gray);
   padding: 30px;
 }
 @include media-lg-down {
@@ -78,11 +72,6 @@
     flex: 1 1 auto;
     align-items: flex-start;
     padding: 20px;
-    //padding-top: 60px;
-    //margin-left: 5%;
-    //width: 100%;
-    //width: 60%;
-    //background: var(--background-color-gray);
   }
   .settings__sidebar {
     display: flex;

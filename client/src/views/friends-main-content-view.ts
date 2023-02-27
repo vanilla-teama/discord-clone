@@ -54,36 +54,6 @@ class FriendsMainContentView extends View {
 
   displayFoundUsers(users: User[], currentUser: User): void {
     const __ = translation();
-    //const userfake = [
-    //  {
-    //    name: 'stggggggggggggggggggggggggggggggggggggring',
-    //    password: 'string',
-    //    email: 'string',
-    //    phone: 'string',
-    //    availability: Availability.Offline,
-    //    chats: null,
-    //    friends: ['22'],
-    //    invitesFrom: ['22'],
-    //    invitesTo: ['22'],
-    //    invitesToChannels:['dewd'],
-    //    createdAt: 'string',
-    //    profile: ['ss'],
-    //  },
-    //  {
-    //    name: 'string',
-    //    password: 'string',
-    //    email: 'string',
-    //    phone: 'string',
-    //    availability: Availability.Offline,
-    //    chats: null,
-    //    friends: ['22'],
-    //    invitesFrom: ['22'],
-    //    invitesTo: ['22'],
-    //    invitesToChannels:['dewd'],
-    //    createdAt: 'string',
-    //    profile: ['ss'],
-    //  },
-    //];
 
     this.$foundUserList.innerHTML = '';
     if (users.length > 0) {

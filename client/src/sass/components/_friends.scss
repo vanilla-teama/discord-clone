@@ -1,6 +1,4 @@
 .friends {
-  &__friends {
-  }
   &__friend-list {
     width: 100%;
     display: flex;
@@ -75,8 +73,7 @@
   &__accept-invitation-btn,
   &__cancel-invite-btn {
     border: none;
-    //background-color: var(--background-color-blue);
-    color: var(--text-secondary);
+    color: var(--text-button);
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
     padding: 5px 10px;
@@ -97,7 +94,6 @@
     }
   }
   &__status {
-    //background-color: var(--background-color-blue);
     color: var(--background-color-blue-light);
     padding: 2px 5px;
     border-radius: 15px;
@@ -167,12 +163,12 @@
   }
   .friends__invite-user {
     border: none;
-    width: 60px;
+    // width: 60px;
     margin-right: 10px;
-    color: var(--text-secondary);
+    color: var(--text-button);
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
-    padding: 5px 0px;
+    padding: 3px 15px;
     border-radius: 5px;
     cursor: pointer;
     margin-left: 10px;
