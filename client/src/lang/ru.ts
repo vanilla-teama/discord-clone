@@ -90,6 +90,10 @@ export default {
     register: 'Зарегистрироваться',
     createAccount: 'Создать аккаунт',
     alreadyHaveAccount: 'Уже есть аккаунт?',
+    emailNotFound: 'Е-мейл не найден',
+    invalidEmailOrPassword: 'Неверный емейл или пароль',
+    accountAlreadyExists: 'Аккаунт с таким емейл уже существует',
+    passwordLengthError: 'Пароль должен состоять из как минимум 4-х символов',
   },
   common: {
     username: 'имя пользователя',

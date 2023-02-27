@@ -90,6 +90,10 @@ export default {
     register: 'Register',
     createAccount: 'Create an account',
     alreadyHaveAccount: 'Already have an account?',
+    emailNotFound: 'Email not found',
+    invalidEmailOrPassword: 'Invalid email or password',
+    accountAlreadyExists: 'Account with that email address already exists',
+    passwordLengthError: 'Password must be at least 4 characters long',
   },
   common: {
     username: 'username',
