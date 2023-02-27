@@ -34,6 +34,7 @@ class ServersScreen extends Controller<ServersScreenView> {
 
     await new StartBarComponent().init();
     await this.onUrlChanged();
+    await new ServersSideBarComponent().init();
     await new MainComponent().init();
   }
 
@@ -54,7 +55,7 @@ class ServersScreen extends Controller<ServersScreenView> {
   }
 
   async onUrlChanged(): Promise<void> {
-    await new ServersSideBarComponent().init();
+    // await new ServersSideBarComponent().init();
   }
 
   static onRouteChanged = async (event: Event): Promise<void> => {};

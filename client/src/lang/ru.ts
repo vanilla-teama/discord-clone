@@ -77,6 +77,8 @@ export default {
     friends: 'Друзья',
     addFriend: 'Добавить друзей',
     searchPlaceholder: 'Искать по имени или емейл',
+    notFound: 'Пользователей не найдено',
+    noFriends: 'Нет друзей',
   },
   auth: {
     welcome: 'С возвращением!',

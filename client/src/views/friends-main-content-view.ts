@@ -53,6 +53,7 @@ class FriendsMainContentView extends View {
   }
 
   displayFoundUsers(users: User[], currentUser: User): void {
+    const __ = translation();
     //const userfake = [
     //  {
     //    name: 'stggggggggggggggggggggggggggggggggggggring',
@@ -85,22 +86,39 @@ class FriendsMainContentView extends View {
     //];
 
     this.$foundUserList.innerHTML = '';
-    users.forEach((user) => {
-      this.$foundUserList.append(this.createFoundUserListItem(user, currentUser));
-    });
+    if (users.length > 0) {
+      users.forEach((user) => {
+        this.$foundUserList.append(this.createFoundUserListItem(user, currentUser));
+      });
+    } else {
+      const $item = $('li', 'friends__found-user-list-item');
+      const $notFound = $('p');
+      $notFound.textContent = __.friends.notFound;
+      $item.append($notFound);
+      this.$foundUserList.append($item);
+    }
   }
 
   displayFriends(invitedTo: User[], invitedFrom: User[], friends: User[]): void {
+    const __ = translation();
     this.$friendList.innerHTML = '';
-    friends.forEach((user) => {
-      this.$friendList.append(this.createFriendItem(user));
-    });
-    invitedTo.forEach((user) => {
-      this.$friendList.append(this.createFriendItem(user, 'invitedTo'));
-    });
-    invitedFrom.forEach((user) => {
-      this.$friendList.append(this.createFriendItem(user, 'invitedFrom'));
-    });
+    if (friends.length > 0 || invitedTo.length > 0 || invitedFrom.length > 0) {
+      friends.forEach((user) => {
+        this.$friendList.append(this.createFriendItem(user));
+      });
+      invitedTo.forEach((user) => {
+        this.$friendList.append(this.createFriendItem(user, 'invitedTo'));
+      });
+      invitedFrom.forEach((user) => {
+        this.$friendList.append(this.createFriendItem(user, 'invitedFrom'));
+      });
+    } else {
+      const $item = $('li', 'friends__friend-list-item');
+      const $notFound = $('p');
+      $notFound.textContent = __.friends.noFriends;
+      $item.append($notFound);
+      this.$friendList.append($item);
+    }
   }
 
   createFriendItem(user: User, status: 'invitedTo' | 'invitedFrom' | 'friend' = 'friend'): HTMLLIElement {
@@ -205,14 +223,14 @@ class FriendsMainContentView extends View {
   }
 
   static showFriendsContent(): void {
-    FriendsMainContentView.$addFriendContent.classList.remove('friends__add-friend_show');
-    FriendsMainContentView.$friendsContent.classList.add('friends__friends_show');
+    FriendsMainContentView.$addFriendContent?.classList.remove('friends__add-friend_show');
+    FriendsMainContentView.$friendsContent?.classList.add('friends__friends_show');
     FriendsMainContentView.onShowFriendsContent();
   }
 
   static showAddFriendContent(): void {
-    FriendsMainContentView.$friendsContent.classList.remove('friends__friends_show');
-    FriendsMainContentView.$addFriendContent.classList.add('friends__add-friend_show');
+    FriendsMainContentView.$friendsContent?.classList.remove('friends__friends_show');
+    FriendsMainContentView.$addFriendContent?.classList.add('friends__add-friend_show');
     FriendsMainContentView.onShowAddFriendContent();
   }
 
