@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } f
 import { API_URL } from '../constants';
 import socket from './socket';
 import { IExpressError } from '../types/http-errors';
+import { toggleLoader } from '../utils/functions';
 
 export enum ErrorStatusCode {
   Unauthorized = 401,
@@ -77,13 +78,18 @@ class Http {
 
     http.interceptors.request.use((config) => {
       config.params = { ...config.params, socketId: socket.id };
+      toggleLoader(true);
       return config;
     });
 
     http.interceptors.response.use(
-      (response) => response,
+      (response) => {
+        toggleLoader(false);
+        return response;
+      },
       (error: AxiosError) => {
         const { response } = error;
+        toggleLoader(false);
         return this.handleError(response);
       }
     );
