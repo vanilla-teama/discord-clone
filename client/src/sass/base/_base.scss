@@ -301,6 +301,25 @@ ul {
     -webkit-line-clamp: 1;
 }
 
+#loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--background-color-dark-grey);
+  color: var(--text-secondary);
+  z-index: 100000;
+  opacity: 0.9;
+  display: none;
+
+  &.on {
+    display: flex;
+  }
+}
 // .app-bar {
 //   @include media-lg-up {
 //     padding-left: 240px;

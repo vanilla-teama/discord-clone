@@ -87,3 +87,10 @@ export const getAvailability = (availability: Availability): string => {
   };
   return data[availability];
 };
+
+export const toggleLoader = (toggle: boolean): void => {
+  const loader = document.getElementById('loader');
+  if (loader) {
+    loader.classList.toggle('on', toggle);
+  }
+};
