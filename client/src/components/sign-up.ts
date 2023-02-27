@@ -3,6 +3,7 @@ import Router, { RouteControllers } from '../lib/router';
 import socket from '../lib/socket';
 import { appStore } from '../store/app-store';
 import { Dispatch } from '../types/types';
+import { translation } from '../utils/lang';
 import SignUpView from '../views/sign-up-view';
 import { StartScreenComponentState } from './start-screen';
 
@@ -42,14 +43,28 @@ class SignUpComponent extends Controller<SignUpView> {
         },
         (error) => {
           if ('errors' in error.data) {
-            this.view.displayError(error.data.errors.map(({ msg }) => msg));
+            this.view.displayError(
+              error.data.errors.map(({ msg }) => {
+                return this.translateErrorMessage(msg);
+              })
+            );
           } else if ('message' in error.data) {
-            this.view.displayError([error.data.message]);
+            this.view.displayError([this.translateErrorMessage(error.data.message)]);
           }
         }
       );
     }
   };
+
+  translateErrorMessage(message: string): string {
+    const __ = translation();
+    if (/account with that email address already exists/i.test(message)) {
+      return __.auth.accountAlreadyExists;
+    } else if (/password must be at least 4 characters long/i.test(message)) {
+      return __.auth.passwordLengthError;
+    }
+    return message;
+  }
 }
 
 export default SignUpComponent;

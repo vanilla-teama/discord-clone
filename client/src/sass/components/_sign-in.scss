@@ -72,6 +72,11 @@
   }
 }
 
+.sign-in__error-container,
+.sign-up__error-container {
+  color: var(--background-color-red);
+}
+
 @include media-sm-down {
   .sign-in,
   .sign-up {
