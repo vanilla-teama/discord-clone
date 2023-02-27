@@ -38,13 +38,17 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
     appStore.bindChannelListChanged(this.onChannelListChanged);
     ServersSideBarComponent.bindRouteChanged();
     {
-      const serverId = new Router().getParams()[0];
-      if (serverId) {
+      const router = new Router();
+      const serverId = router.getParams()[0];
+      const channelId = router.getParams()[1];
+      if (serverId && !channelId) {
         await ServersSideBarComponent.onUrlServerIdChanged(serverId);
+      } else if (channelId) {
+        await ServersSideBarComponent.onUrlChannelIdChanged(channelId);
       }
     }
     if (ServersSideBarComponent.channelId) {
-      await ServersSideBarComponent.onUrlChannelIdChanged(ServersSideBarComponent.channelId);
+      // await ServersSideBarComponent.onUrlChannelIdChanged(ServersSideBarComponent.channelId);
     }
     this.view.bindShowCreateChannel(this.onShowCreateChannel);
     this.view.bindOnInvite(this.onInvite);
@@ -102,7 +106,9 @@ class ServersSideBarComponent extends Controller<ServersSideBarView> {
 
     if (controller === RouteControllers.Servers) {
       if (params.length === 1) {
-        // await ServersSideBarComponent.onUrlServerIdChanged(params[0]);
+        if (ServersSideBarComponent.serverId !== params[0]) {
+          await ServersSideBarComponent.onUrlServerIdChanged(params[0]);
+        }
       } else if (params.length >= 2) {
         await ServersSideBarComponent.onUrlChannelIdChanged(params[1]);
       }
