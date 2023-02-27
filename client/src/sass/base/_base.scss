@@ -3,6 +3,7 @@
 :root {
   --background-separator: #42464D;
   --background-burger-menu: #DCDDDE;
+  --background-chats-buttons: #36393F;
   --background-color-dark-grey: #202225;
   --background-color-gray: #2F3136;
   --background-color-light-gray: #36393F;
@@ -52,6 +53,7 @@
 [light] {
   --background-separator: #cccccd;
   --background-burger-menu: #777777;
+  --background-chats-buttons: #FFFFFF;
   --background-color-dark-grey: #E9EAED; //user-bar
   --background-color-gray: #EEEFF1; //sidebar, info-bar
   --background-color-light-gray: #FFFFFF;  //main
@@ -69,10 +71,10 @@
   --background-color-white-dark: #d8d9db;
   --background-color-white-dark1: #808080;
   --background-color-white-dark2: #6f6f6f;
-  --background-color-orange: #FAA61A;
+  --background-color-orange: #ca8000;
   --background-color-red: #ED4545;
   --background-color-red-dark: #a72626;
-  --background-color-orange-light: #584D3D;
+  --background-color-orange-light: #f8ebd9;
   --text-primary: #4E5058;
   --text-secondary: #060607;
   --text-button: #FFFFFF;
