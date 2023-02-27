@@ -560,8 +560,8 @@ class AppStore {
     const response = await http
       .patch<{ profile: Partial<Profile<'formData'>> }, { data: { user: User } }>(
         `/users/${userId}`,
-        { profile: data },
-        { headers: multipartHeaders }
+        { profile: data }
+        // { headers: multipartHeaders }
       )
       .catch((err) => console.error(err));
     if (response) {
