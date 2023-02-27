@@ -135,6 +135,7 @@ class ServersMainContentView extends View {
       $repliedInfo.textContent = `${responsedToMessage.username} | ${responsedToMessage.message}`;
       $repliedInfo.dataset.scrollTo = `#channel-message-${responsedToMessage.id}`;
       $messageBlock.prepend($repliedInfo);
+      $item.classList.add('replied');
     }
 
     $item.id = `channel-message-${id}`;
