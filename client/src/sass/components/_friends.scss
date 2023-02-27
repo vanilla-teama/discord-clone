@@ -18,6 +18,10 @@
     transition: all 0.3s ease 0s;
     cursor: pointer;
 
+    &:last-child {
+      border-bottom: none;
+    }
+
     .user-item__box {
       flex: 1 1 auto;
     }
@@ -143,6 +147,10 @@
     transition: all 0.3s ease 0s;
     list-style: none;
     cursor: pointer;
+
+    &:last-child {
+      border-bottom: none;
+    }
 
     .user-item__box {
       flex: 1 1 auto;

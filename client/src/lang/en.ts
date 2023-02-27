@@ -77,6 +77,8 @@ export default {
     friends: 'Friends',
     addFriend: 'Add Friends',
     searchPlaceholder: 'Search by name or email',
+    notFound: 'No users found',
+    noFriends: 'No friends',
   },
   auth: {
     welcome: 'Welcome Back!',
