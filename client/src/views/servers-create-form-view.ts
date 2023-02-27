@@ -30,9 +30,7 @@ class ServersCreateFormView extends View {
 
   private createForm(): HTMLFormElement {
     const __ = translation();
-    const $form = Object.assign($('form', ['form-create-server', 'form', 'form_white']), {
-      enctype: 'multipart/form-data',
-    });
+    const $form = Object.assign($('form', ['form-create-server', 'form', 'form_white']));
     const $closeBtn = $('button', ['form-create-server__close-btn']);
 
     const $title = $('h3', ['form__title', 'form-create-server__title']);
@@ -73,6 +71,11 @@ class ServersCreateFormView extends View {
     $form.append($closeBtn, $title, $subtitle, $imageInputContainer, $inputContainer, $button);
 
     this.bindImageChange($imageInput, $form, $imageUpload);
+
+    $closeBtn.onclick = (event) => {
+      event.preventDefault();
+      ModalView.hide();
+    };
 
     return $form;
   }
