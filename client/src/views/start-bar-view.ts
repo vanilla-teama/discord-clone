@@ -50,7 +50,6 @@ class StartBarView extends View {
       StartBarView.$serversBar
     );
     this.$container.append($startBarContainer);
-
   }
 
   bindShowSideBarClick = (handler: EventListener): void => {
