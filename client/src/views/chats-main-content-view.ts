@@ -5,7 +5,6 @@ import { $, base64Url, capitalize, isClosestElementOfCssClass } from '../utils/f
 import { translation } from '../utils/lang';
 import MainView from './main-view';
 
-
 export type RenderedPersonalMessage = {
   id: MongoObjectId;
   userId: MongoObjectId;
