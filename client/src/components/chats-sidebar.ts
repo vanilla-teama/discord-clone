@@ -173,16 +173,16 @@ class ChatsSideBarComponent extends Controller<ChatsSideBarView> {
       })
     );
 
-    socket.removeListener('personalMessage', ChatsSideBarComponent.onSocketPersonalMessage);
-    socket.on(
-      'personalMessage',
-      (ChatsSideBarComponent.onSocketPersonalMessage = async ({ fromUserId, toUserId }) => {
-        if (!appStore.user || toUserId !== appStore.user.id) {
-          return;
-        }
-        await appStore.createChat([fromUserId]);
-      })
-    );
+    // socket.removeListener('personalMessage', ChatsSideBarComponent.onSocketPersonalMessage);
+    // socket.on(
+    //   'personalMessage',
+    //   (ChatsSideBarComponent.onSocketPersonalMessage = async ({ fromUserId, toUserId }) => {
+    //     if (!appStore.user || toUserId !== appStore.user.id) {
+    //       return;
+    //     }
+    //     await appStore.createChat([fromUserId]);
+    //   })
+    // );
   }
 
   static onSocketUserAvailabilityChangedServer = async ({

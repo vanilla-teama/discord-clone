@@ -2,6 +2,7 @@ import Controller from '../lib/controller';
 import socket from '../lib/socket';
 import { IncomingChannelMessage, appStore } from '../store/app-store';
 import { ChannelInvite } from '../types/entities';
+import { translation } from '../utils/lang';
 import ChannelsInviteFormView from '../views/channels-invite-form-view';
 import ModalView from '../views/modal-view';
 
@@ -17,9 +18,15 @@ class ChannelsInviteFormComponent extends Controller<ChannelsInviteFormView> {
     this.view.bindOnInvite(this.onInvite);
     this.view.render();
     {
+      const __ = translation();
       const data = appStore.getChannelNameAndServerName(this.channelId);
+      const channel = appStore.getChannel(this.channelId);
       if (data) {
-        this.view.displayTitle(data.serverName, data.channelName);
+        let channelName = data.channelName;
+        if (channel && channel.general) {
+          channelName = __.common.general;
+        }
+        this.view.displayTitle(data.serverName, channelName);
       }
     }
     this.displayInviteFriendList();
