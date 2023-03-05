@@ -246,7 +246,7 @@
   bottom: 10px;
   z-index: 2;
   &__container {
-    width: 137%;
+    width: 100%;
     background-color: var(--background-color-black);
     padding: 10px;
     overflow: hidden;
@@ -327,7 +327,9 @@
     }
   }
   .change-control__container {
-    width: 110%;
+    width: 90%;
+    flex-direction: column;
+    gap: 10px;
   }
 }
 @include media-sm-down {
@@ -345,15 +347,15 @@
    align-self: flex-end;
   }
   .change-control__container {
-    flex-direction: column;
-    gap: 10px;
+    // flex-direction: column;
+    // gap: 10px;
   }
   .change-control__container {
-    width: 137%;
+    // width: 137%;
   }
 }
 @media (max-width: 480px){
   .change-control__container {
-    width: 110%;
+    // width: 110%;
   }
 }

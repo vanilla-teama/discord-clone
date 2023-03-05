@@ -134,7 +134,10 @@ class FriendsMainContentView extends View {
     }
     $massageButtonContainer.append($messageButton);
     $deleteButtonContainer.append($deleteFriendButton);
-    $buttonsBlock.append($massageButtonContainer, $deleteButtonContainer);
+    $buttonsBlock.append($massageButtonContainer);
+    if (status === 'friend') {
+      $buttonsBlock.append($deleteButtonContainer);
+    }
     $item.append($itemBox, $buttonsBlock);
 
     $messageButton.onclick = () => {
