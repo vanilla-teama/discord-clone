@@ -181,6 +181,9 @@ class ChatsMainContentView extends View {
                 if (!$message) {
                   return;
                 }
+                if (event.target instanceof HTMLInputElement) {
+                  return;
+                }
                 this.onMessageHoverKey(key, $message, items.message, isEdit, mouseOverEvent);
               })
             );
@@ -521,7 +524,7 @@ class ChatsMainContentView extends View {
       if (event.key === 'Escape') {
         this.destroyEditMessageForm($message);
       } else if (event.key === 'Enter') {
-        $form.submit();
+        // $form.submit();
       }
     };
   };

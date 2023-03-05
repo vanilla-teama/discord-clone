@@ -154,4 +154,4 @@ export class App {
   }
 }
 
-new App(env.PORT).Start();
+new App(8000).Start();

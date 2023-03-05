@@ -2,6 +2,7 @@ import Controller from '../lib/controller';
 import socket, { emitPersonalMessage } from '../lib/socket';
 import { IncomingPersonalMessage, appStore } from '../store/app-store';
 import { Chat } from '../types/entities';
+import { ServerToClientEvents } from '../types/socket';
 import { CustomEvents } from '../types/types';
 import { getTypedCustomEvent } from '../utils/functions';
 import { translation } from '../utils/lang';
@@ -33,9 +34,9 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
       appStore.bindPersonalMessageListChanged(this.onMessageListChange);
       await this.fetchMessages();
       this.view.bindMessageEvent(this.handleSendMessage);
-      this.onSocketPersonalMessage();
-      this.onSocketPersonalMessageUpdated();
-      this.onSocketPersonalMessageDeleted();
+      this.bindSocketPersonalMessage();
+      this.bindSocketPersonalMessageUpdated();
+      this.bindSocketPersonalMessageDeleted();
       this.bindAccountUpdated();
       this.view.bindOnMessageHoverKey(this.onMessageHoverKey);
       this.view.bindMessageHover(this.showFastMenu);
@@ -103,17 +104,20 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
     emitPersonalMessage(message);
   };
 
-  onSocketPersonalMessage() {
-    socket.removeAllListeners('personalMessage');
-    socket.on('personalMessage', async ({ fromUserId, toUserId }) => {
-      if (!this.chat) {
-        return;
-      }
-      await this.fetchMessages();
-    });
+  bindSocketPersonalMessage() {
+    socket.removeListener('personalMessage', ChatsMainContentComponent.onSocketPersonalMessage);
+    socket.on(
+      'personalMessage',
+      (ChatsMainContentComponent.onSocketPersonalMessage = async ({ fromUserId, toUserId }) => {
+        if (!this.chat) {
+          return;
+        }
+        await this.fetchMessages();
+      })
+    );
   }
 
-  onSocketPersonalMessageUpdated() {
+  bindSocketPersonalMessageUpdated() {
     socket.removeAllListeners('personalMessageUpdated');
     socket.on('personalMessageUpdated', async ({ messageId }) => {
       if (!this.chat) {
@@ -123,7 +127,7 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
     });
   }
 
-  onSocketPersonalMessageDeleted() {
+  bindSocketPersonalMessageDeleted() {
     socket.removeAllListeners('personalMessageDeleted');
     socket.on('personalMessageDeleted', async ({ messageId }) => {
       if (!this.chat) {
@@ -250,6 +254,8 @@ class ChatsMainContentComponent extends Controller<ChatsMainContentView> {
   }
 
   static onAccountUpdated: EventListener = () => {};
+
+  static onSocketPersonalMessage: ServerToClientEvents['personalMessage'] = () => {};
 }
 
 export default ChatsMainContentComponent;

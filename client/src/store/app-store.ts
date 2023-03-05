@@ -572,12 +572,14 @@ class AppStore {
     if (!this.user) {
       return;
     }
+    console.log('creating chat');
     const response = await http
       .post(`/chats/users/${this.user.id}`, { userId: userIDs[0] })
       .catch((err) => console.error(err));
     if (response) {
       await this.fetchChats(this.user.id);
     }
+    console.log(this.chats);
     this.onChatListChanged(this.chats);
   }
 
@@ -848,6 +850,8 @@ class AppStore {
 
   static onSocketAccountUpdated: ServerToClientEvents['accountUpdated'] = () => {};
 
+  static onSocketPersonalMessage: ServerToClientEvents['personalMessage'] = () => {};
+
   private constructor() {
     AppStore.instance = this;
 
@@ -873,6 +877,17 @@ class AppStore {
           });
           document.dispatchEvent(event);
         }
+      })
+    );
+
+    socket.removeListener('personalMessage', AppStore.onSocketPersonalMessage);
+    socket.on(
+      'personalMessage',
+      (AppStore.onSocketPersonalMessage = async ({ fromUserId, toUserId }) => {
+        if (!appStore.user || toUserId !== appStore.user.id) {
+          return;
+        }
+        await appStore.createChat([fromUserId]);
       })
     );
   }

@@ -72,6 +72,11 @@ class ServersCreateFormView extends View {
     $inputContainer.append($label, $nameInput);
     $form.append($closeBtn, $title, $subtitle, $imageInputContainer, $inputContainer, $button);
 
+    $closeBtn.onclick = (event) => {
+      event.preventDefault();
+      ModalView.hide();
+    };
+
     this.bindImageChange($imageInput, $form, $imageUpload);
 
     return $form;

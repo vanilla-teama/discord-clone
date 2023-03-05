@@ -43,7 +43,9 @@ class ChannelsInviteFormView extends View {
     // this.$subtitle.textContent = '';
 
     $form.append($closeBtn, this.$title, this.$subtitle, this.$friendList);
-
+    $closeBtn.onclick = (event) => {
+      ModalView.hide();
+    };
     return $form;
   }
 
