@@ -16,4 +16,4 @@
     - passport
     - multer
     - sharp
-
+    - mongoose
