@@ -1,0 +1,131 @@
+.servers-sidebar {
+  min-height: 100%;
+  //height: calc(100% - 15px);
+  background-color: var(--background-color-gray);
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  &__create-container {
+    padding: 18px 5px 4px 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  &__create-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    opacity: 0.5;
+    transition: all 0.3s ease 0s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+  &__create-add {
+    background: var(--icons-plus) center no-repeat;
+    width: 15px;
+    height: 15px;
+    opacity: 0.5;
+    transition: all 0.3s ease 0s;
+    border-radius: 7px;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+    row-gap: 10px;
+    padding: 10px 5px;
+    height: calc(100vh - 109px);
+  }
+  &__item {
+    padding: 5px 5px 5px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+
+    width: calc(100% - 15px);
+    border-radius: 7px;
+    transition: all 0.3s ease 0s;
+
+    &:before {
+      content: '';
+      display: block;
+      width: 4px;
+      height: 8px;
+      background: var(--text-secondary);
+      border-radius: 10px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      top: 50%;
+      left: -5px;
+      transform: translateY(-50%);
+      position: absolute;
+      transition: all 0.3s ease 0s;
+    }
+
+    &_active {
+      background-color: var(--background-color-gray-hover);
+      cursor: pointer;
+
+      &.servers-sidebar__item::before {
+        display: none;
+      }
+    }
+
+    &:hover {
+      background-color: var(--background-color-gray-hover);
+      cursor: pointer;
+    }
+  }
+  &__hash-icon {
+    background: var(--icons-hash) center no-repeat;
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+  }
+  &__name {
+    color: var(--text-primary);
+    transition: all 0.3s ease 0s;
+  }
+  &__invite {
+    margin-left: auto;
+    background: var(--icons-create-invite) center / contain no-repeat;
+    width: 19px;
+    height: 16px;
+    opacity: 0.5;
+    transition: all 0.3s ease 0s;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+
+    &.tooltip::after {
+      top: -25px;
+      //white-space: white-space: normal;
+    }
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+@include media-lg-down {
+  .servers-sidebar {
+    &__invite {
+      &.tooltip::after {
+        display: none;
+      }
+    }
+  }
+}

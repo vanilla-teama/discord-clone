@@ -1,0 +1,77 @@
+.servers-app-bar {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &__channel-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  &__hash-icon {
+    background: var(--icons-hash) center no-repeat;
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+  }
+  &__panel-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  &__members-btn {
+    background: var(--icons-members) center/ cover no-repeat;
+    width: 25px;
+    height: 25px;
+    opacity: 0.5;
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    &.tooltip::after {
+      left: -50px;
+      top: 45px;
+    }
+    &:hover {
+      opacity: 1;
+    }
+  }
+  &__profile-btn {
+    &.tooltip::after {
+      left: -50px;
+      top: 45px;
+    }
+    background: var(--icons-user-profile) center / cover no-repeat;
+  }
+  &__help-btn {
+    &.tooltip::after {
+      left: -10px;
+      top: 45px;
+    }
+    background: var(--icons-help) center / cover no-repeat;
+    position: relative;
+  }
+
+  &__profile-btn,
+  &__help-btn {
+    width: 25px;
+    height: 25px;
+    opacity: 0.5;
+    transition: all 0.3s ease 0s;
+  }
+
+  &__search {
+    width: 130px;
+    border: 0;
+    outline: 0;
+    padding: 5px;
+    background-color: var(--background-color-black);
+    transition: all 0.3s ease 0s;
+
+    &::placeholder {
+      color: var(--text-primary);
+    }
+    &:focus {
+      width: 180px;
+    }
+  }
+}

@@ -1,0 +1,91 @@
+.form-invite-to-server {
+  border-radius: 8px;
+  position: relative;
+  width: 400px;
+  padding: 15px;
+  background-color: var(--background-color-light-gray);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  &__title {
+    font-weight: 700;
+    color: var(--text-secondary);
+  }
+  &__subtitle {
+    margin-left: 20px;
+    position: relative;
+    &::before{
+      content:'';
+      position: absolute;
+      top: 50%;
+      left: -20px;
+      background: var(--icons-hash) center / contain no-repeat;
+      width: 15px;
+      height: 15px;
+      transform: translateY(-50%);
+    }
+  }
+  &__friend-list {
+    border-top: 2px solid var(--background-color-gray);
+    padding-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: auto;
+  }
+  &__friend-list-item {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    transition: all 0.3s ease 0s;
+    border-radius: 8px;
+    &:hover{
+      background-color: var(--background-color-gray-hover);
+      .form-invite-to-server__friend-list-invite {
+        background-color: var(--background-color-green);
+      }
+    }
+  }
+  &__friend-list-name {
+    color: var(--text-secondary);
+  }
+  &__friend-list-invite {
+    // width: 70px;
+    height: 30px;
+    color: var(--text-secondary);
+    border: 2px solid var(--background-color-green);
+    background-color: transparent;
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    border-radius: 7px;
+    &:hover {
+      background-color: var(--background-color-green-dark)!important;
+      border: 2px solid var(--background-color-green-dark);
+    }
+  }
+  &__close-btn {
+    background: var(--icons-close) center / contain no-repeat;
+    width: 17px;
+    height: 17px;
+    opacity: 0.5;
+    z-index: 10;
+    position: absolute;
+    transition: all 0.3s ease 0s;
+    top: 15px;
+    right: 15px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &__not-found {
+    font-size: 120%;
+    margin-top: 0px;
+  }
+}

@@ -1,0 +1,93 @@
+.list-item-key {
+  margin-top: 20px;
+  height: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 2px solid var(--background-color-black-light);
+}
+
+.list-key-bind {
+  width: 80%;
+}
+.title-key-bibnd {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.list-key-bind:last-child {
+  border-bottom: 2px solid var(--background-color-black-light);
+}
+
+.button-key {
+  margin: 5px;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+  border: 0;
+}
+.button-key {
+  font-weight: 100;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  background: var(--background-color-dark-grey);
+  border: 2px solid var(--background-color-gray-hover);
+  border-radius: 5px;
+  transition: transform 0.15s;
+  transform-style: preserve-3d;
+}
+.button-key::before {
+  position: absolute;
+  content: '';
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--background-color-gray-hover);
+  border-radius: inherit;
+  transform: translate3d(0, 0.4em, -1em);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.button-key:hover {
+  transform: translate(0, 0.25em);
+}
+.button-key:hover::before {
+  transform: translate3d(0, 0.5em, -1em);
+}
+.button-key:active {
+  transform: translate(0em, 0.75em);
+}
+.button-key:active::before {
+  transform: translate3d(0, 0, -1em);
+}
+
+@include media-lg-down {
+  .list-key-bind {
+    width: 100%;
+  }
+  .settings__content {
+    margin-left: 5%;
+    width: 80%;
+  }
+  .title-key {
+    white-space: pre-wrap;
+  }
+  .conttainer-button-key {
+    display: flex;
+  }
+}
+@include media-md-down {
+  .settings__content {
+    padding-top: 20px;
+  }
+}
+@media (max-width: 390px) {
+  .settings__content {
+    margin-left: 0;
+  }
+}
+

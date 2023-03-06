@@ -1,0 +1,66 @@
+.form-create-server {
+  position: relative;
+  &__close-btn {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    right: 20px;
+    top: 20px;
+    background: var(--icons-close) center/ cover no-repeat;
+    cursor: pointer;
+    border: none;
+    opacity: 0.5;
+    transition: all 0.3s ease 0s;
+    &:hover{
+      opacity: 1;
+    }
+  }
+  &__title {
+    color: var(--text-black);
+  }
+  &__subtitle {
+    color: var(--text-black);
+  }
+  &__input-container {
+    margin: 0;
+  }
+
+  &__image-input-container {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    margin: 15px 0; 
+    border-radius: 50%;
+  }
+
+  &__image-upload {
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    &.selected {
+      border-radius: 80px;
+    }
+  }
+
+  &__input-image {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    font-size: 0px;
+  }
+
+  &__label {
+    color: var(--text-gray-dark);
+  }
+  &__name {
+    background-color: var(--background-color-white-dark);
+    color: var(--background-color-gray);
+  }
+  &__submit {
+    align-self: flex-end;
+  }
+}

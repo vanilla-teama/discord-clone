@@ -1,0 +1,326 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+  --background-separator: #42464D;
+  --background-burger-menu: #DCDDDE;
+  --background-chats-buttons: #36393F;
+  --background-color-dark-grey: #202225;
+  --background-color-gray: #2F3136;
+  --background-color-light-gray: #36393F;
+  --background-color-light-gray-scroll: #32363b;
+  --background-color-main-input: #42464D;
+  --background-color-gray-hover: #42464D;
+  --background-color-green: #3ba55d;
+  --background-color-green-dark: #226737;
+  --background-color-black: #0e0e0e;
+  --background-color-black-light: #202225;
+  --background-color-blue: #5865F2;
+  --background-color-blue-dark: #3d4bea;
+  --background-color-blue-light: #00AFF4;
+  --background-color-white: #FFFFFF;
+  --background-color-white-dark: #d8d9db;
+  --background-color-white-dark1: #808080;
+  --background-color-white-dark2: #6f6f6f;
+  --background-color-orange: #FAA61A;
+  --background-color-red: #ED4545;
+  --background-color-red-dark: #a72626;
+  --background-color-orange-light: #584D3D;
+  --text-primary: #DCDDDE;
+  --text-secondary: #FFFFFF;
+  --text-button: #FFFFFF;
+  --text-gray: #D2D3D5;
+  --text-black: #060607;
+  --text-gray-dark: #4F5660;
+  
+  --icons-course: url('/src/assets/icons/rs_school.svg');
+  --icons-friends: url('/src/assets/icons/friends.svg');
+  --icons-trash: url('/src/assets/icons/trash.svg');
+  --icons-pencil: url('/src/assets/icons/pencil.svg');
+  --icons-replay: url('/src/assets/icons/reply.svg');
+  --icons-at: url('/src/assets/icons/at-icon.svg');
+  --icons-settings: url('/src/assets/icons/settings.svg');
+  --icons-hash: url('/src/assets/icons/hash.svg');
+  --icons-help: url('/src/assets/icons/help.svg');
+  --icons-plus: url('/src/assets/icons/plus.svg');
+  --icons-close: url('/src/assets/icons/close.svg');
+  --icons-create-invite: url('/src/assets/icons/create-invite.svg');
+  --icons-user-profile: url('/src/assets/icons/user-profile.svg');
+  --icons-members: url('/src/assets/icons/members.svg');
+  --icons-arrow: url('/src/assets/icons/arrow.svg');
+  --icons-message: url('/src/assets/icons/message.svg');
+  --icons-esc: url('/src/assets/icons/esc.svg');
+}
+
+[light] {
+  --background-separator: #cccccd;
+  --background-burger-menu: #777777;
+  --background-chats-buttons: #FFFFFF;
+  --background-color-dark-grey: #E9EAED; //user-bar
+  --background-color-gray: #EEEFF1; //sidebar, info-bar
+  --background-color-light-gray: #FFFFFF;  //main
+  --background-color-light-gray-scroll: #cccccd;
+  --background-color-main-input: #EEEFF1;
+  --background-color-gray-hover: #D4D6DA;  //main-input D4D6DA
+  --background-color-green: #3ba55d;
+  --background-color-green-dark: #226737;
+  --background-color-black: #FFFFFF;
+  --background-color-black-light: #E0E1E5;  //app-bar
+  --background-color-blue: #5865F2;
+  --background-color-blue-dark: #3d4bea;
+  --background-color-blue-light: #00AFF4;
+  --background-color-white: #FFFFFF;
+  --background-color-white-dark: #d8d9db;
+  --background-color-white-dark1: #808080;
+  --background-color-white-dark2: #6f6f6f;
+  --background-color-orange: #ca8000;
+  --background-color-red: #ED4545;
+  --background-color-red-dark: #a72626;
+  --background-color-orange-light: #f8ebd9;
+  --text-primary: #4E5058;
+  --text-secondary: #060607;
+  --text-button: #FFFFFF;
+  --text-gray: #060607;
+  --text-black: #060607;
+  --text-gray-dark: #4F5660;
+
+  --icons-course: url('/src/assets/icons/rs_school-light.svg');
+  --icons-friends: url('/src/assets/icons/friends-light.svg');
+  --icons-trash: url('/src/assets/icons/trash-light.svg');
+  --icons-pencil: url('/src/assets/icons/pencil-light.svg');
+  --icons-replay: url('/src/assets/icons/reply-light.svg');
+  --icons-at: url('/src/assets/icons/at-icon-light.svg');
+  --icons-settings: url('/src/assets/icons/settings-light.svg');
+  --icons-hash: url('/src/assets/icons/hash-light.svg');
+  --icons-help: url('/src/assets/icons/help-light.svg');
+  --icons-plus: url('/src/assets/icons/plus-light.svg');
+  --icons-close: url('/src/assets/icons/close-light.svg');
+  --icons-create-invite: url('/src/assets/icons/create-invite-light.svg');
+  --icons-user-profile: url('/src/assets/icons/user-profile-light.svg');
+  --icons-members: url('/src/assets/icons/members-light.svg');
+  --icons-arrow: url('/src/assets/icons/arrow-light.svg');
+  --icons-message: url('/src/assets/icons/message-light.svg');
+  --icons-esc: url('/src/assets/icons/esc-light.svg');
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  box-sizing: border-box;
+  color: var(--text-primary);
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--background-color-gray);
+  overflow-x: hidden;
+}
+
+button {
+  border: none;
+  outline: none;
+}
+
+ul {
+  display: block;
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 0px;
+}
+
+#root {
+  height: 100vh;
+  display: flex;
+  //min-height: 100%;
+  width: 100%;
+  //position: relative;
+}
+
+.form {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  border-radius: 7px;
+  background-color: var(--background-color-gray);
+  z-index: 2;
+  &_white {
+    background-color: var(--background-color-white);
+  }
+  &__title {
+    margin: 0 auto 0 auto;
+    text-align: center;
+    font-weight: 600;
+    font-size: 24px;
+  }
+
+  &__subtitle {
+    text-align: center;
+    max-width: 390px;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  &__input-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    width: 410px;
+  }
+  &__label {
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  &__input {
+    padding: 10px;
+    background-color: var(--background-color-dark-grey);
+    border: none;
+    outline: none;
+    border-radius: 2px;
+    color: var(--text-primary);
+  }
+  &__btn-submit {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: var(--background-color-blue);
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+  }
+  &__image {
+  }
+}
+
+.user-item {
+  &__box {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-right: 10px;
+  }
+  &__close {
+    background: var(--icons-close) center no-repeat;
+    width: 15px;
+    height: 15px;
+    opacity: 0.5;
+    z-index: 10;
+    transition: all 0.3s ease 0s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+  &__avatar {
+    position: relative;
+  }
+  &__icon {
+    background: url('/src/assets/icons/discord.svg') center / cover no-repeat;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+  }
+  &__status {
+    position: absolute;
+    height: 10px;
+    width: 10px;
+    bottom: -5px;
+    left: 20px;
+    background-color: var(--text-primary);
+    border-radius: 50px;
+    border: 3px solid var(--background-color-gray);
+    &::before {
+      content: '';
+      position: absolute;
+      height: 5px;
+      width: 5px;
+      background-color: var(--background-color-gray);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50px;
+    }
+
+    &_online {
+      background-color: var(--background-color-green);
+      &::before {
+        display: none;
+      }
+    }
+  }
+  &__name {
+    width: 165px;
+    opacity: 0.8;
+    color: var(--text-gray);
+    transition: all 0.3s ease 0s;
+    @extend .text-ellipsis;
+  }
+}
+
+
+.form-create-chat {
+  .user-item__status {
+    // I hide this element as we don't have time to implement status updates
+    // for any additional elements this far
+    display: none;
+  }
+}
+
+.tooltip {
+  position: relative;
+  z-index: 100;
+  &::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    font-size: 14px;
+    transform: translateX(-50%);
+    color: var(--text-primary);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    background-color: var(--background-color-black);
+    padding: 5px 10px;
+    white-space: nowrap;
+    opacity: 0;
+    border-radius: 5px;
+    transition: all 0.3s ease 0s;
+  }
+  &:hover {
+    opacity: 1;
+    &::after {
+      opacity: 1;
+    }
+  }
+}
+
+.text-ellipsis{
+  overflow: hidden;
+  display: -webkit-box;
+ -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    white-space: normal;
+    -webkit-line-clamp: 1;
+}
+
+#loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--background-color-dark-grey);
+  color: var(--text-secondary);
+  z-index: 100000;
+  opacity: 0.9;
+  display: none;
+
+  &.on {
+    display: flex;
+  }
+}

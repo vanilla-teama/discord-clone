@@ -1,0 +1,21 @@
+.apperance-container-child {
+  border-radius: 3px;
+  width: 80%;
+  margin-top: 20px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background: var(--background-color-gray);
+  &:hover {
+    background: var(--background-color-gray-hover);
+  }
+}
+.apperance-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+.apperance-title-child {
+  margin-top: 20px;
+}

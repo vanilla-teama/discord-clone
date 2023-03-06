@@ -1,0 +1,109 @@
+.sign-in,
+.sign-up {
+  width: 100vw;
+  background: url('/src/assets/bg/register-bg.png') center / cover no-repeat;
+  //display: flex;
+  //flex-direction: column;
+
+  &__box {
+    padding: 32px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 10px;
+    border-radius: 10px;
+    background-color: var(--background-color-light-gray);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+  }
+
+  &__title {
+    margin: 0 auto 20px auto;
+    font-weight: 600;
+    font-size: 24px;
+  }
+  &__form {
+  }
+
+  &__form-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    width: 410px;
+  }
+  &__form-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  &__input-email,
+  &__input-password,
+  &__input-name {
+    padding: 10px;
+    background-color: var(--background-color-dark-grey);
+    border: none;
+    outline: none;
+    border-radius: 2px;
+    color: var(--text-primary);
+  }
+  &__btn-submit {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: var(--background-color-blue);
+    border: none;
+    color: var(--text-button);
+    cursor: pointer;
+  }
+
+  .btn-auth {
+    text-align: left;
+    font-size: 14px;
+    border: none;
+    background-color: transparent;
+    color: var(--background-color-blue-light);
+    cursor: pointer;
+  }
+
+  &__text {
+    font-size: 14px;
+  }
+}
+
+.sign-in__error-container,
+.sign-up__error-container {
+  color: var(--background-color-red);
+}
+
+@include media-sm-down {
+  .sign-in,
+  .sign-up {
+    &__form-wrapper {
+      width: 330px;
+    }
+  }
+}
+
+@include media-xs-down {
+  .sign-in,
+  .sign-up {
+    &__box {
+      padding: 15px;
+    }
+    &__form-wrapper {
+      width: 290px;
+    }
+    &__title {
+      margin: 0 auto;
+      font-weight: 600;
+      font-size: 20px;
+    }
+    &__btn-submit {
+      font-size: 14px;
+    }
+  }
+}
